@@ -1,0 +1,172 @@
+/**
+ * Crane iOS layer — sits on top of the Fox tokens in theme.css.
+ *
+ * theme.css owns colour (brand green ramp + every semantic text/bg/border/fg token).
+ * This file adds what an iPhone app needs that a web DS doesn't have:
+ *   - the iOS system font stack (SF Pro renders on Apple devices, Inter elsewhere)
+ *   - the iOS Dynamic Type scale as Tailwind text-* utilities
+ *   - iPhone 17 device metrics (402 × 874 pt, safe areas, Dynamic Island)
+ *   - Liquid Glass surfaces, ported from react-cupertino-ui's glass mixin
+ */
+
+@theme {
+    /* FONT FAMILY — system first so screens match the native app on a Mac/iPhone. */
+    --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+    --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+    --font-rounded: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, sans-serif;
+
+    /* iOS DYNAMIC TYPE (Large / default content size). Use as text-ios-<style>. */
+    --text-ios-large-title: 34px;
+    --text-ios-large-title--line-height: 41px;
+    --text-ios-large-title--letter-spacing: 0.4px;
+    --text-ios-large-title--font-weight: 700;
+
+    --text-ios-title1: 28px;
+    --text-ios-title1--line-height: 34px;
+    --text-ios-title1--letter-spacing: 0.38px;
+    --text-ios-title1--font-weight: 700;
+
+    --text-ios-title2: 22px;
+    --text-ios-title2--line-height: 28px;
+    --text-ios-title2--letter-spacing: -0.26px;
+    --text-ios-title2--font-weight: 700;
+
+    --text-ios-title3: 20px;
+    --text-ios-title3--line-height: 25px;
+    --text-ios-title3--letter-spacing: -0.45px;
+    --text-ios-title3--font-weight: 600;
+
+    --text-ios-headline: 17px;
+    --text-ios-headline--line-height: 22px;
+    --text-ios-headline--letter-spacing: -0.43px;
+    --text-ios-headline--font-weight: 600;
+
+    --text-ios-body: 17px;
+    --text-ios-body--line-height: 22px;
+    --text-ios-body--letter-spacing: -0.43px;
+
+    --text-ios-callout: 16px;
+    --text-ios-callout--line-height: 21px;
+    --text-ios-callout--letter-spacing: -0.31px;
+
+    --text-ios-subheadline: 15px;
+    --text-ios-subheadline--line-height: 20px;
+    --text-ios-subheadline--letter-spacing: -0.23px;
+
+    --text-ios-footnote: 13px;
+    --text-ios-footnote--line-height: 18px;
+    --text-ios-footnote--letter-spacing: -0.08px;
+
+    --text-ios-caption1: 12px;
+    --text-ios-caption1--line-height: 16px;
+
+    --text-ios-caption2: 11px;
+    --text-ios-caption2--line-height: 13px;
+    --text-ios-caption2--letter-spacing: 0.06px;
+
+    /* RADIUS — iOS continuous-corner equivalents. */
+    --radius-ios-control: 12px; /* text fields, small buttons */
+    --radius-ios-card: 16px; /* inset-grouped lists, cards */
+    --radius-ios-sheet: 38px; /* bottom sheets, alerts */
+    --radius-ios-device: 55px; /* iPhone 17 display corner */
+
+    /* SPACING — iPhone 17 device metrics, in points. */
+    --spacing-device-w: 402px;
+    --spacing-device-h: 874px;
+    --spacing-safe-top: 62px;
+    --spacing-safe-bottom: 34px;
+    --spacing-gutter: 16px; /* standard iOS layout margin */
+    --spacing-nav-bar: 54px; /* glass nav bar row under the status bar */
+    --spacing-tab-bar: 64px; /* floating tab bar pill */
+
+    /* SHADOW — the soft lift Crane uses on white cards over the grouped background. */
+    --shadow-ios-card: 0px 1px 2px rgba(0, 0, 0, 0.04), 0px 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-ios-float: 0px 10px 30px rgba(0, 0, 0, 0.12), 0px 2px 8px rgba(0, 0, 0, 0.06);
+
+    /* MOTION — iOS-like spring/ease curves. */
+    --ease-ios: cubic-bezier(0.22, 1, 0.36, 1);
+    --animate-sheet-up: sheet-up 420ms var(--ease-ios);
+    --animate-drawer-in: drawer-in 360ms var(--ease-ios);
+    --animate-alert-in: alert-in 220ms var(--ease-ios);
+
+    @keyframes sheet-up {
+        from {
+            transform: translateY(100%);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+    @keyframes drawer-in {
+        from {
+            transform: translateX(-100%);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
+    @keyframes alert-in {
+        from {
+            opacity: 0;
+            transform: scale(1.12);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+}
+
+/* LIQUID GLASS — values from react-cupertino-ui's globals.css + glass mixin. */
+:root {
+    --glass-blur: 24px;
+    --glass-saturation: 180%;
+    --glass-surface: rgba(255, 255, 255, 0.72);
+    --glass-surface-strong: rgba(255, 255, 255, 0.9);
+    --glass-border: rgba(255, 255, 255, 0.6);
+    --glass-edge: rgba(0, 0, 0, 0.06);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --glass-highlight: linear-gradient(135deg, rgba(255, 255, 255, 0.55) 0%, transparent 55%);
+    --scrim: rgba(0, 0, 0, 0.32);
+}
+
+.dark-mode {
+    --glass-surface: rgba(28, 28, 30, 0.6);
+    --glass-surface-strong: rgba(36, 36, 38, 0.88);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-edge: rgba(255, 255, 255, 0.06);
+    --glass-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+    --glass-highlight: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, transparent 55%);
+    --scrim: rgba(0, 0, 0, 0.55);
+}
+
+/* A translucent, blurred surface with a bright rim. Floating chrome only:
+   tab bar, nav-bar buttons, alerts, sheets. Never use it for content cards. */
+@utility glass {
+    background: var(--glass-surface);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    box-shadow:
+        inset 0 0 0 1px var(--glass-border),
+        0 0 0 0.5px var(--glass-edge),
+        var(--glass-shadow);
+    background-image: var(--glass-highlight);
+}
+
+@utility glass-strong {
+    background: var(--glass-surface-strong);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+    box-shadow:
+        inset 0 0 0 1px var(--glass-border),
+        0 0 0 0.5px var(--glass-edge),
+        var(--glass-shadow);
+}
+
+/* Native-feeling press: scale down slightly while pressed (React Aria sets data-pressed). */
+@utility press-scale {
+    transition: transform 180ms var(--ease-ios), opacity 180ms var(--ease-ios);
+    &[data-pressed] {
+        transform: scale(0.97);
+    }
+}
