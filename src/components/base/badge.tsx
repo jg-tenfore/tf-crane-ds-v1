@@ -87,3 +87,34 @@ export const Pill = ({ children, icon: Icon, tone = "gray", className }: PillPro
         {children}
     </span>
 );
+
+const statusTones = sortCx({
+    success: "bg-success-primary text-success-primary ring-fg-success-secondary/30",
+    gray: "bg-tertiary text-secondary ring-secondary",
+    error: "bg-error-primary text-error-primary ring-fg-error-secondary/30",
+    warning: "bg-warning-primary text-warning-primary ring-fg-warning-secondary/30",
+});
+
+export type StatusTone = keyof typeof statusTones;
+
+export interface StatusBadgeProps {
+    children: ReactNode;
+    tone?: StatusTone;
+    className?: string;
+}
+
+/**
+ * StatusBadge — sentence-case status on wallet items: Active, Available, Used Up,
+ * Expired, Expiring Soon. Use Tag for the small uppercase labels (FULL, BOOKER).
+ */
+export const StatusBadge = ({ children, tone = "success", className }: StatusBadgeProps) => (
+    <span
+        className={cx(
+            "inline-flex h-[24px] shrink-0 items-center rounded-md px-2 text-ios-footnote font-semibold whitespace-nowrap ring-1 ring-inset",
+            statusTones[tone],
+            className,
+        )}
+    >
+        {children}
+    </span>
+);

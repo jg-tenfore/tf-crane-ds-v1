@@ -130,9 +130,23 @@
     --scrim: rgba(0, 0, 0, 0.32);
 }
 
+/* WARM DARK — Crane's dark theme ("Warm Dark" in Appearance), sampled from the app
+   (references/100926-12pm). Unlike Fox's dark mode, cards sit *lighter* than the page,
+   and neutrals are warm rather than blue-grey. Overrides Fox's .dark-mode surfaces only. */
 .dark-mode {
-    --glass-surface: rgba(28, 28, 30, 0.6);
-    --glass-surface-strong: rgba(36, 36, 38, 0.88);
+    --color-bg-primary: rgb(31 29 27); /* cards, nav bar        #1F1D1B */
+    --color-bg-secondary: rgb(22 20 20); /* page background      #161414 */
+    --color-bg-primary_hover: rgb(40 37 35);
+    --color-bg-secondary_hover: rgb(31 29 27);
+    --color-bg-tertiary: rgb(43 40 38); /* chips, progress tracks */
+    --color-bg-quaternary: rgb(58 54 51);
+    --color-border-primary: rgb(66 62 58);
+    --color-border-secondary: rgb(44 41 39);
+    --color-text-primary: rgb(237 234 230); /* warm white            #EDEAE6 */
+    --color-bg-brand-primary_alt: rgb(37 43 37); /* green-tinted tiles      #252B25 */
+
+    --glass-surface: rgba(38, 35, 33, 0.66);
+    --glass-surface-strong: rgba(44, 41, 39, 0.9);
     --glass-border: rgba(255, 255, 255, 0.1);
     --glass-edge: rgba(255, 255, 255, 0.06);
     --glass-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
