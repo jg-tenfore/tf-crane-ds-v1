@@ -12,7 +12,8 @@ UX concepts are designed and prototyped before they're built there).
 
 ## Design foundations
 
-- **Colour + semantic tokens = Fox DS** (`src/styles/theme.css`, ported verbatim from tf-fox-ds-v1).
+- **Colour + semantic tokens = Fox DS** (`src/styles/theme.css`, ported from tf-fox-ds-v1). The brand ramp's
+  600–950 are re-anchored on the Crane app's green: **brand-600 #2C7C4D** (solid buttons), brand-500 #339C5E.
   Use semantic classes only: `text-primary`, `text-tertiary`, `bg-primary`, `bg-secondary`,
   `bg-brand-solid`, `text-brand-secondary`, `text-fg-brand-primary`, `ring-secondary`, … Never raw
   palette classes like `text-gray-600` / `bg-green-700`.

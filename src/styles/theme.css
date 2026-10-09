@@ -121,11 +121,11 @@
     --color-alpha-white: rgb(255 255 255);
     --color-alpha-black: rgb(0 0 0);
 
-    /* TenFore green — monochrome + green accent (ported verbatim from Fox). The brand ramp is the
-       fairway green (#339C5D ≈ brand-500), so every brand-derived token (solid
-       CTAs, links, focus rings, toggles, active states) renders green while the
-       neutral text/background/border tokens keep the system monochromatic.
-       brand-600 is the primary interactive colour (darkened for white-text contrast). */
+    /* Crane green — matched to the production app (sampled from the iPhone references):
+       brand-600 #2C7C4D is every solid button / selected state (Sign Out, Continue, date chip),
+       brand-500 #339C5E is the lighter accent (Add Payment "Submit"). 25–500 are the Fox ramp
+       unchanged (Fox brand-500 already equals Crane's #339C5E); 600–950 are re-anchored on
+       Crane's hue. White on brand-600 = 5.1:1 (AA). */
     --color-brand-25: rgb(246 252 248);
     --color-brand-50: rgb(236 250 241);
     --color-brand-100: rgb(209 242 221);
@@ -133,11 +133,11 @@
     --color-brand-300: rgb(116 208 152);
     --color-brand-400: rgb(74 182 117);
     --color-brand-500: rgb(51 156 93);
-    --color-brand-600: rgb(34 124 72);
-    --color-brand-700: rgb(27 100 59);
-    --color-brand-800: rgb(24 80 49);
-    --color-brand-900: rgb(20 66 41);
-    --color-brand-950: rgb(10 38 23);
+    --color-brand-600: rgb(44 124 77);
+    --color-brand-700: rgb(36 102 63);
+    --color-brand-800: rgb(30 82 51);
+    --color-brand-900: rgb(25 67 42);
+    --color-brand-950: rgb(14 39 24);
 
     /* LIGHT MODE VARIABLES */
 

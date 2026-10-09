@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 /**
  * The TF Crane color foundations (Fox tokens), rendered straight from the live CSS variables.
- * Neutral greys carry the UI; the brand ramp is TenFore green. brand-600 (#227C48) is the
- * interactive colour and matches the green in the Crane app screenshots (#2C7C4D).
+ * Neutral greys carry the UI; the brand ramp is Crane green, matched to the production app:
+ * brand-600 #2C7C4D (solid buttons, selected states) and brand-500 #339C5E (lighter accent).
  * Semantic error/warning/success tokens stay red/amber/green.
  *
  * Every swatch reads its real `--color-*` variable inline so what you see is exactly
