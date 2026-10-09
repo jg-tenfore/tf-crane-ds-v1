@@ -29,6 +29,7 @@ export * from "./profile-screen";
 export * from "./punch-cards-screen";
 export * from "./rain-checks-screen";
 export * from "./waitlist-screen";
+export * from "./wallet-cards";
 export { ProfileNav, ProfileRow, RowCard } from "./profile-shared";
 
 /**
@@ -42,11 +43,11 @@ export const profileScreens: ScreenRegistry = {
     "payment-methods": () => createElement(PaymentMethodsScreen),
     "add-payment-method": (p) => createElement(AddPaymentMethodScreen, p as AddPaymentMethodScreenProps),
     "golf-buddies": (p) => createElement(GolfBuddiesScreen, p as GolfBuddiesScreenProps),
-    memberships: () => createElement(MembershipsScreen),
+    memberships: (p) => createElement(MembershipsScreen, p),
     waitlist: () => createElement(WaitlistScreen),
-    "punch-cards": () => createElement(PunchCardsScreen),
-    "rain-checks": () => createElement(RainChecksScreen),
-    "gift-cards": () => createElement(GiftCardsScreen),
+    "punch-cards": (p) => createElement(PunchCardsScreen, p),
+    "rain-checks": (p) => createElement(RainChecksScreen, p),
+    "gift-cards": (p) => createElement(GiftCardsScreen, p),
     appearance: () => createElement(AppearanceScreen),
     community: (p) => createElement(CommunityScreen, p as CommunityScreenProps),
     "kiosk-sign-in": () => createElement(KioskSignInScreen),

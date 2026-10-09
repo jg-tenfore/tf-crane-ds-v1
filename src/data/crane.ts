@@ -130,11 +130,26 @@ export interface PaymentCard {
 
 export const PAYMENT_CARDS: PaymentCard[] = [{ id: "card-1", brand: "Visa", last4: "2521", exp: "03/28", name: "Justin C Girard", zip: "02149" }];
 
-export const BUDDIES = [
-    { id: "u-1", name: "Mike Callahan", email: "mike.callahan@tenfore.golf", handicap: 12.4 },
-    { id: "u-2", name: "Chris Duffy", email: "chris.duffy@tenfore.golf", handicap: 8.1 },
-    { id: "u-3", name: "Ryan Walsh", email: "ryan.walsh@tenfore.golf", handicap: 18.7 },
+export interface Buddy {
+    id: string;
+    /** Can be empty: invited people who haven't finished setting up show only an email. */
+    name: string;
+    email: string;
+    handicap?: number;
+}
+
+/** Accepted golf buddies (refs IMG_8581). */
+export const BUDDIES: Buddy[] = [
+    { id: "u-1", name: "", email: "charlie@tenfore.golf" },
+    { id: "u-2", name: "Austin Wride", email: "austin.wride@tenfore.golf", handicap: 12.4 },
+    { id: "u-3", name: "Cody Sanders", email: "cody.sanders@tenfore.golf", handicap: 8.1 },
+    { id: "u-4", name: "Chris Duffy", email: "chris.duffy@tenfore.golf", handicap: 18.7 },
+    { id: "u-5", name: "Jarrette Schule", email: "jarrette.schule@tenfore.golf", handicap: 6.3 },
+    { id: "u-6", name: "Mike Callahan", email: "mike.callahan@tenfore.golf", handicap: 14.2 },
 ];
+
+/** Invites sent that haven't been accepted yet. */
+export const BUDDY_REQUESTS: Buddy[] = [{ id: "r-1", name: "Ryan Denner", email: "ryan.denner@tenfore.golf" }];
 
 export const BOOKING_NOTICE = [
     "Golf Car Notice! Please know that golf cars are suspended each day two hours before sunset (we transition to walking only at that time)",
@@ -143,5 +158,78 @@ export const BOOKING_NOTICE = [
     "No-Show Fees (per absent player): Weekdays $15 pp / Weekends & Holidays $20 pp",
     "We require at least 24-hours notice for all tee time changes & cancellations (the easiest way to manage/cancel tee-times is via your online booking profile)",
 ];
+
+/** "Today" for every prototype screen — fixed so statuses and the tee sheet never drift. */
+export const TODAY = new Date(2026, 9, 9);
+
+const daysUntil = (d: Date) => Math.round((d.getTime() - TODAY.getTime()) / 86_400_000);
+
+export type WalletStatus = "active" | "available" | "used-up" | "expired" | "expiring-soon";
+
+/** Expired beats everything; then fully used; then "expiring soon" inside 30 days. */
+export const walletStatus = ({ expires, used = 0, total }: { expires: Date; used?: number; total?: number }): WalletStatus => {
+    if (daysUntil(expires) < 0) return "expired";
+    if (total != null && used >= total) return "used-up";
+    if (daysUntil(expires) <= 30) return "expiring-soon";
+    return "active";
+};
+
+/* ---------- Profile wallet items (refs IMG_8575–8578) ---------- */
+
+export interface PunchCard {
+    id: string;
+    number: string;
+    expires: Date;
+    /** Each punchable product on the card. */
+    items: { name: string; used: number; total: number }[];
+}
+
+export const PUNCH_CARDS: PunchCard[] = [{ id: "pc-1", number: "19581", expires: new Date(2027, 7, 19), items: [{ name: "Green Fees", used: 3, total: 20 }] }];
+
+export interface RainCheck {
+    id: string;
+    number: string;
+    expires: Date;
+    amount: number;
+    used: number;
+}
+
+export const RAIN_CHECKS: RainCheck[] = [
+    { id: "rc-1", number: "36903", expires: new Date(2027, 3, 28), amount: 91.63, used: 91.63 },
+    { id: "rc-2", number: "55209", expires: new Date(2027, 8, 16), amount: 31.85, used: 31.85 },
+    { id: "rc-3", number: "55220", expires: new Date(2027, 8, 17), amount: 31.85, used: 0 },
+    { id: "rc-4", number: "56272", expires: new Date(2027, 8, 23), amount: 48.4, used: 12.1 },
+];
+
+export interface GiftCard {
+    id: string;
+    code: string;
+    expires: Date;
+    amount: number;
+    used: number;
+    /** What the balance can be spent on. */
+    categories: string[];
+}
+
+export const GIFT_CARDS: GiftCard[] = [
+    { id: "gc-1", code: "6584", expires: new Date(2027, 11, 31), amount: 7, used: 0, categories: ["Tee Fees", "Merchandise", "Food & Beverage", "Alcohol"] },
+    { id: "gc-2", code: "808080808080", expires: new Date(2026, 5, 30), amount: 100, used: 100, categories: ["Tee Fees", "Merchandise", "Food & Beverage"] },
+    { id: "gc-3", code: "553911404251", expires: new Date(2026, 3, 1), amount: 123, used: 123, categories: ["Tee Fees", "Merchandise", "Food & Beverage", "Alcohol"] },
+    { id: "gc-4", code: "4633122401251", expires: new Date(2026, 0, 15), amount: 1000, used: 1000, categories: ["Tee Fees", "Merchandise"] },
+];
+
+export interface Membership {
+    id: string;
+    name: string;
+    memberId: string;
+    expires: Date;
+}
+
+export const MEMBERSHIPS: Membership[] = [
+    { id: "m-1", name: "Gold Punch Membership", memberId: "40471", expires: new Date(2027, 11, 1) },
+    { id: "m-2", name: "30 Day booking window", memberId: "67892", expires: new Date(2026, 9, 12) },
+];
+
+export const formatDate = (d: Date) => d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
 export const currency = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD" });

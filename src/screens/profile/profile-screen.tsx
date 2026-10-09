@@ -22,7 +22,17 @@ import { Screen } from "@/components/device/screen";
 import { AlertDialog } from "@/components/feedback/alert-dialog";
 import { NavigationBar } from "@/components/navigation/navigation-bar";
 import { useStack } from "@/components/prototype/stack-navigator";
-import { APP_VERSION, PAYMENT_CARDS, USER, currency } from "@/data/crane";
+import { APP_VERSION, BUDDIES, GIFT_CARDS, MEMBERSHIPS, PAYMENT_CARDS, PUNCH_CARDS, RAIN_CHECKS, USER, currency, walletStatus } from "@/data/crane";
+
+const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
+/** Counts shown under each Profile row, from the same data the sub-screens render. */
+const COUNTS = {
+    buddies: plural(BUDDIES.length, "buddy", "buddies"),
+    memberships: plural(MEMBERSHIPS.filter((m) => walletStatus({ expires: m.expires }) !== "expired").length, "active membership"),
+    punchCards: plural(PUNCH_CARDS.filter((c) => walletStatus({ expires: c.expires }) !== "expired").length, "active card"),
+    rainChecks: plural(RAIN_CHECKS.filter((c) => walletStatus({ expires: c.expires, used: c.used, total: c.amount }) === "active").length, "active rain check"),
+    giftCards: plural(GIFT_CARDS.length, "card"),
+};
 import { ProfileRow, RowCard } from "./profile-shared";
 
 /** Apple logo for the "Add to Wallet" button (not in @untitledui/icons). */
@@ -110,12 +120,12 @@ export const ProfileScreen = ({ communityBadge = 1, onSignOut, onDeleteAccount, 
                     />
                     <ProfileRow icon={Wallet02} title="Account Balance" subtitle={currency(0)} onPress={() => push("account-balance")} />
                     <ProfileRow icon={CreditCard02} title="Payment Methods" subtitle={`${cards} card${cards === 1 ? "" : "s"}`} onPress={() => push("payment-methods")} />
-                    <ProfileRow icon={Users01} title="Golf Buddies" subtitle="0 buddies" onPress={() => push("golf-buddies")} />
-                    <ProfileRow icon={Award03} title="Memberships" subtitle="0 active memberships" onPress={() => push("memberships")} />
+                    <ProfileRow icon={Users01} title="Golf Buddies" subtitle={COUNTS.buddies} onPress={() => push("golf-buddies")} />
+                    <ProfileRow icon={Award03} title="Memberships" subtitle={COUNTS.memberships} onPress={() => push("memberships")} />
                     <ProfileRow icon={Clock} title="Waitlist" subtitle="0 active waitlists" onPress={() => push("waitlist")} />
-                    <ProfileRow icon={Ticket01} title="Punch Cards" subtitle="0 active cards" onPress={() => push("punch-cards")} />
-                    <ProfileRow icon={CloudRaining01} title="Rain Checks" subtitle="0 active rain checks" onPress={() => push("rain-checks")} />
-                    <ProfileRow icon={Gift01} title="Gift Cards" subtitle="0 cards" onPress={() => push("gift-cards")} />
+                    <ProfileRow icon={Ticket01} title="Punch Cards" subtitle={COUNTS.punchCards} onPress={() => push("punch-cards")} />
+                    <ProfileRow icon={CloudRaining01} title="Rain Checks" subtitle={COUNTS.rainChecks} onPress={() => push("rain-checks")} />
+                    <ProfileRow icon={Gift01} title="Gift Cards" subtitle={COUNTS.giftCards} onPress={() => push("gift-cards")} />
                 </RowCard>
 
                 <RowCard>

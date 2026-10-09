@@ -5,10 +5,12 @@ const meta: Meta = {
     title: "Profile ∕ Account/Gift Cards",
     parameters: {
         phone: true,
-        docs: { description: { component: "Recreates **IMG_2189**. Gift Cards — quiet empty state." } },
+        docs: { description: { component: "Recreates **IMG_8577** (balance, code and spend categories; expired cards are dimmed) and the empty state **IMG_2189**. The references were captured in Warm Dark — flip the toolbar Theme to compare." } },
     },
 };
 export default meta;
 type Story = StoryObj;
 
 export const Default: Story = { render: () => <ProfileStack route="gift-cards" /> };
+
+export const Empty: Story = { render: () => <ProfileStack route="gift-cards" params={{ cards: [] }} /> };

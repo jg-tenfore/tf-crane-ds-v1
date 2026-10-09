@@ -6,14 +6,12 @@ import { DateStrip, buildDays } from "@/components/navigation/date-strip";
 import { UnderlineTabs } from "@/components/navigation/underline-tabs";
 import { TeeTimeCard, type TeeTime } from "@/components/lists/tee-time-card";
 import { EmptyState } from "@/components/feedback/empty-state";
-import { COURSE_SECTIONS, teeSheet } from "@/data/crane";
+import { COURSE_SECTIONS, TODAY, teeSheet } from "@/data/crane";
 import { useCourse } from "@/screens/chrome/course-context";
 import { useBookings } from "@/screens/bookings/bookings-store";
 import { useToast } from "@/components/feedback/toast";
 import { useAppShell } from "@/components/prototype/app-shell";
 import { ConfigureBookingSheet } from "./configure-booking-sheet";
-
-const TODAY = new Date(2026, 9, 9);
 
 export interface TeeSheetScreenProps {
     /** Open the Configure Booking sheet on this tee time index (for stories). */
