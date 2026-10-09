@@ -6,3 +6,4 @@ dist
 .vite
 # Reference screenshots stay local: they contain real account details and this repo is public.
 references/
+dist-prototype

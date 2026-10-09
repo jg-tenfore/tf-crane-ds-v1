@@ -45,6 +45,16 @@ Reference screenshots (`references/`, 1206 × 2622 @3x) are iPhone 17. Every scr
   three independent stacks.
 - Screen registries: each area exports a `ScreenRegistry` from `src/screens/<area>/index.ts`.
 
+## Prototype app (`npm run prototype` → http://localhost:6022)
+
+`prototype/` (index.html + main.tsx) + `vite.prototype.config.ts` + `src/prototype-app/` stitch every screen into one app:
+- `Presenter` renders the page around the phone: a side panel to jump to any screen, frame and appearance toggles, and Reset. It fits the phone to the window and goes full-screen (`IPhoneFrame variant="fullscreen"`) on real phones.
+- `CranePrototype` covers the signed-out auth stack → the signed-in `AppShell`. All state is in `PrototypeState` (`prototype-state.ts`): it's persisted to localStorage and mirrored to the URL hash (`#/profile/edit-profile`, `#/auth/welcome/sign-in`, `#/reset`).
+- Screens stay prototype-agnostic: they talk to optional contexts that no-op in Storybook. These are `useBookings()`, `useToast()`, `useAppShell()`, `useCourse()` and `useSafeArea()`. Never hard-code the 62/34 insets; use `useSafeArea()` / `useNavChromeHeight()`.
+- The `brand/` and `crane-logo/` folders are served and copied by a small plugin in `vite.prototype.config.ts`.
+- The Introduction's hero (`src/stories/prototype-link.tsx`) shows real screenshots from `public/prototype-preview/`.
+  After changing those screens, refresh them with `npm run prototype:preview` while the prototype is running. GitHub Pages publishes the build at `/tf-crane-ds-v1/prototype/`.
+
 ## Conventions (from Untitled UI / Fox)
 
 - Files are **kebab-case**. Imports from `react-aria-components` are prefixed `Aria*`

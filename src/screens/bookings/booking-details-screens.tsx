@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useToast } from "@/components/feedback/toast";
 import { Calendar, CheckCircle, CreditCard02, Flag01, User01, Users01 } from "@untitledui/icons";
 import { Screen } from "@/components/device/screen";
 import { NavigationBar } from "@/components/navigation/navigation-bar";
@@ -9,12 +10,16 @@ import { Notice, StatusBanner } from "@/components/feedback/notice";
 import { AlertDialog } from "@/components/feedback/alert-dialog";
 import { KeyValueRow } from "@/components/lists/list";
 import { useStack } from "@/components/prototype/stack-navigator";
-import { BOOKINGS, PURCHASES, USER, currency } from "@/data/crane";
+import { PURCHASES, USER, currency } from "@/data/crane";
+import { useBookings } from "./bookings-store";
 
 /** Tee Time Details — date, course, players with their rates, total, and cancel rules. */
 export const TeeTimeDetailsScreen = ({ id = "b-2" }: { id?: string }) => {
     const stack = useStack();
-    const b = BOOKINGS.find((x) => x.id === id) ?? BOOKINGS[0];
+    const { bookings, cancelBooking } = useBookings();
+    const toast = useToast();
+    // Snapshot on mount so the screen doesn't change under the pop animation after a cancel.
+    const [b] = useState(() => bookings.find((x) => x.id === id) ?? bookings[0]);
     const past = b.status === "past";
     const rate = past ? 34 : 53;
     const [confirm, setConfirm] = useState(false);
@@ -83,7 +88,18 @@ export const TeeTimeDetailsScreen = ({ id = "b-2" }: { id?: string }) => {
                 onOpenChange={setConfirm}
                 title="Cancel tee time?"
                 message={`${b.time} at ${b.course.name}. Cancellations inside 24 hours may incur a no-show fee.`}
-                actions={[{ label: "Keep", style: "cancel" }, { label: "Cancel Tee Time", style: "destructive", onPress: stack.pop }]}
+                actions={[
+                    { label: "Keep", style: "cancel" },
+                    {
+                        label: "Cancel Tee Time",
+                        style: "destructive",
+                        onPress: () => {
+                            cancelBooking(b.id);
+                            toast.show({ title: "Tee time cancelled" });
+                            stack.pop();
+                        },
+                    },
+                ]}
             />
         </Screen>
     );

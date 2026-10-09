@@ -1,6 +1,8 @@
 name: Deploy Storybook
 
-# Publishes Storybook to https://jg-tenfore.github.io/tf-crane-ds-v1/ on every push to main.
+# Publishes on every push to main:
+#   https://jg-tenfore.github.io/tf-crane-ds-v1/            → Storybook
+#   https://jg-tenfore.github.io/tf-crane-ds-v1/prototype/  → Crane prototype (same src/)
 
 on:
     push:
@@ -35,6 +37,10 @@ jobs:
             - name: Build Storybook
               # PAGES=1 sets Vite's base to /tf-crane-ds-v1/ (see .storybook/main.ts).
               run: PAGES=1 npm run build-storybook -- -o dist
+
+            - name: Build prototype
+              # PAGES=1 sets the base to /tf-crane-ds-v1/prototype/ (see vite.prototype.config.ts).
+              run: PAGES=1 npm run build:prototype && cp -r dist-prototype dist/prototype
 
             - uses: actions/upload-pages-artifact@v4
               with:

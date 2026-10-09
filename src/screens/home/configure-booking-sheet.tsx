@@ -19,7 +19,7 @@ export interface ConfigureBookingSheetProps {
     onOpenChange: (open: boolean) => void;
     /** Start on the summary step (for stories). */
     initialStep?: "configure" | "summary";
-    onReserve?: () => void;
+    onReserve?: (booking: { players: number; holes: 9 | 18; transport: "walking" | "cart"; total: number }) => void;
 }
 
 /**
@@ -72,7 +72,7 @@ export const ConfigureBookingSheet = ({ teeTime, course, dateLabel, onOpenChange
                                 setReserving(true);
                                 setTimeout(() => {
                                     setReserving(false);
-                                    onReserve?.();
+                                    onReserve?.({ players: count, holes: holes === "9" ? 9 : 18, transport: transport as "walking" | "cart", total });
                                     close();
                                 }, 900);
                             }}

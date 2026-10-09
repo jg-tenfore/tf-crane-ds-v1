@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { COURSES, courseById, type Course } from "@/data/crane";
 
 interface CourseContextValue {
@@ -22,12 +22,26 @@ const CourseContext = createContext<CourseContextValue | null>(null);
  * CourseProvider — Crane's global "which course am I at" state. The course header,
  * locations drawer and course info sheet all read and write it.
  */
-export const CourseProvider = ({ initialCourseId = "sagamore-hampton", children }: { initialCourseId?: string; children: ReactNode }) => {
+export interface CourseProviderProps {
+    initialCourseId?: string;
+    /** My Courses. Defaults to the sample saved courses. */
+    initialSavedIds?: string[];
+    /** Fires when the active course or My Courses changes (for persistence). */
+    onChange?: (state: { courseId: string; savedIds: string[] }) => void;
+    children: ReactNode;
+}
+
+export const CourseProvider = ({ initialCourseId = "sagamore-hampton", initialSavedIds, onChange, children }: CourseProviderProps) => {
     const [courseId, setCourseId] = useState(initialCourseId);
     const [savedIds, setSavedIds] = useState(() => {
-        const ids = COURSES.filter((c) => c.saved).map((c) => c.id);
+        const ids = initialSavedIds ?? COURSES.filter((c) => c.saved).map((c) => c.id);
         return ids.includes(initialCourseId) ? ids : [initialCourseId, ...ids];
     });
+    const onChangeRef = useRef(onChange);
+    onChangeRef.current = onChange;
+    useEffect(() => {
+        onChangeRef.current?.({ courseId, savedIds });
+    }, [courseId, savedIds]);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [infoOpen, setInfoOpen] = useState(false);
 

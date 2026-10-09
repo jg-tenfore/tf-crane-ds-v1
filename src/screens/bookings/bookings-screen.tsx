@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Calendar, ChevronRight, CreditCard02, Receipt } from "@untitledui/icons";
 import { Button as AriaButton } from "react-aria-components";
-import { NAV_CHROME_HEIGHT, Screen } from "@/components/device/screen";
+import { Screen, useNavChromeHeight } from "@/components/device/screen";
 import { NavigationBar } from "@/components/navigation/navigation-bar";
 import { UnderlineTabs } from "@/components/navigation/underline-tabs";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { IconTile } from "@/components/base/card";
 import { useStack } from "@/components/prototype/stack-navigator";
-import { BOOKINGS, PURCHASES, currency, type Booking } from "@/data/crane";
+import { PURCHASES, currency, type Booking } from "@/data/crane";
+import { useBookings } from "./bookings-store";
 
 const rowClass =
     "press-scale flex w-full cursor-pointer items-center gap-3 rounded-ios-card bg-primary p-3 text-left shadow-ios-card ring-1 ring-secondary/60 outline-none focus-visible:ring-4 focus-visible:ring-brand-300/60";
@@ -37,13 +38,15 @@ const BookingRow = ({ booking, onPress }: { booking: Booking; onPress: () => voi
 export const BookingsScreen = ({ initialTab = "reservations", empty }: { initialTab?: "reservations" | "purchases"; empty?: boolean }) => {
     const stack = useStack();
     const [tab, setTab] = useState(initialTab);
-    const bookings = empty ? [] : BOOKINGS;
+    const navHeight = useNavChromeHeight();
+    const store = useBookings();
+    const bookings = empty ? [] : store.bookings;
     const upcoming = bookings.filter((b) => b.status === "upcoming");
     const past = bookings.filter((b) => b.status === "past");
 
     return (
         <Screen
-            topInset={NAV_CHROME_HEIGHT + 45}
+            topInset={navHeight + 45}
             nav={
                 <div>
                     <NavigationBar title="Bookings" divider={false} />

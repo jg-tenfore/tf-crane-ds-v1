@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { ShoppingBag01 } from "@untitledui/icons";
-import { NAV_CHROME_HEIGHT, Screen } from "@/components/device/screen";
+import { Screen, useNavChromeHeight } from "@/components/device/screen";
 import { CourseHeader } from "@/components/navigation/course-header";
 import { DateStrip, buildDays } from "@/components/navigation/date-strip";
 import { UnderlineTabs } from "@/components/navigation/underline-tabs";
@@ -8,6 +8,9 @@ import { TeeTimeCard, type TeeTime } from "@/components/lists/tee-time-card";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { COURSE_SECTIONS, teeSheet } from "@/data/crane";
 import { useCourse } from "@/screens/chrome/course-context";
+import { useBookings } from "@/screens/bookings/bookings-store";
+import { useToast } from "@/components/feedback/toast";
+import { useAppShell } from "@/components/prototype/app-shell";
 import { ConfigureBookingSheet } from "./configure-booking-sheet";
 
 const TODAY = new Date(2026, 9, 9);
@@ -31,6 +34,10 @@ export const TeeSheetScreen = ({ openTeeTimeIndex, bookingStep, cartCount = 0 }:
     const [section, setSection] = useState("tee");
     const sheet = useMemo(() => teeSheet(course), [course]);
     const [selected, setSelected] = useState<TeeTime | null>(openTeeTimeIndex != null ? sheet[openTeeTimeIndex] : null);
+    const navHeight = useNavChromeHeight();
+    const { addBooking } = useBookings();
+    const toast = useToast();
+    const shell = useAppShell();
     const dayLabel = new Date(`${day}T12:00:00`).toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
 
     // Header + section tabs + date strip all float; content starts below them.
@@ -50,7 +57,7 @@ export const TeeSheetScreen = ({ openTeeTimeIndex, bookingStep, cartCount = 0 }:
 
     return (
         <>
-            <Screen nav={chrome} topInset={NAV_CHROME_HEIGHT + 45 + (section === "tee" ? 68 : 0)}>
+            <Screen nav={chrome} topInset={navHeight + 45 + (section === "tee" ? 68 : 0)}>
                 {section === "tee" ? (
                     <div className="space-y-2.5 px-gutter pt-1">
                         {sheet.map((t) => (
@@ -71,6 +78,11 @@ export const TeeSheetScreen = ({ openTeeTimeIndex, bookingStep, cartCount = 0 }:
                 dateLabel={dayLabel}
                 initialStep={bookingStep}
                 onOpenChange={(o) => !o && setSelected(null)}
+                onReserve={({ players, holes }) => {
+                    if (!selected) return;
+                    addBooking({ course, date: new Date(`${day}T12:00:00`), time: selected.time, players, holes, status: "upcoming" });
+                    toast.show({ title: `Reserved ${selected.time} · ${course.shortName}`, action: { label: "View", onPress: () => shell.setTab("bookings") } });
+                }}
             />
         </>
     );

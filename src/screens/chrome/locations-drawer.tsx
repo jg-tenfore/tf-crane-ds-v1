@@ -4,7 +4,7 @@ import { Button as AriaButton, Heading as AriaHeading } from "react-aria-compone
 import { cx } from "@/utils/cx";
 import { Drawer } from "@/components/overlays/drawer";
 import { SearchField } from "@/components/forms/search-field";
-import { IPHONE_17 } from "@/components/device/iphone-frame";
+import { useSafeArea } from "@/components/device/iphone-frame";
 import { COURSES, type Course } from "@/data/crane";
 import { useCourse } from "./course-context";
 import { CourseLogo } from "./course-logo";
@@ -15,9 +15,10 @@ const iconBtn =
 /** My Locations — saved courses; tap to switch the whole app to that course. */
 export const MyLocationsPanel = ({ onClose, onAdd }: { onClose: () => void; onAdd: () => void }) => {
     const { course: active, saved, setCourseId, removeSaved } = useCourse();
+    const safe = useSafeArea();
     return (
         <>
-            <div className="flex items-center justify-between border-b border-secondary px-4 pb-3" style={{ paddingTop: IPHONE_17.safeTop }}>
+            <div className="flex items-center justify-between border-b border-secondary px-4 pb-3" style={{ paddingTop: safe.top }}>
                 <AriaHeading slot="title" className="text-ios-title3 font-bold text-primary">
                     My Locations
                 </AriaHeading>
@@ -64,7 +65,7 @@ export const MyLocationsPanel = ({ onClose, onAdd }: { onClose: () => void; onAd
                     );
                 })}
             </ul>
-            <div className="border-t border-secondary px-4 pt-3" style={{ paddingBottom: IPHONE_17.safeBottom + 8 }}>
+            <div className="border-t border-secondary px-4 pt-3" style={{ paddingBottom: safe.bottom + 8 }}>
                 <AriaButton
                     onPress={onAdd}
                     className="press-scale flex h-[48px] w-full cursor-pointer items-center justify-center gap-2 rounded-ios-control border-2 border-dashed border-brand text-ios-headline text-brand-secondary outline-none focus-visible:ring-4 focus-visible:ring-brand-300/60"
@@ -80,6 +81,7 @@ export const MyLocationsPanel = ({ onClose, onAdd }: { onClose: () => void; onAd
 /** Add a Location — search nearby courses and add them to My Courses. */
 export const AddLocationPanel = ({ onBack, onClose }: { onBack: () => void; onClose: () => void }) => {
     const { saved, addSaved } = useCourse();
+    const safe = useSafeArea();
     const [query, setQuery] = useState("");
     const savedIds = new Set(saved.map((c) => c.id));
     const results = COURSES.filter((c) => c.distanceMi != null)
@@ -88,7 +90,7 @@ export const AddLocationPanel = ({ onBack, onClose }: { onBack: () => void; onCl
 
     return (
         <>
-            <div className="flex items-center gap-2 border-b border-secondary px-2 pb-3" style={{ paddingTop: IPHONE_17.safeTop }}>
+            <div className="flex items-center gap-2 border-b border-secondary px-2 pb-3" style={{ paddingTop: safe.top }}>
                 <AriaButton aria-label="Back to My Locations" onPress={onBack} className={iconBtn}>
                     <ArrowLeft className="size-6" />
                 </AriaButton>
@@ -102,7 +104,7 @@ export const AddLocationPanel = ({ onBack, onClose }: { onBack: () => void; onCl
             <div className="px-4 py-3">
                 <SearchField placeholder="Search golf courses..." value={query} onChange={setQuery} />
             </div>
-            <ul className="scrollbar-hide flex-1 divide-y divide-border-secondary overflow-y-auto" style={{ paddingBottom: IPHONE_17.safeBottom }}>
+            <ul className="scrollbar-hide flex-1 divide-y divide-border-secondary overflow-y-auto" style={{ paddingBottom: safe.bottom }}>
                 {results.map((c: Course) => {
                     const added = savedIds.has(c.id);
                     return (

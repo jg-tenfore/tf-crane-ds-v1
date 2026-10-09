@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "motion/react";
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 export type RouteParams = Record<string, unknown>;
 export interface Route {
@@ -46,6 +46,8 @@ export interface StackNavigatorProps {
     initialRoute: string | Route;
     /** Pre-populate the stack, e.g. ["profile", "edit-profile"] to open on a sub-screen with a working back button. */
     initialStack?: (string | Route)[];
+    /** Fires after every push/pop/replace with the full stack — e.g. to mirror it into the URL. */
+    onStackChange?: (stack: Route[]) => void;
 }
 
 const toRoute = (r: string | Route): Route => (typeof r === "string" ? { name: r } : r);
@@ -60,7 +62,7 @@ const variants = {
  * StackNavigator — a UINavigationController-style push/pop stack for prototypes.
  * Screens are plain components; they navigate with `useStack()`.
  */
-export const StackNavigator = ({ screens, initialRoute, initialStack }: StackNavigatorProps) => {
+export const StackNavigator = ({ screens, initialRoute, initialStack, onStackChange }: StackNavigatorProps) => {
     const [stack, setStack] = useState<Route[]>(() => (initialStack?.length ? initialStack.map(toRoute) : [toRoute(initialRoute)]));
     const [direction, setDirection] = useState(1);
 
@@ -80,6 +82,12 @@ export const StackNavigator = ({ screens, initialRoute, initialStack }: StackNav
         setDirection(1);
         setStack((s) => [...s.slice(0, -1), { name, params }]);
     }, []);
+
+    const onChangeRef = useRef(onStackChange);
+    onChangeRef.current = onStackChange;
+    useEffect(() => {
+        onChangeRef.current?.(stack);
+    }, [stack]);
 
     const top = stack[stack.length - 1];
     const api = useMemo<StackApi>(

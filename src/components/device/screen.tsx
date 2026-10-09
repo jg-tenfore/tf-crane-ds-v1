@@ -1,9 +1,11 @@
 import { createContext, useContext, type ReactNode } from "react";
 import { cx } from "@/utils/cx";
-import { IPHONE_17 } from "./iphone-frame";
+import { IPHONE_17, useSafeArea } from "./iphone-frame";
 
-/** Height of the top chrome when a NavigationBar is present: status bar safe area + nav row. */
+/** Height of the top chrome on iPhone 17 when a NavigationBar is present: status bar safe area + nav row. */
 export const NAV_CHROME_HEIGHT = IPHONE_17.safeTop + 54;
+/** Same as NAV_CHROME_HEIGHT but for the device actually rendering (Storybook frame or a real phone). */
+export const useNavChromeHeight = () => useSafeArea().top + 54;
 /** Space reserved at the bottom when the floating TabBar is on screen. */
 export const TAB_BAR_CHROME_HEIGHT = 108;
 
@@ -26,7 +28,7 @@ export interface ScreenProps {
     footerSurface?: "fade" | "glass" | "none";
     /** Grouped gray (default, iOS settings style) or plain white. */
     background?: "grouped" | "plain";
-    /** Override the top inset, e.g. 0 for a full-bleed hero image under the status bar. */
+    /** Override the top inset, e.g. 0 for a full-bleed hero image. Use useNavChromeHeight() to build on the nav height. */
     topInset?: number;
     children?: ReactNode;
     className?: string;
@@ -40,8 +42,9 @@ export interface ScreenProps {
  */
 export const Screen = ({ nav, footer, footerSurface = "fade", background = "grouped", topInset, children, className, contentClassName }: ScreenProps) => {
     const { hasTabBar } = useScreenChrome();
-    const top = topInset ?? (nav ? NAV_CHROME_HEIGHT : IPHONE_17.safeTop);
-    const bottomChrome = hasTabBar ? TAB_BAR_CHROME_HEIGHT : IPHONE_17.safeBottom;
+    const safe = useSafeArea();
+    const top = topInset ?? (nav ? safe.top + 54 : safe.top);
+    const bottomChrome = hasTabBar ? TAB_BAR_CHROME_HEIGHT : safe.bottom;
 
     return (
         <div className={cx("absolute inset-0 flex flex-col", background === "grouped" ? "bg-secondary" : "bg-primary", className)}>

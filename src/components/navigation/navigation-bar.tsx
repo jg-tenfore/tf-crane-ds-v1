@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { cx } from "@/utils/cx";
 import { BackButton } from "@/components/base/glass-button";
-import { IPHONE_17 } from "@/components/device/iphone-frame";
+import { useSafeArea } from "@/components/device/iphone-frame";
 
 export interface NavigationBarProps {
     title?: ReactNode;
@@ -45,6 +45,7 @@ export const NavigationBar = ({
     surface = "glass",
     className,
 }: NavigationBarProps) => {
+    const { top: safeTop } = useSafeArea();
     const lead = leading ?? (backLabel || backIconOnly ? <BackButton label={backIconOnly ? undefined : backLabel} onPress={onBack} /> : null);
     const titleEl = title ? (
         <h1 className={cx("truncate text-ios-headline", titleTone === "brand" ? "text-brand-secondary" : "text-primary")}>{title}</h1>
@@ -59,7 +60,7 @@ export const NavigationBar = ({
                 divider && surface !== "transparent" && "border-b border-secondary",
                 className,
             )}
-            style={{ paddingTop: IPHONE_17.safeTop - 8 }}
+            style={{ paddingTop: safeTop - 8 }}
         >
             <div className="relative flex h-[54px] items-center gap-3 px-gutter pb-1">
                 {lead && <div className="flex shrink-0 items-center">{lead}</div>}

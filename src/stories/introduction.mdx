@@ -1,4 +1,5 @@
 import { Meta } from "@storybook/addon-docs/blocks";
+import { PrototypeLink } from "./prototype-link";
 
 <Meta title="Introduction" />
 
@@ -10,18 +11,18 @@ import { Meta } from "@storybook/addon-docs/blocks";
     </div>
 </div>
 
+<PrototypeLink />
+
 ## What's here
 
 This is where Crane screens and UX concepts are designed and prototyped before they're built in the production Expo app.
 Every screen is drawn at **iPhone 17: 402 × 874 pt**, the same size as the reference screenshots.
 
-| Category | What it holds |
-| --- | --- |
-| **Foundations** | Colours, type (iOS Dynamic Type), spacing, radius, borders, shadows, **Liquid Glass**, icons, logos, and **device** metrics (safe areas, chrome heights). |
-| **Components** | The building blocks: buttons, glass buttons, nav bar, tab bar, tabs, date strip, lists, tee time cards, fields, notices, empty states, alerts, sheets and drawers. |
-| **Sign in ∕ Sign up** | Welcome → sign in / sign up → verify email → choose home course. Includes a clickable **Flow**. |
-| **Profile ∕ Account** | Profile, wallet pass, balance, payment methods, buddies, memberships, appearance, kiosk QR and community. Includes a clickable **Flow**. |
-| **App Chrome** | Global navigation: the floating tab bar, the course header, the **My Locations** course switcher, course info, the Home tee sheet with the booking sheet, and Bookings. **Global Nav** is the whole app, clickable. |
+- **Foundations:** colours, type (iOS Dynamic Type), spacing, radius, borders, shadows, **Liquid Glass**, icons, logos, and **device** metrics (safe areas, chrome heights).
+- **Components:** the building blocks: buttons, glass buttons, nav bar, tab bar, tabs, date strip, lists, tee time cards, fields, notices, empty states, alerts, sheets and drawers.
+- **Sign in ∕ Sign up:** Welcome → sign in / sign up → verify email → choose home course. Includes a clickable **Flow**.
+- **Profile ∕ Account:** Profile, wallet pass, balance, payment methods, buddies, memberships, appearance, kiosk QR and community. Includes a clickable **Flow**.
+- **App Chrome:** global navigation: the floating tab bar, the course header, the **My Locations** course switcher, course info, the Home tee sheet with the booking sheet, and Bookings. **Global Nav** is the whole app, clickable.
 
 ## How it's built
 
@@ -29,6 +30,20 @@ Every screen is drawn at **iPhone 17: 402 × 874 pt**, the same size as the refe
 - **The look comes from [react-cupertino-ui](https://github.com/andersonlimahw/react-cupertino-ui)** (iOS 26 Liquid Glass). Its components are ported into this repo and re-skinned, not installed.
 - **Behaviour comes from React Aria Components**, which handles focus, keyboard and screen readers.
 - **Prototyping:** a `StackNavigator` gives iOS push/pop navigation and `AppShell` adds the tab bar. Screens navigate with `useStack()`.
+
+## The prototype
+
+Every screen in this Storybook, stitched into one working app. It's a separate Vite app built from the same `src/`, so it can never drift from these stories.
+
+- **Run locally:** `npm run prototype`, then open http://localhost:6022
+- **Live:** https://jg-tenfore.github.io/tf-crane-ds-v1/prototype/ (published from `main`)
+- **What works:**
+  - sign up or sign in, then reserve a tee time; it appears in Bookings and you can cancel it
+  - switch courses, set Appearance (dark mode), sign out
+- **Built for testing:**
+  - state survives a reload, and every screen has a deep link (for example `#/profile/edit-profile`)
+  - a side panel jumps to any screen, and `#/reset` starts over
+  - on an iPhone, Add to Home Screen runs it full-screen
 
 ## Toolbar
 

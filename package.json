@@ -7,7 +7,11 @@
         "storybook": "storybook dev -p 6021",
         "build-storybook": "storybook build",
         "typecheck": "tsc --noEmit",
-        "test": "vitest run --project=storybook"
+        "test": "vitest run --project=storybook",
+        "prototype": "vite --config vite.prototype.config.ts",
+        "build:prototype": "vite build --config vite.prototype.config.ts",
+        "preview:prototype": "vite preview --config vite.prototype.config.ts",
+        "prototype:preview": "node scripts/capture-prototype-preview.mjs"
     },
     "dependencies": {
         "@untitledui/icons": "^0.0.22",
