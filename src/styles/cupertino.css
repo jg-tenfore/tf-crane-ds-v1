@@ -117,6 +117,21 @@
     }
 }
 
+/* STATUS BADGES — pale pills that stay light in BOTH themes (Active, Used Up, Expired,
+   Expiring Soon), exactly as the app draws them on Warm Dark cards. Fills sampled from
+   references/100926-12pm; text is the matching 700 shade (AA on each fill). Deliberately
+   not redefined under .dark-mode. */
+:root {
+    --status-success-bg: #d1fae5;
+    --status-success-fg: #047857;
+    --status-gray-bg: #f3f4f6;
+    --status-gray-fg: #4b5563;
+    --status-error-bg: #fee2e2;
+    --status-error-fg: #b91c1c;
+    --status-warning-bg: #fef3c7;
+    --status-warning-fg: #b45309;
+}
+
 /* LIQUID GLASS — values from react-cupertino-ui's globals.css + glass mixin. */
 :root {
     --glass-blur: 24px;

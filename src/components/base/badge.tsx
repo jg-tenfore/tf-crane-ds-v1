@@ -89,10 +89,10 @@ export const Pill = ({ children, icon: Icon, tone = "gray", className }: PillPro
 );
 
 const statusTones = sortCx({
-    success: "bg-success-primary text-success-primary ring-fg-success-secondary/30",
-    gray: "bg-tertiary text-secondary ring-secondary",
-    error: "bg-error-primary text-error-primary ring-fg-error-secondary/30",
-    warning: "bg-warning-primary text-warning-primary ring-fg-warning-secondary/30",
+    success: "bg-(--status-success-bg) text-(--status-success-fg)",
+    gray: "bg-(--status-gray-bg) text-(--status-gray-fg)",
+    error: "bg-(--status-error-bg) text-(--status-error-fg)",
+    warning: "bg-(--status-warning-bg) text-(--status-warning-fg)",
 });
 
 export type StatusTone = keyof typeof statusTones;
@@ -105,12 +105,13 @@ export interface StatusBadgeProps {
 
 /**
  * StatusBadge — sentence-case status on wallet items: Active, Available, Used Up,
- * Expired, Expiring Soon. Use Tag for the small uppercase labels (FULL, BOOKER).
+ * Expired, Expiring Soon. Pale in both Light and Warm Dark, like the app (--status-* tokens
+ * in cupertino.css). Use Tag for the small uppercase labels (FULL, BOOKER).
  */
 export const StatusBadge = ({ children, tone = "success", className }: StatusBadgeProps) => (
     <span
         className={cx(
-            "inline-flex h-[24px] shrink-0 items-center rounded-md px-2 text-ios-footnote font-semibold whitespace-nowrap ring-1 ring-inset",
+            "inline-flex h-[24px] shrink-0 items-center rounded-md px-2 text-ios-footnote font-semibold whitespace-nowrap",
             statusTones[tone],
             className,
         )}
