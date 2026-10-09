@@ -13,6 +13,8 @@ npm run typecheck
 npm run test        # mounts every story in headless Chromium
 ```
 
+Live Storybook (after merge to main): https://jg-tenfore.github.io/tf-crane-ds-v1/
+
 Storybook categories: **Foundations**, **Components**, **Sign in ∕ Sign up**, **Profile ∕ Account**,
 **App Chrome**. **App Chrome → Global Nav** is the whole app, clickable.
 

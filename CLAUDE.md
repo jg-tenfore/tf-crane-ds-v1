@@ -59,6 +59,12 @@ Reference screenshots (`references/`, 1206 × 2622 @3x) are iPhone 17. Every scr
 
 Introduction · Foundations · Components · Sign in ∕ Sign up · Profile ∕ Account · App Chrome
 
+## Hosting
+
+GitHub Pages: every push to `main` runs `.github/workflows/deploy-pages.yml` and publishes Storybook to
+https://jg-tenfore.github.io/tf-crane-ds-v1/ (built with `PAGES=1` so Vite uses the `/tf-crane-ds-v1/` base).
+Asset paths must stay relative (`crane-logo/…`, `brand/…`) so they resolve under that sub-path.
+
 ## Git
 
 Commit as **jg-tenfore** (`justin.girard@tenfore.golf`, set repo-locally). Check `gh api user -q .login`
