@@ -1,0 +1,106 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { TAX_BY_ZIP, COURSE_TAX } from "@/data/shop";
+
+<Meta title="Nov 11, 2026 Issues/Overview" />
+
+# Nov 11, 2026 Issues
+
+These are the issues raised on the **Nov 11, 2026 CraneWeb call** with Weston. Each one has a page here that shows how Crane Web answers it, using the real Crane Web screens. Nothing in this category is a new design. It points at work that is already in **Crane Web**.
+
+<table>
+    <thead>
+        <tr><th>#</th><th>Issue</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>1</td><td>Reuse Fox's web layouts</td><td>Built in Crane Web</td></tr>
+        <tr><td>2</td><td>Browse by category on mobile</td><td>Built in Crane Web</td></tr>
+        <tr><td>3</td><td>Shipping address, and tax where it ships</td><td>Designed in Crane Web · tax work needs sizing</td></tr>
+        <tr><td>4</td><td>Keep Fox's deep links</td><td>Built in Crane Web</td></tr>
+        <tr><td>5</td><td>Timing</td><td>On the radar, not confirmed</td></tr>
+    </tbody>
+</table>
+
+## 1 · Reuse Fox's web layouts
+
+**The issue:** use Fox's web layouts, with their checkout flows and edge cases, instead of designing CraneWeb from scratch.
+
+**Status:** built in Crane Web.
+
+**How it's addressed:** the shop and checkout in Crane Web are the Fox layouts, restyled in Crane and wired to CraneWeb's routes. That covers Shop all, Product, Cart, Add more, Checkout, Confirmation and Restaurant. Fox's edge cases came with them: sold out, expired card, empty cart. Fox itself stays an archive.
+
+- Here: [1. Fox layouts reused](?path=/story/nov-11-2026-issues-1-fox-layouts-reused--shop-all)
+- In Crane Web: [Shop › 4. Cart](?path=/story/crane-web-shop-4-cart--default) · [Shop › 6. Checkout](?path=/story/crane-web-shop-6-checkout--ship-to-ma) · [Shop › 7. Confirmation](?path=/story/crane-web-shop-7-confirmation--shipped)
+- The Fox originals: [Shop Checkout › 1. Cart](https://jg-tenfore.github.io/tf-fox-ds-v1/?path=/story/shop-checkout-1-cart--default) · [3. Checkout](https://jg-tenfore.github.io/tf-fox-ds-v1/?path=/story/shop-checkout-3-checkout--default) · [Pro Shop › Shop All](https://jg-tenfore.github.io/tf-fox-ds-v1/?path=/story/global-nav-pro-shop-shop-all--default)
+
+## 2 · Browse by category on mobile
+
+**The issue:** on mobile there's no way to browse by category. It needs a menu at the top, or a search.
+
+**Status:** built in Crane Web.
+
+**How it's addressed:** below 768px the shop has a sticky bar under the header. It has a search field, a **Categories** button and a row of category chips. Categories opens every group and subgroup, with item counts. Inside a group, the chips switch to its subgroups. The Restaurant menu has the same search and chips.
+
+- Here: [2. Mobile categories & search](?path=/story/nov-11-2026-issues-2-mobile-categories-search--categories-menu)
+- In Crane Web: [Shop › 1. Shop › Mobile web (categories open)](?path=/story/crane-web-shop-1-shop--mobile-web-categories-open) · [Shop › 2. Category › Mobile web (search active)](?path=/story/crane-web-shop-2-category--mobile-web-search) · [Restaurant › Mobile web](?path=/story/crane-web-restaurant-restaurant--mobile-web)
+
+## 3 · Shipping address, and tax where it ships
+
+**The issue:** checkout needs a normal shipping address field, so tax is charged where the item ships. Tax varies by state, county and city. This came up on a call with a university course.
+
+**Status:** designed in Crane Web. The tax work needs sizing (see Timing).
+
+**How it's addressed:** checkout asks **Ship** or **Pick up at the course**.
+
+- **Ship:** pick a saved address or add a new one with a normal address form. The tax row names the destination and its rate, and it recalculates when the address changes.
+- **Pick up at the course:** taxed where the course is ({COURSE_TAX.label}).
+- **Before an address is chosen:** tax reads "Calculated after address".
+- **Food & drinks:** pickup only, so they are always taxed at the course. Food and pro shop items check out separately.
+
+Sample rates in the prototype (real rates would come from a tax service):
+
+<table>
+    <thead>
+        <tr><th>ZIP</th><th>Where</th><th>Rate</th></tr>
+    </thead>
+    <tbody>
+        {Object.values(TAX_BY_ZIP).map((t) => (
+            <tr key={t.zip}><td>{t.zip}</td><td>{t.label}</td><td>{(t.rate * 100).toFixed(2)}%</td></tr>
+        ))}
+    </tbody>
+</table>
+
+- Here: [3. Shipping address & tax](?path=/story/nov-11-2026-issues-3-shipping-address-tax--ship-to-ga) · [Compare GA vs MA vs pickup](?path=/story/nov-11-2026-issues-3-shipping-address-tax--compare)
+- In Crane Web: [Shop › 6. Checkout › Ship to GA (tax changes)](?path=/story/crane-web-shop-6-checkout--ship-to-ga) · [Pick up at course](?path=/story/crane-web-shop-6-checkout--pick-up) · [Food order (pickup only)](?path=/story/crane-web-shop-6-checkout--food-order)
+
+## 4 · Keep Fox's deep links
+
+**The issue:** keep Fox's deep links, so a button on the course website or in an email can open a specific page. For example Beer, or `/shop/golf-balls/dozens`.
+
+**Status:** built in Crane Web.
+
+**How it's addressed:** every level has its own URL, and the address bar always shows it.
+
+<table>
+    <thead>
+        <tr><th>Link</th><th>Opens</th></tr>
+    </thead>
+    <tbody>
+        <tr><td><code>/shop/golf-balls</code></td><td>A group</td></tr>
+        <tr><td><code>/shop/golf-balls/dozens</code></td><td>A subgroup</td></tr>
+        <tr><td><code>/shop/golf-balls/dozens/ball-titleist-pro-v1-dozen</code></td><td>A product</td></tr>
+        <tr><td><code>/restaurant/beer</code></td><td>A Restaurant menu section (Beer &amp; Seltzer)</td></tr>
+        <tr><td><code>/shop/gift-cards</code></td><td>Club Offerings</td></tr>
+        <tr><td><code>/shop?category=golf-balls&amp;subcategory=dozens</code></td><td>Live CraneWeb's query-string style, still supported</td></tr>
+        <tr><td><code>/cart · /checkout</code></td><td>Cart and checkout</td></tr>
+    </tbody>
+</table>
+
+An old or mistyped link lands on a friendly Not found page, not an error.
+
+- Here: [4. Deep links](?path=/story/nov-11-2026-issues-4-deep-links--golf-balls-dozens). Each story opens the whole app at a URL.
+- In Crane Web: [Flow](?path=/story/crane-web-flow--desktop) · [Restaurant › Category deep link](?path=/story/crane-web-restaurant-restaurant--category-deep-link)
+- In the prototype: run `npm run prototype:web`, then open http://localhost:6024/web/#/shop/golf-balls/dozens or http://localhost:6024/web/#/restaurant/beer. Once published, the same links work at https://jg-tenfore.github.io/tf-crane-ds-v1/prototype/web/#/restaurant/beer.
+
+## 5 · Timing
+
+This is on the radar but not confirmed. Weston needs to size the tax work first: looking up rates by state, county and city for each ship-to address. The screens are ready either way.

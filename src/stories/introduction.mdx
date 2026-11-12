@@ -1,5 +1,6 @@
 import { Meta } from "@storybook/addon-docs/blocks";
 import { PrototypeLink } from "./prototype-link";
+import { WebPrototypeLink } from "./web-prototype-link";
 
 <Meta title="Introduction" />
 
@@ -13,6 +14,8 @@ import { PrototypeLink } from "./prototype-link";
 
 <PrototypeLink />
 
+<WebPrototypeLink />
+
 ## What's here
 
 This is where Crane screens and UX concepts are designed and prototyped before they're built in the production Expo app.
@@ -22,7 +25,7 @@ Every screen is drawn at **iPhone 17: 402 × 874 pt**, the same size as the refe
 - **Components:** the building blocks: buttons, glass buttons, nav bar, tab bar, tabs, date strip, lists, tee time cards, fields, notices, empty states, alerts, sheets and drawers.
 - **Sign in ∕ Sign up:** Welcome → sign in / sign up → verify email → choose home course. Includes a clickable **Flow**.
 - **Profile ∕ Account:** Profile, wallet pass, balance, payment methods, buddies, memberships, appearance, kiosk QR and community. Includes a clickable **Flow**.
-- **Crane Web:** the responsive web app (crane.tenfore.golf) that replaces Fox: Tee Times, Shop through checkout, Restaurant, Events, Clinics, Leagues, Activities, Calendar, Profile ∕ Account and Sign in ∕ Sign up, in Outfit at 1440 / 1024 / 390. Its own prototype runs at `localhost:6022/web/` and, once published, at https://jg-tenfore.github.io/tf-crane-ds-v1/prototype/web/.
+- **Crane Web:** the responsive web app (crane.tenfore.golf) that replaces Fox: Tee Times, Shop through checkout, Restaurant, Events, Clinics, Leagues, Activities, Calendar, Profile ∕ Account and Sign in ∕ Sign up, in Outfit at 1440 / 1024 / 390. It has its own prototype (see **The Crane Web prototype** below).
 - **App Chrome:** global navigation: the floating tab bar, the course header, the **My Locations** course switcher, course info, the Home tee sheet with the booking sheet, and Bookings. **Global Nav** is the whole app, clickable.
 
 ## How it's built
@@ -45,6 +48,22 @@ Every screen in this Storybook, stitched into one working app. It's a separate V
   - state survives a reload, and every screen has a deep link (for example `#/profile/edit-profile`)
   - a side panel jumps to any screen, and `#/reset` starts over
   - on an iPhone, Add to Home Screen runs it full-screen
+
+## The Crane Web prototype
+
+Every Crane Web page as one working website, with a review panel around it.
+
+- **Run locally:** `npm run prototype:web`, then open http://localhost:6024/web/ (`npm run prototype` also serves it at http://localhost:6022/web/)
+- **Live:** https://jg-tenfore.github.io/tf-crane-ds-v1/prototype/web/ (published from `main`)
+- **Review panel:**
+  - jump to any page
+  - switch the width: Desktop 1440, Laptop 1024, Tablet 768, Mobile 390
+  - switch light or dark, and Tabs or Sidebar shop navigation
+  - open the site full-window
+- **Built for testing:**
+  - every page is a deep link (for example `#/shop/golf-balls/dozens`), and browser Back works
+  - the cart, sign-in and page are kept when you change the width
+  - on a phone, it opens full-window
 
 ## Toolbar
 

@@ -45,6 +45,8 @@ const preview: Preview = {
                     ["Global Nav", "*"],
                     "Crane Web",
                     ["Overview", "Foundations", "Components", "Shop", "*"],
+                    "Nov 11, 2026 Issues",
+                    ["Overview", "*"],
                 ],
             },
         },

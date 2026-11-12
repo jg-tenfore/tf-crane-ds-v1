@@ -79,8 +79,15 @@ Fox itself stays an archive (`tf-fox-ds-v1`).
 - **Areas** (each exports a `…Routes` array, assembled in `src/screens/web/web-app.tsx` → `webRoutes()` + `CraneWebRoutes`):
   `auth/`, `browse/` (shop, tabs | sidebar nav variants), `checkout/` (cart → checkout with destination tax → order),
   `restaurant/`, `tee-times/`, `events/` (events, clinics, leagues, activities, calendar), `account/`.
-- **Web prototype:** `prototype/web/` + `src/prototype-app/web-prototype.tsx` → http://localhost:6022/web/ (hash routes,
-  `WebFrame fill`, real window breakpoints). Storybook › Crane Web › Flow is the same app in a frame.
+- **Web prototype:** `npm run prototype:web` → http://localhost:6024/web/ (also :6022/web/). `prototype/web/main.tsx`
+  renders `CraneWebPresenter` (`src/prototype-app/web-presenter.tsx`: jump list, width/appearance/shop-nav switches,
+  full-window) around the shared hash-routed app in `src/prototype-app/web-prototype.tsx`. Storybook › Crane Web › Flow
+  is the same app in a frame.
+- **Event/clinic/league art:** `src/screens/web/events/images/art/<id>-card.webp` (1200×800, 3:2 cards) and
+  `<id>-banner.webp` (2160×925, 21:9 detail heroes, subject centred so it crops to 3:1 / 5:2 / 16:9). Loaded via
+  `art(id)` in `events-data.ts`; `Hero` uses `banner ?? image`. Generated with Higgsfield from Sagamore references.
+- **Course imagery** copied from Fox lives in `images/courses/` (sagamore, mcg, kettleHills, flogolf, events, logos).
+- **WebDialog** sits below the global nav on tablet+ (not centred) and is a bottom sheet on mobile web.
 - Web sizing: shared form/feedback components switch to web sizes inside `.crane-web` via `in-[.crane-web]:` variants;
   Button has explicit `web-sm | web-md | web-lg` sizes.
 
@@ -96,7 +103,7 @@ Fox itself stays an archive (`tf-fox-ds-v1`).
 
 ## Story categories (sidebar order)
 
-Introduction · Foundations · Components · Sign in ∕ Sign up · Profile ∕ Account · App Chrome · Crane Web
+Introduction · Foundations · Components · Sign in ∕ Sign up · Profile ∕ Account · App Chrome · Crane Web · Nov 11, 2026 Issues
 
 ## Hosting
 

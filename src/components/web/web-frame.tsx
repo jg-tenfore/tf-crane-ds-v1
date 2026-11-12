@@ -3,8 +3,8 @@ import { UNSAFE_PortalProvider } from "react-aria";
 import { ChevronLeft, ChevronRight, Lock01, RefreshCw01 } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 
-/** Crane Web review widths: desktop, laptop/tablet landscape, and mobile web. */
-export const WEB_WIDTHS = { desktop: 1440, laptop: 1024, mobile: 390 } as const;
+/** Crane Web review widths: desktop, laptop/tablet landscape, tablet portrait, and mobile web. */
+export const WEB_WIDTHS = { desktop: 1440, laptop: 1024, tablet: 768, mobile: 390 } as const;
 export type WebWidth = keyof typeof WEB_WIDTHS;
 
 const CHROME_H = 44;

@@ -244,7 +244,7 @@ const LeagueDetail = ({ league, initialTab, initialStep, initialJoined }: { leag
                 <div className="mb-5">
                     <BackLink href="/leagues">All leagues</BackLink>
                 </div>
-                <Hero src={league.image} alt={league.name} />
+                <Hero src={league.banner ?? league.image} alt={league.name} />
                 <div className="mt-6 flex flex-wrap items-center gap-2">
                     <LeagueStatusPill league={league} />
                     {status !== "open" && <AvailabilityBadge availability={status} waitlist={!!league.waitlist} />}

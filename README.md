@@ -9,7 +9,8 @@ Design system and clickable prototypes for **TF Crane**, TenFore Golf's customer
 ```bash
 npm install
 npm run storybook   # http://localhost:6021
-npm run prototype   # http://localhost:6022 (iPhone) · http://localhost:6022/web/ (Crane Web)
+npm run prototype       # http://localhost:6022 (iPhone) · http://localhost:6022/web/ (Crane Web)
+npm run prototype:web   # http://localhost:6024/web/ (Crane Web review presenter)
 npm run typecheck
 npm run test        # mounts every story in headless Chromium
 ```
@@ -38,10 +39,11 @@ Sign in ∕ Sign up — stitched into one real, full-window site.
 | | |
 | --- | --- |
 | **Open it** | **https://jg-tenfore.github.io/tf-crane-ds-v1/prototype/web/** (live after merge to `main`) |
-| **Run locally** | `npm run prototype` → http://localhost:6022/web/ |
+| **Run locally** | `npm run prototype:web` → http://localhost:6024/web/ (also served by `npm run prototype` at http://localhost:6022/web/) |
 
-Every page is a deep link (`#/shop/golf-balls/dozens`, `#/checkout`, `#/account/wallet`) and resize the
-window to see the 1024 and mobile-web layouts. Storybook › **Crane Web** has each screen at 1440 / 1024 / 390.
+It opens in a **review presenter**: a side panel jumps to any page and switches the width (Desktop 1440 ·
+Laptop 1024 · Tablet 768 · Mobile 390), appearance and shop nav, or goes full-window. Every page is a deep link
+(`#/shop/golf-balls/dozens`, `#/checkout`, `#/account/wallet`), and the cart and sign-in survive width changes. Storybook › **Crane Web** has each screen at 1440 / 1024 / 390.
 
 ## Storybook
 

@@ -124,7 +124,7 @@ const ClinicDetail = ({ clinic, initialStep, initialRegistered }: { clinic: Clin
                 <div className="mb-5">
                     <BackLink href="/clinics">All clinics</BackLink>
                 </div>
-                <Hero src={clinic.image} alt={clinic.title} />
+                <Hero src={clinic.banner ?? clinic.image} alt={clinic.title} />
 
                 <div className="mt-6 flex flex-wrap items-center gap-2">
                     <LevelBadge level={clinic.level} />

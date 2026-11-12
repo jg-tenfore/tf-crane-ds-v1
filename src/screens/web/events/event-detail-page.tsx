@@ -273,7 +273,7 @@ const EventDetail = ({ event, initialStep, initialRegistered, initialBuddies, in
                 <div className="mb-5">
                     <BackLink href="/events">All events</BackLink>
                 </div>
-                <Hero src={event.image} alt={event.title} />
+                <Hero src={event.banner ?? event.image} alt={event.title} />
 
                 <div className="mt-6 flex flex-wrap items-center gap-2">
                     <LabelPill icon={event.charity ? HeartHand : Trophy01}>{kindLabel(event.kind)}</LabelPill>

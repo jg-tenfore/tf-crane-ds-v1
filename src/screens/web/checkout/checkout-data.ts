@@ -80,7 +80,7 @@ export const addressLine = (a: Address) => `${a.street}${a.apt ? `, ${a.apt}` : 
 /** Two saved addresses in different tax jurisdictions so reviewers can flip and watch tax change. */
 export const SAVED_ADDRESSES: Address[] = [
     { id: "addr-ma", name: "Justin Girard", street: "118 Fairway Dr", city: "Brookline", state: "MA", zip: "02445", phone: "(617) 555-0142", isDefault: true },
-    { id: "addr-ga", name: "Justin Girard", company: "UGA Men's Golf", street: "100 Sanford Dr", city: "Athens", state: "GA", zip: "30602", phone: "(706) 555-0190" },
+    { id: "addr-ga", name: "Justin Girard", company: "Team order", street: "250 Oak Hollow Dr", city: "Athens", state: "GA", zip: "30602", phone: "(706) 555-0190" },
 ];
 
 /** Fake type-ahead results for the Add address modal. */

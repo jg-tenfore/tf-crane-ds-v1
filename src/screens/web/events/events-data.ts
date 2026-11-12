@@ -24,6 +24,15 @@ import simLounge from "./images/sim-lounge.jpg";
 
 export const IMAGES = { clubhouse, course17, course19, courseNinth, diningRoom, golfDay, groupTeaching, simLounge, event1, event2, event3, event4, event5, event6, event7 };
 
+/**
+ * Per-item art generated for Crane Web (Higgsfield, from Sagamore course references):
+ *   <id>-card.webp   1200×800 (3:2) — list cards
+ *   <id>-banner.webp 2160×925 (21:9) — detail heroes; subject kept in the centre so it crops
+ *                    cleanly to 3:1 (desktop), 5:2 (tablet) and 16:9 (mobile).
+ */
+const ART = import.meta.glob<string>("./images/art/*.webp", { eager: true, import: "default" });
+const art = (id: string) => ({ image: ART[`./images/art/${id}-card.webp`], banner: ART[`./images/art/${id}-banner.webp`] });
+
 /* ---------------------------------------------------------------- */
 /* Dates                                                             */
 /* ---------------------------------------------------------------- */
@@ -108,6 +117,8 @@ export interface ClubEvent extends Capacity {
     location: string;
     format: string;
     image: string;
+    /** Wide hero art for the detail page (falls back to `image`). */
+    banner?: string;
     description: string;
     included: string[];
     /** 0 = free. */
@@ -133,7 +144,7 @@ export const EVENTS: ClubEvent[] = [
         time: "9:00 AM shotgun",
         location: "Championship Course",
         format: "2-person scramble",
-        image: IMAGES.event5,
+        ...art("oktoberfest-scramble"),
         description: "Our annual fall kickoff: 18 holes of 2-person scramble followed by brats, pretzels and local brews on the patio.",
         included: ["18 holes with cart", "Patio lunch", "Team prizes"],
         price: 70,
@@ -151,7 +162,7 @@ export const EVENTS: ClubEvent[] = [
         time: "7:30 AM tee times",
         location: "Championship Course",
         format: "36-hole stroke play · gross & net flights",
-        image: IMAGES.course19,
+        ...art("club-championship-finals"),
         description:
             "Two rounds, 36 holes, one champion. The season's top qualifiers play gross and net flights from the blue tees, with the trophy presentation in the clubhouse Sunday evening.",
         included: ["36 holes with cart", "Range balls both days", "Trophy reception Sunday", "Flight prizes"],
@@ -170,7 +181,7 @@ export const EVENTS: ClubEvent[] = [
         time: "11:00 AM shotgun",
         location: "Championship Course",
         format: "4-person scramble",
-        image: IMAGES.event4,
+        ...art("rally-for-the-cure"),
         description:
             "Wear pink, play 18 and raise money for breast cancer research. Every registration includes lunch, on-course contests and a raffle — and 100% of contest proceeds go to the fund.",
         included: ["18 holes with cart", "Lunch & awards", "Pink ball contest", "Raffle ticket"],
@@ -190,7 +201,7 @@ export const EVENTS: ClubEvent[] = [
         time: "4:00 PM shotgun",
         location: "Front Nine · Patio",
         format: "9-hole 2-person best ball",
-        image: IMAGES.clubhouse,
+        ...art("twilight-nine-and-wine"),
         description: "Play the front nine as the sun drops, then settle onto the patio for a guided tasting of four fall wines with small plates.",
         included: ["9 holes with cart", "Four-pour wine tasting", "Small plates", "Closest-to-the-pin prize"],
         price: 45,
@@ -208,7 +219,7 @@ export const EVENTS: ClubEvent[] = [
         time: "8:00 AM shotgun",
         location: "Championship Course",
         format: "4-person scramble",
-        image: IMAGES.event2,
+        ...art("fall-foliage-scramble"),
         description:
             "Peak color, crisp air and a relaxed 4-person scramble. Bring a foursome or sign up solo and we'll pair you. Breakfast before, awards and cider donuts after.",
         included: ["18 holes with cart", "Continental breakfast", "Range balls", "Awards & cider donuts"],
@@ -228,7 +239,7 @@ export const EVENTS: ClubEvent[] = [
         time: "10:00 AM – 2:00 PM",
         location: "Practice Range",
         format: "Drop-in fitting",
-        image: IMAGES.event7,
+        ...art("club-fitting-demo-day"),
         description: "Hit the latest drivers, irons and wedges on launch monitors with our fitting team. Free to attend — reserve a 20-minute fitting slot to skip the line.",
         included: ["Launch-monitor fitting", "Range balls", "Demo-day pricing in the Pro Shop"],
         price: 0,
@@ -245,7 +256,7 @@ export const EVENTS: ClubEvent[] = [
         time: "9:00 AM",
         location: "Clubhouse Dining Room",
         format: "Brunch, then 9-hole scramble",
-        image: IMAGES.diningRoom,
+        ...art("ladies-brunch-nine"),
         description: "Brunch in the dining room, then an easygoing nine with new and returning players. All abilities welcome.",
         included: ["Brunch buffet", "9 holes with cart", "Gift bag"],
         price: 55,
@@ -263,7 +274,7 @@ export const EVENTS: ClubEvent[] = [
         time: "10:00 AM shotgun",
         location: "Championship Course",
         format: "2-person best ball · 3 nines",
-        image: IMAGES.golfDay,
+        ...art("member-guest-invitational"),
         description:
             "Bring a guest for the club's marquee fall event: three nines of best ball across two days, a Friday welcome dinner and Saturday's shootout for the top flight.",
         included: ["Two rounds with cart", "Welcome dinner Friday", "Tee gifts for both players", "Shootout & awards"],
@@ -283,7 +294,7 @@ export const EVENTS: ClubEvent[] = [
         time: "1:00 PM – 4:00 PM",
         location: "Practice Range · 17th Hole",
         format: "Skills contest",
-        image: IMAGES.event3,
+        ...art("long-drive-ctp"),
         description: "Six balls on the long-drive grid, three shots at the 17th green. Leaderboards update live and the winners take home Pro Shop credit.",
         included: ["6 long-drive balls", "3 closest-to-the-pin shots", "Pro Shop credit prizes"],
         price: 25,
@@ -300,7 +311,7 @@ export const EVENTS: ClubEvent[] = [
         time: "6:00 PM shotgun",
         location: "Front Nine",
         format: "9-hole 2-person scramble",
-        image: IMAGES.event6,
+        ...art("glow-ball-nine"),
         description: "LED balls, lit flags and costumes encouraged. Nine holes after dark, then a costume contest and fire pits on the patio.",
         included: ["9 holes with cart", "Glow balls & necklaces", "Costume contest", "Fire-pit s'mores"],
         price: 50,
@@ -318,7 +329,7 @@ export const EVENTS: ClubEvent[] = [
         time: "10:00 AM – 12:00 PM",
         location: "Short Game Area",
         format: "Chip & putt contest",
-        image: IMAGES.event1,
+        ...art("junior-halloween-chip-putt"),
         description: "A free morning of chipping and putting games for juniors. Costumes welcome — candy at every station and prizes by age group.",
         included: ["Clubs provided", "Contests by age group", "Candy & prizes"],
         price: 0,
@@ -336,7 +347,7 @@ export const EVENTS: ClubEvent[] = [
         time: "10:00 AM shotgun",
         location: "Championship Course",
         format: "4-person scramble",
-        image: IMAGES.courseNinth,
+        ...art("veterans-day-scramble"),
         description: "Honor those who served. Veterans play free; every other registration supports local veterans' housing. Lunch and a flag ceremony follow play.",
         included: ["18 holes with cart", "Lunch & ceremony", "Hole-in-one prize"],
         price: 85,
@@ -354,7 +365,7 @@ export const EVENTS: ClubEvent[] = [
         time: "9:00 AM shotgun",
         location: "Championship Course",
         format: "2-person scramble",
-        image: IMAGES.course17,
+        ...art("turkey-shoot"),
         description: "The last scramble of the season. Winning teams take home a turkey; everyone takes home pie.",
         included: ["18 holes with cart", "Turkeys for the winners", "Pie for everyone"],
         price: 60,
@@ -402,6 +413,8 @@ export interface Clinic extends Capacity {
     sessions: ClinicSession[];
     location: string;
     image: string;
+    /** Wide hero art for the detail page (falls back to `image`). */
+    banner?: string;
     description: string;
     learn: string[];
     bring: string[];
@@ -424,7 +437,7 @@ export const CLINICS: Clinic[] = [
         instructor: INSTRUCTORS.tom,
         sessions: weekly("2026-10-10", 4, "10:30 AM – 12:00 PM"),
         location: "Learning Center",
-        image: IMAGES.event1,
+        ...art("junior-fall-academy"),
         description: "Four Saturday mornings of fundamentals — full swing, short game and on-course etiquette — in small, fun groups for juniors.",
         learn: ["Grip, stance and posture", "Full-swing basics", "Putting and chipping games", "Etiquette and rules on the course"],
         bring: ["Junior clubs if you have them", "Sneakers or golf shoes", "Water and a hat"],
@@ -444,7 +457,7 @@ export const CLINICS: Clinic[] = [
         instructor: INSTRUCTORS.mike,
         sessions: weekly("2026-10-13", 3, "5:30 PM – 6:45 PM"),
         location: "Short Game Area",
-        image: IMAGES.course19,
+        ...art("short-game-series"),
         description: "Three Tuesday evenings on the scoring clubs: chipping, pitching and greenside bunkers, with reps and individual feedback every week.",
         learn: ["Consistent chipping contact", "Pitch distance windows", "Greenside bunker technique", "Reading lies around the green"],
         bring: ["Your wedges", "Golf shoes", "Water"],
@@ -463,7 +476,7 @@ export const CLINICS: Clinic[] = [
         instructor: INSTRUCTORS.sarah,
         sessions: [{ date: "2026-10-15", time: "5:00 PM – 6:00 PM" }],
         location: "Practice Range",
-        image: IMAGES.event3,
+        ...art("driver-distance-clinic"),
         description: "Add yards off the tee. Setup, sequencing and launch conditions, with launch-monitor numbers so you can see the gains in real time.",
         learn: ["Tee height and setup for launch", "Sequencing for speed", "Reading launch-monitor numbers", "Simple speed drills"],
         bring: ["Your driver", "Golf shoes"],
@@ -482,7 +495,7 @@ export const CLINICS: Clinic[] = [
         instructor: INSTRUCTORS.tom,
         sessions: weekly("2026-10-17", 4, "9:00 AM – 10:00 AM"),
         location: "Learning Center",
-        image: IMAGES.groupTeaching,
+        ...art("golf-101"),
         description: "Never played? Start here. Four relaxed Saturday sessions take you from grip to your first nine holes, with clubs provided.",
         learn: ["Grip and setup", "Making solid contact", "Putting and chipping basics", "Playing your first holes"],
         bring: ["Comfortable clothes", "Sneakers are fine"],
@@ -502,7 +515,7 @@ export const CLINICS: Clinic[] = [
         instructor: INSTRUCTORS.sarah,
         sessions: [{ date: "2026-10-18", time: "3:00 PM – 4:15 PM" }],
         location: "Practice Green",
-        image: IMAGES.event4,
+        ...art("putting-lab"),
         description: "A repeatable green-reading routine, speed-control drills and start-line fundamentals on the practice green.",
         learn: ["Green-reading routine", "Speed control", "Start-line drills", "A pre-putt routine"],
         bring: ["Your putter"],
@@ -521,7 +534,7 @@ export const CLINICS: Clinic[] = [
         instructor: INSTRUCTORS.mike,
         sessions: [{ date: "2026-10-25", time: "1:00 PM – 3:00 PM" }],
         location: "Championship Course",
-        image: IMAGES.event2,
+        ...art("playing-lesson"),
         description: "Play six holes with the Head Pro, who coaches club selection, targets and decision-making as you go.",
         learn: ["Picking targets", "Club selection", "Recovering from trouble", "A personal game plan"],
         bring: ["Your full bag", "Golf shoes"],
@@ -540,7 +553,7 @@ export const CLINICS: Clinic[] = [
         instructor: INSTRUCTORS.sarah,
         sessions: weekly("2026-11-09", 2, "6:30 PM – 7:30 PM"),
         location: "Simulator Lounge",
-        image: IMAGES.simLounge,
+        ...art("winter-swing-tune-up"),
         description: "Keep your swing sharp through the off-season. Two simulator sessions with TrackMan data and a video breakdown.",
         learn: ["Reading your TrackMan data", "Club path and face control", "Winter practice plan"],
         bring: ["Your clubs"],
@@ -599,6 +612,8 @@ export interface League extends Capacity {
     includes: string[];
     status: LeagueStatus;
     image: string;
+    /** Wide hero art for the detail page (falls back to `image`). */
+    banner?: string;
     description: string;
     schedule: LeagueWeek[];
     standings?: Standing[];
@@ -641,7 +656,7 @@ export const LEAGUES: League[] = [
         feeUnit: "per player · season",
         includes: ["9 holes with cart each week", "Dinner & one drink each week", "Weekly skins & CTP", "Season-end banquet"],
         status: "in-season",
-        image: IMAGES.clubhouse,
+        ...art("wednesday-9-and-dine"),
         description:
             "Sagamore's most popular league: a relaxed 9-hole best ball every Wednesday, followed by dinner on the patio. Teams earn points each week and the top four play off on Oct 28.",
         schedule: weeksFrom("2026-09-02", 9, ["Front 9 · Best ball", "Back 9 · Best ball", "Front 9 · Scramble", "Back 9 · Alternate shot"], {
@@ -681,7 +696,7 @@ export const LEAGUES: League[] = [
         feeUnit: "per player · season",
         includes: ["Weekly 2-hour bay", "A new world course each week", "League night drink specials", "Playoff night & prizes"],
         status: "registering",
-        image: IMAGES.simLounge,
+        ...art("winter-simulator-league"),
         description:
             "Sixteen Monday nights on the simulators, with a different famous course each week. Teams of two play best ball; handicaps are tracked automatically from your rounds.",
         schedule: weeksFrom("2026-11-02", 16, ["Pebble Beach", "St Andrews Old", "TPC Sawgrass", "Bethpage Black", "Whistling Straits", "Kiawah Ocean"], { 16: { format: "Playoffs", note: "Top 8 teams" } }, [
@@ -710,7 +725,7 @@ export const LEAGUES: League[] = [
         feeUnit: "per player · season",
         includes: ["Weekly tee times held", "Stableford points & skins", "Season-end lunch"],
         status: "in-season",
-        image: IMAGES.golfDay,
+        ...art("senior-mens-league"),
         description: "A friendly, well-run Tuesday morning game. Play when you can — your best 12 weeks count toward the season points race.",
         schedule: weeksFrom("2026-09-08", 8, ["Stableford · white tees", "Stableford · gold tees"], { 8: { format: "Season finale", note: "Lunch follows" } }),
         standings: [
@@ -742,7 +757,7 @@ export const LEAGUES: League[] = [
         feeUnit: "per player · season",
         includes: ["9 holes each week", "Weekly game of the day", "Coffee & pastries", "Closing luncheon"],
         status: "in-season",
-        image: IMAGES.courseNinth,
+        ...art("ladies-9-hole-league"),
         description: "A welcoming Thursday nine with a different game every week. New players can join any week for a prorated fee.",
         schedule: weeksFrom("2026-09-10", 8, ["Net medal", "Low putts", "Blind partner", "Throw out 2 worst"], { 8: { format: "Closing luncheon" } }),
         standings: [
@@ -773,7 +788,7 @@ export const LEAGUES: League[] = [
         feeUnit: "per player · season",
         includes: ["9 holes with cart", "Friday dinner", "Weekly prizes"],
         status: "in-season",
-        image: IMAGES.event6,
+        ...art("couples-twilight-league"),
         description: "Friday evening alternate shot for pairs, followed by dinner. Full for the fall — join the waitlist for spring.",
         schedule: weeksFrom("2026-09-04", 8, ["Alternate shot", "Chapman", "Scramble"]),
         coordinator: "leagues@tenfore.golf",
@@ -846,6 +861,8 @@ export interface Activity {
     description: string;
     price: string;
     image: string;
+    /** Wide hero art for the detail page (falls back to `image`). */
+    banner?: string;
     cta: string;
     href: string;
 }
