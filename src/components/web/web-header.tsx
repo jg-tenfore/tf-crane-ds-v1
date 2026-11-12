@@ -146,7 +146,7 @@ export const WebHeader = ({
 
     {/* Main row */}
     <div className="border-b border-secondary">
-      <div className="mx-auto flex h-16 max-w-web items-center gap-3 px-4 @tablet:h-[72px] @tablet:px-8">
+      <div className="mx-auto flex h-16 max-w-web items-center gap-1.5 px-3 @tablet:h-[72px] @tablet:gap-3 @tablet:px-8">
         {/* Mobile: menu button */}
         <AriaButton
           aria-label="Golf courses"
@@ -164,7 +164,7 @@ export const WebHeader = ({
           onPress={onCourse}
           aria-label={`${course.name}, change course`}
           className={cx(
-            "flex min-w-0 flex-1 cursor-pointer items-center justify-center gap-2.5 rounded-lg py-1 @tablet:flex-initial @tablet:justify-start",
+            "flex min-w-0 flex-1 cursor-pointer items-center justify-start gap-2.5 rounded-lg py-1 @tablet:flex-initial",
             focus,
           )}
         >
@@ -178,7 +178,7 @@ export const WebHeader = ({
                 : "hidden rounded-full @tablet:inline-flex",
             )}
           />
-          <span className="flex min-w-0 flex-col items-center @tablet:items-start">
+          <span className="flex min-w-0 flex-col items-start">
             <span className="flex max-w-full items-center gap-1.5">
               <span className="truncate text-md font-semibold tracking-[-0.2px] text-primary @tablet:text-xl @tablet:tracking-[-0.3px]">
                 {course.name}

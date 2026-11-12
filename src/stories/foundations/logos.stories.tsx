@@ -91,9 +91,10 @@ export const CourseLogos: Story = {
         <div className="min-h-screen bg-secondary p-10 font-body">
             <h1 className="text-ios-title1 text-primary">Course logos</h1>
             <p className="mt-1 max-w-[720px] text-ios-subheadline text-tertiary">
-                Any course whose id or name matches Sagamore, MCG (and each MCG course), FloGolf or Kettle Hills shows its real logo in{" "}
+                Any course whose id or name matches Sagamore, MCG (and each MCG course), FloGolf, Kettle Hills or Memorial Park shows its real logo in{" "}
                 <code className="font-mono">CourseLogo</code> (header, course picker, My Locations, tee times, cards…). Every other course keeps the initials
-                placeholder. Mapping: <code className="font-mono">src/screens/chrome/course-brands.ts</code>; originals in{" "}
+                placeholder. MCG and Memorial Park are vector SVGs; Rattlewood and Sligo Creek use the MCG vector because their own marks only exist at 55px.
+                Mapping: <code className="font-mono">src/screens/chrome/course-brands.ts</code>; originals in{" "}
                 <code className="font-mono">images/courses/</code>.
             </p>
             <div className="mt-8 grid max-w-[1100px] grid-cols-[repeat(auto-fill,minmax(230px,1fr))] gap-6">

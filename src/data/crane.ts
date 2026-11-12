@@ -3,6 +3,7 @@
  * references/100926, with personal details swapped for safe stand-ins.
  */
 import type { TeeTime } from "@/components/lists/tee-time-card";
+import { coursePhotos } from "@/screens/chrome/course-photos";
 
 export const APP_VERSION = "v7.1.48 (1)";
 
@@ -27,10 +28,14 @@ export interface Course {
     /** Saved to "My Courses". */
     saved?: boolean;
     /**
-     * Logo image URL. Optional: Sagamore, MCG, FloGolf and Kettle Hills courses get theirs from
+     * Logo image URL. Optional: Sagamore, MCG, FloGolf, Kettle Hills and Memorial Park courses get theirs from
      * `courseBrandFor()` (src/screens/chrome/course-brands.ts); others show initials.
      */
     logo?: string;
+    /** Hero photo (Vite asset URL) for the course info sheet. Optional: courses without one keep the gradient placeholder. */
+    photo?: string;
+    /** Indoor-only simulator venue (no outdoor course), e.g. FloGolf. */
+    indoor?: boolean;
 }
 
 export const COURSES: Course[] = [
@@ -66,6 +71,81 @@ export const COURSES: Course[] = [
     { id: "raceway", name: "Raceway Golf Club", shortName: "Raceway", city: "Thompson", state: "CT", distanceMi: 50 },
     { id: "farmington", name: "Farmington Country Club", shortName: "Farmington", city: "Farmington", state: "NH", distanceMi: 67 },
     { id: "woodstock", name: "Woodstock Inn & Resort", shortName: "Woodstock", city: "Woodstock", state: "VT", distanceMi: 111 },
+    /* Courses we have real logos (and photos) for. Not saved, so they show up in Add a Location, course search and the
+       web course picker without making My Locations long. Appended so stories that rely on the order above are unaffected. */
+    {
+        id: "laytonsville",
+        name: "Laytonsville Golf Course",
+        shortName: "Laytonsville",
+        city: "Laytonsville",
+        state: "MD",
+        distanceMi: 412,
+        phone: "(301) 555-0182",
+        email: "info@laytonsvillegolf.com",
+        address: "7130 Dorsey Road, Laytonsville, MD 20882",
+        photo: coursePhotos.laytonsville,
+    },
+    {
+        id: "northwest",
+        name: "Northwest Golf Course",
+        shortName: "Northwest",
+        city: "Silver Spring",
+        state: "MD",
+        distanceMi: 405,
+        phone: "(301) 555-0147",
+        email: "info@northwestgolf.com",
+        address: "15711 Layhill Road, Silver Spring, MD 20906",
+        photo: coursePhotos.northwest,
+    },
+    {
+        id: "falls-road",
+        name: "Falls Road Golf Course",
+        shortName: "Falls Road",
+        city: "Potomac",
+        state: "MD",
+        distanceMi: 418,
+        phone: "(301) 555-0119",
+        email: "info@fallsroadgolf.com",
+        address: "10800 Falls Road, Potomac, MD 20854",
+        photo: coursePhotos.fallsRoad,
+    },
+    {
+        id: "flogolf",
+        name: "FloGolf Lounge",
+        shortName: "FloGolf",
+        city: "Saugus",
+        state: "MA",
+        distanceMi: 4.8,
+        indoor: true,
+        phone: "(781) 555-0166",
+        email: "info@flogolflounge.com",
+        address: "880 Broadway, Saugus, MA 01906",
+        photo: coursePhotos.flogolf,
+    },
+    {
+        id: "kettle-hills",
+        name: "Kettle Hills Golf Course",
+        shortName: "Kettle Hills",
+        city: "Richfield",
+        state: "WI",
+        distanceMi: 1080,
+        phone: "(262) 555-0128",
+        email: "info@kettlehillsgolf.com",
+        address: "3375 State Highway 167, Richfield, WI 53076",
+        photo: coursePhotos.kettleHills,
+    },
+    {
+        id: "memorial-park",
+        name: "Memorial Park Golf Course",
+        shortName: "Memorial Park",
+        city: "Houston",
+        state: "TX",
+        distanceMi: 1850,
+        phone: "(713) 555-0193",
+        email: "info@memorialparkgolf.com",
+        address: "1001 East Memorial Loop Drive, Houston, TX 77007",
+        photo: coursePhotos.memorialPark,
+    },
 ];
 
 export const courseById = (id: string) => COURSES.find((c) => c.id === id) ?? COURSES[0];

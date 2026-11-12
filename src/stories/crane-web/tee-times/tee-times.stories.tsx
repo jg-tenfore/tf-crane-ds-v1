@@ -70,3 +70,25 @@ export const NoTimes: Story = {
     name: "No times",
     render: () => <WebScreen path={`/tee-times?d=${CLOSED_DAY}`}><TeeTimesPage /></WebScreen>,
 };
+
+/** Indoor-only venue (FloGolf Lounge): no tee sheet — the page points to simulator bay booking instead. */
+export const IndoorVenue: Story = {
+    name: "Indoor venue (FloGolf)",
+    render: () => (
+        <WebScreen path="/tee-times">
+            <WithCourse id="flogolf">
+                <TeeTimesPage />
+            </WithCourse>
+        </WebScreen>
+    ),
+};
+export const IndoorVenueMobile: Story = {
+    name: "Indoor venue (FloGolf) · Mobile web",
+    render: () => (
+        <WebScreen path="/tee-times" width="mobile" height={1100}>
+            <WithCourse id="flogolf">
+                <TeeTimesPage />
+            </WithCourse>
+        </WebScreen>
+    ),
+};

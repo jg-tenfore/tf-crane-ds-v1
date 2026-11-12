@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { Calendar, CalendarCheck01, Flag01, SearchMd, Users01 } from "@untitledui/icons";
+import { ArrowRight, Calendar, CalendarCheck01, Flag01, Monitor01, SearchMd, Users01 } from "@untitledui/icons";
+import { SIM_BAYS } from "@/screens/web/events/events-data";
 import { cx } from "@/utils/cx";
 import { Button } from "@/components/base/button";
 import { WebCoursePicker } from "@/components/web/web-course-picker";
@@ -111,7 +112,7 @@ export const TeeTimesPage = ({ date: dateProp, players: playersProp, banner, mem
         <PageHeader
             eyebrow={noCourse ? "Book a round" : course.name}
             title="Tee Times"
-            subtitle={noCourse ? undefined : `${advance ? "This week, or up to 3 months ahead" : "Book up to 7 days ahead"} · ${course.city}, ${course.state}`}
+            subtitle={noCourse ? undefined : `${course.indoor ? "Indoor simulator venue" : advance ? "This week, or up to 3 months ahead" : "Book up to 7 days ahead"} · ${course.city}, ${course.state}`}
             actions={
                 <WebLink href="/tee-times/my-rounds" className={cx("inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-md font-semibold text-secondary ring-1 ring-primary ring-inset hover:bg-primary_hover", focusRing)}>
                     <CalendarCheck01 className="size-5 text-fg-quaternary" aria-hidden="true" /> My Rounds
@@ -145,6 +146,57 @@ export const TeeTimesPage = ({ date: dateProp, players: playersProp, banner, mem
                         setNoCourse(false);
                     }}
                 />
+            </WebShell>
+        );
+    }
+
+    /* ---- Indoor-only venue (e.g. FloGolf Lounge): no tee sheet — book a simulator bay instead ---- */
+    if (course.indoor) {
+        return (
+            <WebShell active="tee-times">
+                <WebPage>
+                    {header}
+                    <div className="mt-8 grid grid-cols-1 overflow-hidden rounded-2xl bg-primary ring-1 ring-secondary ring-inset @tablet:grid-cols-[minmax(0,6fr)_minmax(0,5fr)]">
+                        <div className="relative aspect-[16/10] bg-tertiary @tablet:aspect-auto">
+                            {course.photo && <img src={course.photo} alt={`${course.name} simulator lounge`} className="absolute inset-0 size-full object-cover" />}
+                            <span className="caps absolute top-4 left-4 rounded-full bg-black/60 px-3 py-1.5 text-[11px] text-white backdrop-blur">Indoor golf</span>
+                        </div>
+                        <div className="flex flex-col gap-5 p-6 @desktop:p-8">
+                            <div>
+                                <h2 className="text-display-xs font-semibold tracking-[-0.3px] text-primary">No tee times here: book a bay</h2>
+                                <p className="mt-2 text-md text-tertiary">
+                                    {course.name} is an indoor simulator venue, so there's no tee sheet. Book a bay by the hour instead and play a world course, the range or a game with friends.
+                                </p>
+                            </div>
+                            <ul className="flex flex-col divide-y divide-secondary rounded-xl ring-1 ring-secondary ring-inset">
+                                {SIM_BAYS.map((b) => (
+                                    <li key={b.id} className="flex items-center justify-between gap-3 px-4 py-3 text-sm">
+                                        <span className="flex items-center gap-3">
+                                            <Monitor01 className="size-5 shrink-0 text-fg-brand-primary" aria-hidden="true" />
+                                            <span>
+                                                <span className="block font-semibold text-primary">{b.name}</span>
+                                                <span className="block text-tertiary">{b.seating}</span>
+                                            </span>
+                                        </span>
+                                        <span className="flex items-center gap-1.5 text-tertiary">
+                                            <Users01 className="size-4" aria-hidden="true" /> Up to {b.capacity}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
+                            <p className="text-sm text-tertiary">$45 / hr before 5 PM · $65 / hr evenings & weekends · per bay, not per player</p>
+                            <div className="flex flex-wrap items-center gap-3">
+                                <WebLink href="/activities" className={cx("inline-flex h-12 items-center gap-2 rounded-lg bg-brand-solid px-5 text-md font-semibold text-white hover:bg-brand-solid_hover", focusRing)}>
+                                    Book a bay <ArrowRight className="size-5" aria-hidden="true" />
+                                </WebLink>
+                                <Button size="lg" color="outline" iconLeading={Flag01} onPress={() => setPicker(true)} className={webBtn}>
+                                    Find an outdoor course
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </WebPage>
+                <WebCoursePicker isOpen={picker} onOpenChange={setPicker} onSelect={(c) => setCourse(c)} />
             </WebShell>
         );
     }

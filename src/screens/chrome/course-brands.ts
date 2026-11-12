@@ -3,9 +3,13 @@
  * matches one of these gets its logo instead of the initials placeholder in `CourseLogo`
  * (and anywhere else a course mark is shown). Every other course keeps the initials tile.
  *
- * The files are 256px WebP copies of the originals in `images/courses/` (Sagamore, MCG + each
- * MCG course, FloGolf, Kettle Hills). They're imported as Vite assets so the URLs are right in
- * Storybook, both prototypes and the GitHub Pages build (base path) without a static dir.
+ * The files are 256px WebP copies of the originals in `images/courses/` (Sagamore, each MCG
+ * course, FloGolf, Kettle Hills) or vector SVGs (the MCG mark, Memorial Park). They're imported
+ * as Vite assets so the URLs are right in Storybook, both prototypes and the GitHub Pages build
+ * (base path) without a static dir.
+ *
+ * Rattlewood and Sligo Creek only exist as 55px marks, which blur at tile sizes, so they use the
+ * MCG vector instead (originals kept in images/courses/mcg/).
  */
 import crossvines from "./images/course-logos/crossvines.webp";
 import fallsRoad from "./images/course-logos/falls-road.webp";
@@ -14,12 +18,11 @@ import hampshireGreens from "./images/course-logos/hampshire-greens.webp";
 import kettleHills from "./images/course-logos/kettle-hills.webp";
 import laytonsville from "./images/course-logos/laytonsville.webp";
 import littleBennett from "./images/course-logos/little-bennett.webp";
-import mcg from "./images/course-logos/mcg.webp";
+import mcg from "./images/course-logos/mcg.svg";
+import memorialPark from "./images/course-logos/memorial-park.svg";
 import needwood from "./images/course-logos/needwood.webp";
 import northwest from "./images/course-logos/northwest.webp";
-import rattlewood from "./images/course-logos/rattlewood.webp";
 import sagamore from "./images/course-logos/sagamore.webp";
-import sligoCreek from "./images/course-logos/sligo-creek.webp";
 
 export interface CourseBrand {
     id: string;
@@ -41,6 +44,9 @@ const brand = (b: CourseBrand) => b;
 /** MCG course logos sit on transparent backgrounds with a wordmark underneath: give them air. */
 const MCG_INSET = 0.1;
 
+/** The MCG vector is a wide lettermark (≈1.5:1), so it needs less inset than the stacked course marks. */
+const MCG_VECTOR_INSET = 0.06;
+
 /** First match wins, so the specific MCG courses come before the MCG-wide mark. */
 const COURSE_BRANDS: { match: RegExp; brand: CourseBrand }[] = [
     { match: /sagamore/i, brand: brand({ id: "sagamore", label: "Sagamore Golf", logo: sagamore, fit: "contain" }) },
@@ -50,12 +56,13 @@ const COURSE_BRANDS: { match: RegExp; brand: CourseBrand }[] = [
     { match: /little[\s-]?bennett/i, brand: brand({ id: "little-bennett", label: "Little Bennett Golf Course", logo: littleBennett, fit: "contain", inset: MCG_INSET }) },
     { match: /falls[\s-]?road/i, brand: brand({ id: "falls-road", label: "Falls Road Golf Course", logo: fallsRoad, fit: "contain", inset: MCG_INSET }) },
     { match: /hampshire[\s-]?greens/i, brand: brand({ id: "hampshire-greens", label: "Hampshire Greens Golf Course", logo: hampshireGreens, fit: "contain", inset: MCG_INSET }) },
-    { match: /sligo[\s-]?creek/i, brand: brand({ id: "sligo-creek", label: "Sligo Creek Golf Course", logo: sligoCreek, fit: "contain", inset: 0.04 }) },
-    { match: /rattlewood/i, brand: brand({ id: "rattlewood", label: "Rattlewood Golf Course", logo: rattlewood, fit: "contain", inset: 0.04 }) },
+    { match: /sligo[\s-]?creek/i, brand: brand({ id: "sligo-creek", label: "Sligo Creek Golf Course", logo: mcg, fit: "contain", inset: MCG_VECTOR_INSET }) },
+    { match: /rattlewood/i, brand: brand({ id: "rattlewood", label: "Rattlewood Golf Course", logo: mcg, fit: "contain", inset: MCG_VECTOR_INSET }) },
     { match: /crossvines/i, brand: brand({ id: "crossvines", label: "The Crossvines", logo: crossvines, fit: "contain", inset: 0.06 }) },
-    { match: /\bmcg\b|montgomery county golf/i, brand: brand({ id: "mcg", label: "Montgomery County Golf", logo: mcg, fit: "contain", inset: 0.04 }) },
+    { match: /\bmcg\b|montgomery county golf/i, brand: brand({ id: "mcg", label: "Montgomery County Golf", logo: mcg, fit: "contain", inset: MCG_VECTOR_INSET }) },
     { match: /flo[\s-]?golf/i, brand: brand({ id: "flogolf", label: "FloGolf", logo: flogolf, fit: "cover" }) },
     { match: /kettle[\s-]?hills/i, brand: brand({ id: "kettle-hills", label: "Kettle Hills Golf Course", logo: kettleHills, fit: "cover" }) },
+    { match: /memorial[\s-]?park/i, brand: brand({ id: "memorial-park", label: "Memorial Park Golf Course", logo: memorialPark, fit: "contain", inset: 0.03 }) },
 ];
 
 /** Every brand we have a logo for (stories / docs). */

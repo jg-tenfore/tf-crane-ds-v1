@@ -7,7 +7,7 @@ import { hasCourseBrand } from "./course-brands";
 import { CourseLogo } from "./course-logo";
 
 /**
- * Course info — opened by tapping the course name in the header. Hero logo/photo,
+ * Course info — opened by tapping the course name in the header. Hero photo (`course.photo`) and/or logo,
  * then tappable phone / email / address rows (call, compose, open Maps).
  */
 export const CourseInfoSheet = () => {
@@ -23,15 +23,22 @@ export const CourseInfoSheet = () => {
                 <AriaDialog className="relative flex h-full flex-col outline-none">
                     {({ close }) => (
                         <>
-                            {/* Placeholder hero until real course imagery is wired up; clubs with artwork show their logo. */}
+                            {/* Courses with a `photo` get it full-bleed (scrim keeps the logo and close button legible);
+                                every other course keeps the gradient placeholder. Clubs with artwork show their logo on top. */}
                             <div
-                                data-placeholder-asset="course-hero"
-                                className="relative flex h-[200px] shrink-0 items-center justify-center bg-gradient-to-br from-brand-500 to-brand-800"
+                                data-placeholder-asset={course.photo ? undefined : "course-hero"}
+                                className="relative flex h-[200px] shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br from-brand-500 to-brand-800"
                             >
+                                {course.photo && (
+                                    <>
+                                        <img src={course.photo} alt="" draggable={false} className="absolute inset-0 size-full object-cover" />
+                                        <span className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/5 to-black/35" aria-hidden="true" />
+                                    </>
+                                )}
                                 {hasCourseBrand(course) ? (
-                                    <CourseLogo course={course} size={112} className="rounded-2xl shadow-ios-float ring-0" />
+                                    <CourseLogo course={course} size={course.photo ? 96 : 112} className="relative rounded-2xl shadow-ios-float ring-0" />
                                 ) : (
-                                    <Flag01 className="size-16 text-white/85" aria-hidden="true" />
+                                    !course.photo && <Flag01 className="size-16 text-white/85" aria-hidden="true" />
                                 )}
                                 <GlassIconButton icon={XClose} aria-label="Close" onPress={close} className="absolute top-3 right-3" />
                             </div>

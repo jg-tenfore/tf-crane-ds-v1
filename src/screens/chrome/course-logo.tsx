@@ -15,7 +15,7 @@ export interface CourseLogoProps {
 }
 
 /**
- * Course logo tile. Courses we have real artwork for (Sagamore, MCG and its courses, FloGolf,
+ * Course logo tile. Courses we have real artwork for (Sagamore, MCG and its courses, FloGolf, Memorial Park,
  * Kettle Hills — see `course-brands.ts`, or a `course.logo` URL) show the club's logo on a white
  * tile; every other course keeps the placeholder: initials on a tinted tile, tagged
  * `data-placeholder-asset` so outstanding assets stay greppable.

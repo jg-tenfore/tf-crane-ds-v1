@@ -34,3 +34,6 @@ export const MobileTimeSelected: Story = {
     name: "Mobile web · Time selected",
     render: () => <WebScreen path="/activities" width="mobile"><ActivitiesPage initialStart={15 * 60} /></WebScreen>,
 };
+
+/** Indoor-only venue: FloGolf Lounge's own photo on the bays card, and no outdoor driving range in "More to do". */
+export const FloGolfIndoor: Story = { name: "FloGolf (indoor venue)", render: () => <WebScreen path="/activities" courseId="flogolf"><ActivitiesPage /></WebScreen> };
