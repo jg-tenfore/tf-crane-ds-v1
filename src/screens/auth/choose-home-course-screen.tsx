@@ -10,6 +10,8 @@ import { SearchField } from "@/components/forms/search-field";
 import { ListGroup } from "@/components/lists/list";
 import { useStack } from "@/components/prototype/stack-navigator";
 import { COURSES, type Course } from "@/data/crane";
+import { hasCourseBrand } from "@/screens/chrome/course-brands";
+import { CourseLogo } from "@/screens/chrome/course-logo";
 import { AuthFooter, AuthTitle } from "./auth-parts";
 
 export interface ChooseHomeCourseScreenProps {
@@ -29,10 +31,14 @@ const CourseRow = ({ course, isSelected, onChange }: { course: Course; isSelecte
         aria-label={`${course.name}, ${course.city}, ${course.state}`}
         className="group flex min-h-[68px] w-full cursor-pointer items-center gap-3 px-4 py-3 text-left outline-none transition duration-100 ease-linear data-[pressed]:bg-primary_hover data-[focus-visible]:bg-primary_hover"
     >
-        {/* Course logo placeholder — matches the app's flag tile for courses without artwork. */}
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-secondary ring-1 ring-secondary ring-inset">
-            <Flag01 className="size-5 text-fg-quaternary" aria-hidden="true" />
-        </span>
+        {/* Real club logo when we have one; otherwise the app's flag tile for courses without artwork. */}
+        {hasCourseBrand(course) ? (
+            <CourseLogo course={course} size={40} className="rounded-[10px]" />
+        ) : (
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-secondary ring-1 ring-secondary ring-inset">
+                <Flag01 className="size-5 text-fg-quaternary" aria-hidden="true" />
+            </span>
+        )}
         <span className="flex min-w-0 flex-1 flex-col">
             <span className="text-ios-headline text-primary">{course.name}</span>
             <span className="truncate text-ios-subheadline text-tertiary">

@@ -93,7 +93,7 @@ const ShopBrand = () => {
     return (
         <div className="mb-3 flex items-center gap-2">
             <span className="overflow-hidden rounded-full ring-1 ring-secondary">
-                <CourseLogo course={course} size={28} />
+                <CourseLogo course={course} size={28} shape="circle" />
             </span>
             <span className="text-sm font-medium text-secondary">{course.shortName ?? course.name} Pro Shop</span>
         </div>

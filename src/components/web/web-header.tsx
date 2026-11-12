@@ -9,6 +9,7 @@ import { Button as AriaButton } from "react-aria-components";
 import { cx } from "@/utils/cx";
 import type { Course } from "@/data/crane";
 import { CourseLogo } from "@/screens/chrome/course-logo";
+import { hasCourseBrand } from "@/screens/chrome/course-brands";
 import { WebLink } from "./web-router";
 import { RevealRow } from "./reveal-row";
 
@@ -167,14 +168,19 @@ export const WebHeader = ({
             focus,
           )}
         >
+          {/* Real club logos show at every width; initials placeholders only from tablet up. */}
           <CourseLogo
             course={course}
             size={36}
-            className="hidden rounded-full @tablet:inline-flex"
+            className={cx(
+              hasCourseBrand(course)
+                ? "rounded-lg"
+                : "hidden rounded-full @tablet:inline-flex",
+            )}
           />
           <span className="flex min-w-0 flex-col items-center @tablet:items-start">
             <span className="flex max-w-full items-center gap-1.5">
-              <span className="truncate text-lg font-semibold tracking-[-0.3px] text-primary @tablet:text-xl">
+              <span className="truncate text-md font-semibold tracking-[-0.2px] text-primary @tablet:text-xl @tablet:tracking-[-0.3px]">
                 {course.name}
               </span>
               <ChevronDown

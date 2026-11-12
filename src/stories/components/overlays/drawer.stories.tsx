@@ -6,6 +6,8 @@ import { Screen } from "@/components/device/screen";
 import { CourseHeader } from "@/components/navigation/course-header";
 import { Drawer } from "@/components/overlays/drawer";
 import { COURSES } from "@/data/crane";
+import { hasCourseBrand } from "@/screens/chrome/course-brands";
+import { CourseLogo } from "@/screens/chrome/course-logo";
 import { ScreenFiller } from "../story-kit";
 
 /**
@@ -27,7 +29,12 @@ const MyLocationsDemo = () => {
     const active = COURSES.find((c) => c.id === courseId)!;
     const saved = COURSES.filter((c) => c.saved || c.id === courseId);
     return (
-        <Screen nav={<CourseHeader courseName={active.name} city={active.city} onMenu={() => setOpen(true)} />}>
+        <Screen nav={<CourseHeader
+                    courseName={active.name}
+                    city={active.city}
+                    logo={hasCourseBrand(active) ? <CourseLogo course={active} size={32} className="rounded-md" /> : undefined}
+                    onMenu={() => setOpen(true)}
+                />}>
             <ScreenFiller count={6} />
             <Drawer isOpen={open} onOpenChange={setOpen} aria-label="My Locations">
                 {({ close }) => (

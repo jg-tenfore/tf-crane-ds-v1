@@ -5,6 +5,7 @@ import { TeeTimeCard, type TeeTime } from "@/components/lists/tee-time-card";
 import { CourseHeader } from "@/components/navigation/course-header";
 import { buildDays, DateStrip } from "@/components/navigation/date-strip";
 import { courseById, teeSheet } from "@/data/crane";
+import { CourseLogo } from "@/screens/chrome/course-logo";
 import { Panel } from "../story-kit";
 
 /**
@@ -44,7 +45,7 @@ const DAYS = buildDays(new Date(2026, 9, 9));
 const TeeSheetScreen = () => {
     const [day, setDay] = useState(DAYS[0].id);
     return (
-        <Screen nav={<CourseHeader courseName="Sagamore Hampton Golf Club" city="North Hampton" />}>
+        <Screen nav={<CourseHeader courseName="Sagamore Hampton Golf Club" city="North Hampton" logo={<CourseLogo course={courseById("sagamore-hampton")} size={32} className="rounded-md" />} />}>
             <DateStrip days={DAYS} selectedId={day} onChange={setDay} />
             <div className="space-y-3 px-gutter pt-2">
                 {SHEET.map((t) => (

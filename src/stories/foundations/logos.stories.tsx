@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BRAND_ASSETS, CraneAppIcon, CraneLockup, TfLogo } from "@/components/foundations/logos";
+import { courseById, type Course } from "@/data/crane";
+import { ALL_COURSE_BRANDS, courseBrandFor, type CourseBrand } from "@/screens/chrome/course-brands";
+import { CourseLogo } from "@/screens/chrome/course-logo";
 
 /**
  * TF Crane is a TenFore Golf product. The **Crane app icon** (green line-art crane in a
@@ -74,6 +77,40 @@ export const TenForeGolf: Story = {
                 <Tile label="Mark · white" file={BRAND_ASSETS.tfSquareWhite} dark>
                     <TfLogo variant="mark" tone="white" height={72} />
                 </Tile>
+            </div>
+        </div>
+    ),
+};
+
+/** Stand-in Course records so every club with artwork renders through the real `CourseLogo`. */
+const brandCourse = (b: CourseBrand): Course => ({ id: b.id, name: b.label, shortName: b.label, city: "", state: "" });
+
+export const CourseLogos: Story = {
+    name: "Course logos",
+    render: () => (
+        <div className="min-h-screen bg-secondary p-10 font-body">
+            <h1 className="text-ios-title1 text-primary">Course logos</h1>
+            <p className="mt-1 max-w-[720px] text-ios-subheadline text-tertiary">
+                Any course whose id or name matches Sagamore, MCG (and each MCG course), FloGolf or Kettle Hills shows its real logo in{" "}
+                <code className="font-mono">CourseLogo</code> (header, course picker, My Locations, tee times, cards…). Every other course keeps the initials
+                placeholder. Mapping: <code className="font-mono">src/screens/chrome/course-brands.ts</code>; originals in{" "}
+                <code className="font-mono">images/courses/</code>.
+            </p>
+            <div className="mt-8 grid max-w-[1100px] grid-cols-[repeat(auto-fill,minmax(230px,1fr))] gap-6">
+                {[...ALL_COURSE_BRANDS.map(brandCourse), courseById("mount-hood")].map((c) => (
+                    <div key={c.id} className="flex flex-col gap-3 rounded-ios-card bg-primary p-4 ring-1 ring-secondary">
+                        <div className="flex items-end gap-2.5">
+                            <CourseLogo course={c} size={64} className="rounded-xl" />
+                            <CourseLogo course={c} size={44} />
+                            <CourseLogo course={c} size={32} shape="circle" />
+                            <CourseLogo course={c} size={20} className="rounded" />
+                        </div>
+                        <div>
+                            <div className="text-ios-subheadline font-semibold text-primary">{c.name}</div>
+                            <code className="font-mono text-ios-caption1 text-tertiary">{courseBrandFor(c)?.id ?? "no artwork → initials"}</code>
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
     ),

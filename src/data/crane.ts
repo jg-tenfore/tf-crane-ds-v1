@@ -26,6 +26,11 @@ export interface Course {
     address?: string;
     /** Saved to "My Courses". */
     saved?: boolean;
+    /**
+     * Logo image URL. Optional: Sagamore, MCG, FloGolf and Kettle Hills courses get theirs from
+     * `courseBrandFor()` (src/screens/chrome/course-brands.ts); others show initials.
+     */
+    logo?: string;
 }
 
 export const COURSES: Course[] = [

@@ -6,6 +6,7 @@ import { buildDays, DateStrip } from "@/components/navigation/date-strip";
 import { UnderlineTabs } from "@/components/navigation/underline-tabs";
 import { TeeTimeCard } from "@/components/lists/tee-time-card";
 import { COURSE_SECTIONS, courseById, teeSheet } from "@/data/crane";
+import { CourseLogo } from "@/screens/chrome/course-logo";
 
 /**
  * CourseHeader — Home tab top chrome: hamburger (My Locations drawer), the active course
@@ -16,8 +17,13 @@ const meta: Meta<typeof CourseHeader> = {
     title: "Components/Navigation/Course Header",
     component: CourseHeader,
     parameters: { phone: true },
-    args: { courseName: "Sagamore Hampton Golf Club", city: "North Hampton", cartCount: 2 },
-    argTypes: { cartCount: { control: { type: "number", min: 0, max: 120 } } },
+    args: {
+        courseName: "Sagamore Hampton Golf Club",
+        city: "North Hampton",
+        cartCount: 2,
+        logo: <CourseLogo course={courseById("sagamore-hampton")} size={32} className="rounded-md" />,
+    },
+    argTypes: { cartCount: { control: { type: "number", min: 0, max: 120 } }, logo: { control: false } },
 };
 export default meta;
 type Story = StoryObj<typeof CourseHeader>;
@@ -47,9 +53,9 @@ export const WithCart: Story = { name: "With cart count", render: (args) => <Hom
 /** Empty cart — no badge. */
 export const EmptyCart: Story = { name: "Empty cart", args: { cartCount: 0 }, render: (args) => <HomeTab {...args} /> };
 
-/** Long course names truncate around the centered title. */
+/** Long course names truncate around the centered title. Courses without artwork have no logo. */
 export const LongName: Story = {
     name: "Long course name",
-    args: { courseName: "Grand View Lodge - The Pines Championship Course", city: "Nisswa", cartCount: 0 },
+    args: { courseName: "Grand View Lodge - The Pines Championship Course", city: "Nisswa", cartCount: 0, logo: undefined },
     render: (args) => <HomeTab {...args} />,
 };

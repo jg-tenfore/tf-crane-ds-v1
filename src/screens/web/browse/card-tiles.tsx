@@ -38,7 +38,7 @@ export const GiftCardFace = ({ course, design = "classic", amount, to, width = 3
             <div className="flex h-full flex-col justify-between">
                 <div className="flex items-center gap-2" style={{ gap: 8 * k }}>
                     <span className="overflow-hidden rounded-full bg-white" style={{ width: 28 * k, height: 28 * k }}>
-                        <CourseLogo course={course} size={28 * k} />
+                        <CourseLogo course={course} size={28 * k} shape="circle" />
                     </span>
                     <span className="truncate font-semibold" style={{ fontSize: 12 * k, letterSpacing: 1.5 * k, textTransform: "uppercase" }}>
                         {course.shortName ?? course.name}

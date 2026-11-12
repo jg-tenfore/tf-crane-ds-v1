@@ -50,14 +50,32 @@ export const clubLayout = (course: Course): ClubLayout => LAYOUTS[course.id] ?? 
 
 /* ---------- Dates ---------- */
 
-export const DAYS = buildDays(TODAY, 14);
+/** The date strip: a 7-day booking window, today through the same weekday next week minus one. */
+export const WINDOW_DAYS = 7;
+export const DAYS = buildDays(TODAY, WINDOW_DAYS);
 export const TODAY_ID = DAYS[0].id;
+
+/** Advance booking: some courses open their tee sheet ~3 months out (past the 7-day strip). */
+export const ADVANCE_DAYS = 92;
+const ADVANCE = buildDays(TODAY, ADVANCE_DAYS);
+const ADVANCE_COURSES = new Set(["sagamore-spring", "sagamore-hampton", "grand-view", "woodstock"]);
+/** How many days ahead this course takes bookings (7, or ~3 months for advance-booking courses). */
+export const bookingWindow = (course: Course) => (ADVANCE_COURSES.has(course.id) ? ADVANCE_DAYS : WINDOW_DAYS);
+/** Every bookable day for a course, today first. */
+export const bookableDays = (course: Course) => (bookingWindow(course) > WINDOW_DAYS ? ADVANCE : DAYS);
+/** Last bookable day for a course. */
+export const lastBookableDay = (course: Course) => bookableDays(course)[bookableDays(course).length - 1].id;
+/** True when the day is past the 7-day strip (picked from "More dates"). */
+export const isBeyondStrip = (id: string) => !DAYS.some((d) => d.id === id);
 export const dateOf = (id: string) => new Date(`${id}T12:00:00`);
 export const isWeekend = (id: string) => [0, 6].includes(dateOf(id).getDay());
 export const dayType = (id: string) => (isWeekend(id) ? "Weekend" : "Weekday");
 export const fmtDay = (id: string, opts: Intl.DateTimeFormatOptions = { weekday: "short", month: "short", day: "numeric" }) => dateOf(id).toLocaleDateString("en-US", opts);
 export const fmtLongDay = (id: string) => fmtDay(id, { weekday: "long", month: "long", day: "numeric", year: "numeric" });
-export const isBookable = (id: string) => DAYS.some((d) => d.id === id);
+/** In the booking window — the course's when given, otherwise the longest (advance) window. */
+export const isBookable = (id: string, course?: Course) => (course ? bookableDays(course) : ADVANCE).some((d) => d.id === id);
+/** Days from today (0 = today). */
+const dayIndex = (id: string) => Math.max(0, Math.round((dateOf(id).getTime() - dateOf(TODAY_ID).getTime()) / 86_400_000));
 
 /** One closed day in the window, so the "no times" state is reachable by clicking. */
 export const CLOSED_DAY = DAYS[5].id; // Wed, Oct 14
@@ -98,7 +116,7 @@ export const eighteenOnly = (minutes: number, dateId: string) => isWeekend(dateI
 export const teeTimesFor = (course: Course, dateId: string): WebTeeTime[] => {
     if (closureFor(course, dateId)) return [];
     const layout = clubLayout(course);
-    const offset = Math.max(0, DAYS.findIndex((d) => d.id === dateId)) * 5 + (course.id.length % 4);
+    const offset = dayIndex(dateId) * 5 + (course.id.length % 4);
     const appSheet = dateId === TODAY_ID ? teeSheet(course) : [];
     const out: WebTeeTime[] = [];
 

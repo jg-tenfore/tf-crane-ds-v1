@@ -1,5 +1,7 @@
 import { Flag01 } from "@untitledui/icons";
 import type { Course } from "@/data/crane";
+import { hasCourseBrand } from "@/screens/chrome/course-brands";
+import { CourseLogo } from "@/screens/chrome/course-logo";
 
 /** WebFooter — course address, contact, "Powered by TenFore Golf" (matches live CraneWeb). */
 export const WebFooter = ({ course }: { course: Course }) => {
@@ -9,7 +11,11 @@ export const WebFooter = ({ course }: { course: Course }) => {
             <div className="mx-auto grid max-w-web gap-8 px-4 py-10 @tablet:grid-cols-[1fr_auto_auto] @tablet:gap-16 @tablet:px-8">
                 <div>
                     <div className="flex items-center gap-2 text-xl font-semibold text-primary">
-                        <Flag01 className="size-5 text-fg-brand-primary" aria-hidden="true" />
+                        {hasCourseBrand(course) ? (
+                            <CourseLogo course={course} size={32} className="rounded-md" />
+                        ) : (
+                            <Flag01 className="size-5 text-fg-brand-primary" aria-hidden="true" />
+                        )}
                         {course.name}
                     </div>
                     <p className="mt-3 text-md text-tertiary">

@@ -47,6 +47,24 @@ export const NoCourseSelected: Story = {
     render: () => <WebScreen path="/tee-times"><TeeTimesPage noCourse /></WebScreen>,
 };
 
+/** Advance booking: a day 6 weeks out picked from "More dates" — the eighth tile shows it as the selection. */
+export const AdvanceDate: Story = {
+    name: "Advance date (More dates)",
+    render: () => <WebScreen path="/tee-times?d=2026-11-21"><TeeTimesPage /></WebScreen>,
+};
+
+/** A 7-day-only course: the strip is today + six days, with no "More dates" tile. */
+export const SevenDayCourse: Story = {
+    name: "7-day window only",
+    render: () => (
+        <WebScreen path="/tee-times">
+            <WithCourse id="mount-hood">
+                <TeeTimesPage />
+            </WithCourse>
+        </WebScreen>
+    ),
+};
+
 /** A closed day (fall aerification) — no times, with a jump to the next day. */
 export const NoTimes: Story = {
     name: "No times",

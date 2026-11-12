@@ -42,7 +42,16 @@ export const MyLocationsPanel = ({ onClose, onAdd }: { onClose: () => void; onAd
                                 }}
                                 className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 py-3 pl-4 text-left outline-none data-[focus-visible]:bg-primary_hover data-[pressed]:bg-primary_hover"
                             >
-                                {isActive && <CheckCircle className="size-5 shrink-0 fill-fg-brand-primary text-white" aria-hidden="true" />}
+                                {/* Logo (real club logo, else initials) with the active check badged on its corner. */}
+                                <span className="relative mr-1 shrink-0">
+                                    <CourseLogo course={c} size={36} />
+                                    {isActive && (
+                                        <CheckCircle
+                                            className="absolute -right-1.5 -bottom-1.5 size-[18px] rounded-full bg-white fill-fg-brand-primary text-white"
+                                            aria-hidden="true"
+                                        />
+                                    )}
+                                </span>
                                 <span className="min-w-0">
                                     <span className={cx("block text-ios-headline", isActive ? "text-brand-secondary" : "text-primary")}>{c.name}</span>
                                     <span className="block text-ios-footnote text-tertiary">

@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState, type FC, type ReactNode } from "react";
-import { Announcement01, Award05, Check, ChevronDown, ChevronLeft, ChevronRight, Clock, Flag01, HelpCircle, Plus, User01, Users01, XClose } from "@untitledui/icons";
+import { Announcement01, Award05, Calendar, Check, ChevronDown, ChevronLeft, ChevronRight, Clock, Flag01, HelpCircle, Plus, User01, Users01, XClose } from "@untitledui/icons";
 import { Button as AriaButton, ToggleButton as AriaToggleButton, ToggleButtonGroup as AriaToggleButtonGroup, type Key } from "react-aria-components";
 import { cx } from "@/utils/cx";
 import { Button } from "@/components/base/button";
@@ -108,17 +108,28 @@ export const MenuRow = ({ selected, onPress, label, detail, leading, isDisabled 
 
 /* ---------- Month calendar (Date cell) ---------- */
 
-export const MonthCalendar = ({ value, onChange, priceFor }: { value: string; onChange: (id: string) => void; priceFor?: (id: string) => number | null }) => {
+export const MonthCalendar = ({
+    value,
+    onChange,
+    priceFor,
+    days = DAYS,
+}: {
+    value: string;
+    onChange: (id: string) => void;
+    priceFor?: (id: string) => number | null;
+    /** Bookable days (default: the 7-day window; pass `bookableDays(course)` for advance booking). */
+    days?: { id: string }[];
+}) => {
     const sel = dateOf(value);
     const [month, setMonth] = useState(() => new Date(sel.getFullYear(), sel.getMonth(), 1));
     const first = month.getDay();
     const daysIn = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
     const cells = Array.from({ length: first + daysIn }, (_, i) => (i < first ? null : i - first + 1));
     const idOf = (d: number) => `${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-    const bookable = new Set(DAYS.map((d) => d.id));
+    const bookable = new Set(days.map((d) => d.id));
     const nav = "flex size-8 cursor-pointer items-center justify-center rounded-full text-fg-secondary hover:bg-primary_hover disabled:cursor-not-allowed disabled:opacity-40";
-    const lastDay = dateOf(DAYS[DAYS.length - 1].id);
-    const firstDay = dateOf(DAYS[0].id);
+    const lastDay = dateOf(days[days.length - 1].id);
+    const firstDay = dateOf(days[0].id);
 
     return (
         <div className="w-full">
@@ -170,42 +181,82 @@ export const MonthCalendar = ({ value, onChange, priceFor }: { value: string; on
 
 /* ---------- Date strip ---------- */
 
-/** Web date strip — the app's day picker with a "from $" line, in web type. */
-export const WebDateStrip = ({ value, onChange, priceFor }: { value: string; onChange: (id: string) => void; priceFor: (id: string) => number | null }) => (
-    <AriaToggleButtonGroup
-        aria-label="Choose a date"
-        selectionMode="single"
-        disallowEmptySelection
-        selectedKeys={[value]}
-        onSelectionChange={(keys: Set<Key>) => {
-            const [k] = keys;
-            if (k != null) onChange(String(k));
-        }}
-        className="scrollbar-hide -mx-4 flex gap-2 overflow-x-auto px-4 py-1 @tablet:mx-0 @tablet:px-0"
-    >
-        {DAYS.map((d, i) => {
-            const price = priceFor(d.id);
-            const closed = d.id === CLOSED_DAY;
-            return (
-                <AriaToggleButton
-                    key={d.id}
-                    id={d.id}
-                    className={cx(
-                        "group flex h-[68px] w-[76px] shrink-0 cursor-pointer flex-col items-center justify-center gap-0.5 rounded-xl bg-primary ring-1 ring-secondary transition duration-100 ease-linear ring-inset hover:ring-primary",
-                        "data-[selected]:bg-brand-solid data-[selected]:ring-0",
-                        focusRing,
-                    )}
+/**
+ * Web date strip — a 7-day booking window (today + the next six days) with a "from $" line.
+ * Courses that book further out (~3 months) get an eighth "More dates" tile that opens the month
+ * calendar; once a later day is picked, that tile shows it as the selection.
+ */
+export const WebDateStrip = ({
+    value,
+    onChange,
+    priceFor,
+    moreUntil,
+    onMore,
+}: {
+    value: string;
+    onChange: (id: string) => void;
+    priceFor: (id: string) => number | null;
+    /** Last bookable day (id) when the course books past the strip; omit for a 7-day-only course. */
+    moreUntil?: string;
+    onMore?: () => void;
+}) => {
+    const later = !DAYS.some((d) => d.id === value);
+    const laterPrice = later ? priceFor(value) : null;
+    const tile = "group flex h-[68px] w-[76px] shrink-0 cursor-pointer flex-col items-center justify-center gap-0.5 rounded-xl ring-1 transition duration-100 ease-linear ring-inset @tablet:w-auto";
+    const longDay = (id: string) => dateOf(id).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+    const short = (id: string, o: Intl.DateTimeFormatOptions) => dateOf(id).toLocaleDateString("en-US", o);
+    return (
+        <div className={cx("scrollbar-hide -mx-4 flex gap-2 overflow-x-auto px-4 py-1 @tablet:mx-0 @tablet:grid @tablet:px-0", moreUntil ? "@tablet:grid-cols-8" : "@tablet:grid-cols-7")}>
+            <AriaToggleButtonGroup
+                aria-label="Choose a date this week"
+                selectionMode="single"
+                selectedKeys={later ? [] : [value]}
+                onSelectionChange={(keys: Set<Key>) => {
+                    const [k] = keys;
+                    if (k != null) onChange(String(k));
+                }}
+                className="flex shrink-0 gap-2 @tablet:col-span-7 @tablet:grid @tablet:grid-cols-7"
+            >
+                {DAYS.map((d, i) => {
+                    const price = priceFor(d.id);
+                    const closed = d.id === CLOSED_DAY;
+                    return (
+                        <AriaToggleButton key={d.id} id={d.id} className={cx(tile, "bg-primary ring-secondary hover:ring-primary data-[selected]:bg-brand-solid data-[selected]:ring-0", focusRing)}>
+                            <span className="text-xs text-tertiary group-data-[selected]:text-white/80">{i === 0 ? "Today" : d.weekday}</span>
+                            <span className="text-md font-semibold text-primary group-data-[selected]:text-white">{d.label}</span>
+                            <span className={cx("text-[11px] leading-none group-data-[selected]:text-white/85", closed || price == null ? "text-quaternary" : "text-brand-secondary")}>
+                                {closed ? "Closed" : price == null ? "Full" : `from $${price}`}
+                            </span>
+                        </AriaToggleButton>
+                    );
+                })}
+            </AriaToggleButtonGroup>
+            {moreUntil && (
+                <AriaButton
+                    onPress={onMore}
+                    aria-label={later ? `${longDay(value)} selected. Choose another date` : `More dates, up to ${short(moreUntil, { month: "long", day: "numeric" })}`}
+                    className={cx(tile, later ? "bg-brand-solid ring-transparent" : "border border-dashed border-primary bg-primary_alt ring-transparent hover:bg-primary_hover", focusRing)}
                 >
-                    <span className="text-xs text-tertiary group-data-[selected]:text-white/80">{i === 0 ? "Today" : d.weekday}</span>
-                    <span className="text-md font-semibold text-primary group-data-[selected]:text-white">{d.label}</span>
-                    <span className={cx("text-[11px] leading-none group-data-[selected]:text-white/85", closed || price == null ? "text-quaternary" : "text-brand-secondary")}>
-                        {closed ? "Closed" : price == null ? "Full" : `from $${price}`}
-                    </span>
-                </AriaToggleButton>
-            );
-        })}
-    </AriaToggleButtonGroup>
-);
+                    {later ? (
+                        <>
+                            <span className="flex items-center gap-0.5 text-xs text-white/80">
+                                {short(value, { weekday: "short" })} <ChevronDown className="size-3" aria-hidden="true" />
+                            </span>
+                            <span className="text-md font-semibold text-white">{short(value, { month: "short", day: "numeric" })}</span>
+                            <span className="text-[11px] leading-none text-white/85">{laterPrice == null ? "Full" : `from $${laterPrice}`}</span>
+                        </>
+                    ) : (
+                        <>
+                            <Calendar className="size-4 text-fg-brand-secondary" aria-hidden="true" />
+                            <span className="text-sm font-semibold text-brand-secondary">More dates</span>
+                            <span className="text-[11px] leading-none text-tertiary">to {short(moreUntil, { month: "short", day: "numeric" })}</span>
+                        </>
+                    )}
+                </AriaButton>
+            )}
+        </div>
+    );
+};
 
 /* ---------- Filter chips ---------- */
 
@@ -395,7 +446,7 @@ export const YouTag = () => <span className="rounded-full bg-tertiary px-2 py-0.
 /* ---------- Common questions ---------- */
 
 export const FAQ_ITEMS = [
-    { q: "How far in advance can I book a tee time?", a: "Tee times open 14 days ahead online. Booking early gives you the best choice of prime morning and discounted twilight times." },
+    { q: "How far in advance can I book a tee time?", a: "Tee times open 7 days ahead online. Some courses take advance bookings up to 3 months out: use More dates at the end of the date strip. Booking early gives you the best choice of prime morning and discounted twilight times." },
     { q: "What happens if my group has fewer than four players?", a: "Tee times are built for foursomes, so smaller groups may be paired with other golfers. You only pay for the players in your own booking." },
     { q: "Can I add players to my reservation here?", a: "Yes. Choose the number of players above, then add a golf buddy or a guest to each seat. Your summary updates instantly." },
     { q: "Do I pay now?", a: "No — green fees are paid at the course when you check in. We keep a card on file only to cover no-show fees, should they apply." },

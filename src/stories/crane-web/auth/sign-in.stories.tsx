@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { USER } from "@/data/crane";
 import { SignInPage } from "@/screens/web/auth";
+import { AuthBackgroundContext, type AuthBackground } from "@/screens/web/auth/auth-web-parts";
 import { WebScreen } from "../web-story-kit";
 
 const meta: Meta = {
@@ -51,3 +52,14 @@ export const MobileWeb: Story = {
         </WebScreen>
     ),
 };
+
+/** Brand-panel photo options (Sagamore course imagery under a deep-green wash). Mist is the default. */
+const WithBackground = ({ background }: { background: AuthBackground }) => (
+    <AuthBackgroundContext.Provider value={background}>
+        <WebScreen path="/sign-in" signedIn={false}>
+            <SignInPage />
+        </WebScreen>
+    </AuthBackgroundContext.Provider>
+);
+export const BackgroundGoldenHour: Story = { name: "Background · Golden hour", render: () => <WithBackground background="golden-hour" /> };
+export const BackgroundGreen: Story = { name: "Background · Green", render: () => <WithBackground background="green" /> };

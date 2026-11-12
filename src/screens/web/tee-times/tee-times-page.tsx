@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Calendar, CalendarCheck01, Flag01, SearchMd, Users01 } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 import { Button } from "@/components/base/button";
@@ -13,7 +13,11 @@ import {
     CLOSED_DAY,
     PERIODS,
     TODAY_ID,
+    WINDOW_DAYS,
+    bookableDays,
+    bookingWindow,
     checkoutPath,
+    lastBookableDay,
     closureFor,
     clubLayout,
     dayType,
@@ -59,7 +63,17 @@ export const TeeTimesPage = ({ date: dateProp, players: playersProp, banner, mem
 
     const [noCourse, setNoCourse] = useState(!!noCourseProp);
     const [picker, setPicker] = useState(false);
-    const [date, setDate] = useState(() => dateProp ?? (qd && isBookable(qd) ? qd : TODAY_ID));
+    const [date, setDate] = useState(() => dateProp ?? (qd && isBookable(qd, course) ? qd : TODAY_ID));
+    const advance = bookingWindow(course) > WINDOW_DAYS;
+    /** The Course cell's icon is the club's logo (real logo for branded clubs, initials otherwise). */
+    const courseMark = useMemo(() => {
+        const Mark = ({ className }: { className?: string }) => <CourseLogo course={course} size={24} className={cx(className, "size-6 rounded-md")} />;
+        return Mark;
+    }, [course]);
+    // Switching to a course with a shorter window drops a date it doesn't take bookings for.
+    useEffect(() => {
+        if (!isBookable(date, course)) setDate(TODAY_ID);
+    }, [course, date]);
     const [players, setPlayers] = useState(() => playersProp ?? Math.min(4, Math.max(1, Number(q.get("p")) || 1)));
     const [holes, setHoles] = useState<HolesFilter>("any");
     const [period, setPeriod] = useState<PeriodFilter>("all");
@@ -97,7 +111,7 @@ export const TeeTimesPage = ({ date: dateProp, players: playersProp, banner, mem
         <PageHeader
             eyebrow={noCourse ? "Book a round" : course.name}
             title="Tee Times"
-            subtitle={noCourse ? undefined : `Book up to 14 days ahead · ${course.city}, ${course.state}`}
+            subtitle={noCourse ? undefined : `${advance ? "This week, or up to 3 months ahead" : "Book up to 7 days ahead"} · ${course.city}, ${course.state}`}
             actions={
                 <WebLink href="/tee-times/my-rounds" className={cx("inline-flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-md font-semibold text-secondary ring-1 ring-primary ring-inset hover:bg-primary_hover", focusRing)}>
                     <CalendarCheck01 className="size-5 text-fg-quaternary" aria-hidden="true" /> My Rounds
@@ -138,7 +152,7 @@ export const TeeTimesPage = ({ date: dateProp, players: playersProp, banner, mem
     /* ---- Selector bar ---- */
     const bar = (
         <div className="relative grid grid-cols-3 divide-secondary rounded-xl bg-primary shadow-md ring-1 ring-secondary ring-inset @tablet:grid-cols-[minmax(0,1.6fr)_1fr_1fr_1fr] @tablet:divide-x">
-            <SelectorCell label="Course" value={course.name} icon={Flag01} {...cell("course")} className="col-span-3 border-b border-secondary @tablet:col-span-1 @tablet:border-b-0" panelClassName="@tablet:w-[340px]">
+            <SelectorCell label="Course" value={course.name} icon={courseMark} {...cell("course")} className="col-span-3 border-b border-secondary @tablet:col-span-1 @tablet:border-b-0" panelClassName="@tablet:w-[340px]">
                 {(close) => (
                     <div className="scrollbar-hide flex max-h-[360px] flex-col gap-0.5 overflow-y-auto">
                         <p className="caps px-3 pt-1 pb-2 text-[11px] text-quaternary">Golf courses</p>
@@ -169,7 +183,9 @@ export const TeeTimesPage = ({ date: dateProp, players: playersProp, banner, mem
                 } icon={Calendar} {...cell("date")} panelClassName="@tablet:w-[320px]">
                 {(close) => (
                     <MonthCalendar
+                        key={course.id}
                         value={date}
+                        days={bookableDays(course)}
                         priceFor={priceFor}
                         onChange={(d) => {
                             setDate(d);
@@ -266,7 +282,7 @@ export const TeeTimesPage = ({ date: dateProp, players: playersProp, banner, mem
                 {/* Sticks under the header on desktop while the sheet scrolls (Fox behaviour). */}
                 <div className="relative z-20 -mx-4 mt-4 bg-secondary px-4 py-2 @tablet:mx-0 @tablet:mt-6 @tablet:px-0 @desktop:sticky @desktop:top-[118px]">{bar}</div>
                 <div className="mt-2">
-                    <WebDateStrip value={date} onChange={setDate} priceFor={priceFor} />
+                    <WebDateStrip value={date} onChange={setDate} priceFor={priceFor} moreUntil={advance ? lastBookableDay(course) : undefined} onMore={() => setOpen("date")} />
                 </div>
 
                 <div className={cx("mt-6 flex flex-wrap items-center justify-between gap-3", closure && "hidden")}>
