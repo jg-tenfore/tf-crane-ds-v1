@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { USER } from "@/data/crane";
 import { SignUpPage } from "@/screens/web/auth";
+import { AuthBackgroundContext, type AuthBackground } from "@/screens/web/auth/auth-web-parts";
 import { WebScreen } from "../web-story-kit";
 
 const meta: Meta = {
@@ -42,3 +43,14 @@ export const MobileWeb: Story = {
         </WebScreen>
     ),
 };
+
+/* Brand-panel photo options on Sign up. Mist is the default (the Empty story above). */
+const SignUpWith = ({ background }: { background: AuthBackground }) => (
+    <AuthBackgroundContext.Provider value={background}>
+        <WebScreen path="/sign-up" signedIn={false}>
+            <SignUpPage />
+        </WebScreen>
+    </AuthBackgroundContext.Provider>
+);
+export const BackgroundGoldenHour: Story = { name: "Background · Golden hour", render: () => <SignUpWith background="golden-hour" /> };
+export const BackgroundGreen: Story = { name: "Background · Green", render: () => <SignUpWith background="green" /> };

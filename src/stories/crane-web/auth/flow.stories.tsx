@@ -5,6 +5,7 @@ import { Panel, PageHeader, WebPage } from "@/components/web/web-layout";
 import { matchPath, useWebRouter } from "@/components/web/web-router";
 import { authRoutes } from "@/screens/web/auth";
 import { useWebSession, WebShell } from "@/screens/web/web-shell";
+import { AuthBackgroundContext, type AuthBackground } from "@/screens/web/auth/auth-web-parts";
 import { WebScreen } from "../web-story-kit";
 
 /** Stand-in for pages owned by other Crane Web areas (/account, /tee-times, /shop…). */
@@ -83,3 +84,14 @@ export const WithNext: Story = {
         </WebScreen>
     ),
 };
+
+/* Brand-panel photo options — the whole flow with each background. Mist is the default (the Flow story above). */
+const FlowWith = ({ background }: { background: AuthBackground }) => (
+    <AuthBackgroundContext.Provider value={background}>
+        <WebScreen path="/sign-in" signedIn={false}>
+            <AuthFlow />
+        </WebScreen>
+    </AuthBackgroundContext.Provider>
+);
+export const BackgroundGoldenHour: Story = { name: "Background · Golden hour", render: () => <FlowWith background="golden-hour" /> };
+export const BackgroundGreen: Story = { name: "Background · Green", render: () => <FlowWith background="green" /> };
