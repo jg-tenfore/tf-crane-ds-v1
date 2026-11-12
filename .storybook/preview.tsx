@@ -43,6 +43,8 @@ const preview: Preview = {
                     ["Flow", "Profile", "*"],
                     "App Chrome",
                     ["Global Nav", "*"],
+                    "Crane Web",
+                    ["Overview", "Foundations", "Components", "Shop", "*"],
                 ],
             },
         },

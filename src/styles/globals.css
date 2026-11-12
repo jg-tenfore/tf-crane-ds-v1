@@ -1,7 +1,9 @@
 @import "tailwindcss";
+@import "@fontsource-variable/outfit";
 @import "./theme.css";
 @import "./palette.css";
 @import "./cupertino.css";
+@import "./crane-web.css";
 
 /* Explicit sources: under Storybook, auto-detection misses story files added after the
    dev server starts, leaving their classes out of the CSS until a restart. */

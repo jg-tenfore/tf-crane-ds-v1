@@ -36,14 +36,14 @@ export const TextField = ({ label, placeholder, hint, errorMessage, icon: Icon, 
     return (
         <AriaTextField {...props} type={inputType} className={cx("group flex flex-col gap-1.5", className)}>
             {label && (
-                <AriaLabel className="px-0.5 text-ios-subheadline font-medium text-secondary">
+                <AriaLabel className="px-0.5 text-ios-subheadline font-medium text-secondary in-[.crane-web]:text-sm">
                     {label}
                     {props.isRequired && <span className="text-error-primary"> *</span>}
                 </AriaLabel>
             )}
             <div
                 className={cx(
-                    "flex h-[50px] items-center gap-2.5 rounded-ios-control bg-primary px-3.5 ring-1 ring-primary transition duration-100 ease-linear ring-inset",
+                    "flex h-[50px] items-center gap-2.5 rounded-ios-control bg-primary px-3.5 ring-1 ring-primary transition duration-100 ease-linear ring-inset in-[.crane-web]:h-11 in-[.crane-web]:rounded-lg",
                     "group-focus-within:ring-2 group-focus-within:ring-brand",
                     "group-data-[invalid]:ring-error_subtle group-data-[invalid]:group-focus-within:ring-error",
                     "group-data-[disabled]:cursor-not-allowed group-data-[disabled]:opacity-50",
@@ -52,7 +52,7 @@ export const TextField = ({ label, placeholder, hint, errorMessage, icon: Icon, 
                 {Icon && <Icon className="size-5 shrink-0 text-fg-quaternary" aria-hidden="true" />}
                 <AriaInput
                     placeholder={placeholder}
-                    className="h-full min-w-0 flex-1 bg-transparent text-ios-body text-primary outline-none placeholder:text-placeholder disabled:cursor-not-allowed"
+                    className="h-full min-w-0 flex-1 bg-transparent text-ios-body text-primary outline-none placeholder:text-placeholder disabled:cursor-not-allowed in-[.crane-web]:text-md"
                 />
                 {revealable && (
                     <AriaButton
@@ -66,11 +66,11 @@ export const TextField = ({ label, placeholder, hint, errorMessage, icon: Icon, 
                 {trailing}
             </div>
             {hint && (
-                <AriaText slot="description" className="px-0.5 text-ios-footnote text-tertiary">
+                <AriaText slot="description" className="px-0.5 text-ios-footnote text-tertiary in-[.crane-web]:text-xs">
                     {hint}
                 </AriaText>
             )}
-            <AriaFieldError className="px-0.5 text-ios-footnote text-error-primary">{errorMessage}</AriaFieldError>
+            <AriaFieldError className="px-0.5 text-ios-footnote text-error-primary in-[.crane-web]:text-xs">{errorMessage}</AriaFieldError>
         </AriaTextField>
     );
 };

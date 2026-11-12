@@ -21,12 +21,12 @@ export const ProgressBar = ({ value, max, label, valueLabel, className, ...props
     <AriaMeter value={value} maxValue={max} aria-label={props["aria-label"]} className={cx("flex flex-col gap-2", className)}>
         {({ percentage }) => (
             <>
-                {label && <AriaLabel className="text-ios-body text-primary">{label}</AriaLabel>}
+                {label && <AriaLabel className="text-ios-body text-primary in-[.crane-web]:text-md">{label}</AriaLabel>}
                 <div className="flex items-center gap-3">
                     <div className="h-[7px] flex-1 overflow-hidden rounded-full bg-tertiary">
                         <div className="h-full rounded-full bg-fg-brand-secondary transition-[width] duration-500 ease-ios" style={{ width: `${percentage}%` }} />
                     </div>
-                    {valueLabel && <span className="shrink-0 text-ios-subheadline text-tertiary tabular-nums">{valueLabel}</span>}
+                    {valueLabel && <span className="shrink-0 text-ios-subheadline text-tertiary tabular-nums in-[.crane-web]:text-sm">{valueLabel}</span>}
                 </div>
             </>
         )}

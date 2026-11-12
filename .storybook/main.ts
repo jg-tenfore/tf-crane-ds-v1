@@ -9,6 +9,11 @@ const config: StorybookConfig = {
         // Brand source folders stay where they were dropped; serve them at stable URLs.
         { from: "../brand", to: "/brand" },
         { from: "../crane-logo", to: "/crane-logo" },
+        // Crane Web shop imagery + card-brand logos (copied from tf-fox-ds-v1).
+        { from: "../images/store", to: "/store-images" },
+        { from: "../images/cards", to: "/card-images" },
+        // Curated balls / pro-shop / food imagery (from references/111226).
+        { from: "../images/shop", to: "/shop-images" },
     ],
     // GitHub Pages serves from a repo subpath; dev stays at root.
     viteFinal: async (viteConfig, { configType }) => {

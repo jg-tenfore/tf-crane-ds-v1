@@ -55,6 +55,35 @@ Reference screenshots (`references/`, 1206 × 2622 @3x) are iPhone 17. Every scr
 - The Introduction's hero (`src/stories/prototype-link.tsx`) shows real screenshots from `public/prototype-preview/`.
   After changing those screens, refresh them with `npm run prototype:preview` while the prototype is running. GitHub Pages publishes the build at `/tf-crane-ds-v1/prototype/`.
 
+## Crane Web (`Crane Web/*` stories, `src/components/web/`, `src/screens/web/`)
+
+The responsive web/desktop app (crane.tenfore.golf), replacing Fox. Fox web layouts are ported and restyled;
+Fox itself stays an archive (`tf-fox-ds-v1`).
+- **Fonts are scoped per surface:** iPhone screens use SF Pro; everything inside `WebFrame` (`.crane-web`) uses
+  **Outfit** (`@fontsource-variable/outfit`, `src/styles/crane-web.css`). On web use the web type scale
+  (`text-sm/md/lg/xl`, `text-display-*`) and the `caps` utility (12px · 600 · 2px tracking, uppercase) — never `text-ios-*`.
+- **Chrome = live CraneWeb:** plain white two-row header (no glass): utility row (location · cart · account) + course
+  switcher and uppercase section nav; left course-picker drawer; footer with Contact / Powered by TenFore Golf.
+- **`WebFrame`** renders a browser window at `desktop` 1440 / `laptop` 1024 / `mobile` 390. The page is an `@container`,
+  so components use container variants **`@tablet:` (≥768) and `@desktop:` (≥1024)** — never viewport `md:`/`lg:`.
+  Dialogs/drawers portal into the page (`WebDialog`, `Drawer`).
+- **Routing:** `web-router.tsx` (`WebRouterProvider`, `WebLink`, `useWebRouter`, `matchPath`). Paths mirror real CraneWeb
+  URLs and are deep-linkable (`/shop/golf-balls/dozens/<id>`, `/cart`, `/checkout`, `/tee-times`, `/account/wallet`…);
+  each area exports a `…Routes` array and the address bar shows the current path.
+- **Shared state:** `WebShell` + `useWebSession()` (course, signed-in name), `useCart()` (`src/screens/web/cart-store.tsx`;
+  food & pro-shop items can't be checked out together — `add()` returns `{ ok: false, reason: "mixed" }`).
+- **Data:** `src/data/shop.ts` (groups → subgroups derived from products, Club Offerings, destination tax by ZIP),
+  `store-catalog.ts` (Fox apparel/shoes/balls), `shop-pos-catalog.ts` (curated balls, accessories, snack-bar food).
+  Images: `images/store` → `/store-images`, `images/shop` → `/shop-images`, `images/cards` → `/card-images`.
+- Stories use `WebScreen` (`src/stories/crane-web/web-story-kit.tsx`) with `path` + `width`.
+- **Areas** (each exports a `…Routes` array, assembled in `src/screens/web/web-app.tsx` → `webRoutes()` + `CraneWebRoutes`):
+  `auth/`, `browse/` (shop, tabs | sidebar nav variants), `checkout/` (cart → checkout with destination tax → order),
+  `restaurant/`, `tee-times/`, `events/` (events, clinics, leagues, activities, calendar), `account/`.
+- **Web prototype:** `prototype/web/` + `src/prototype-app/web-prototype.tsx` → http://localhost:6022/web/ (hash routes,
+  `WebFrame fill`, real window breakpoints). Storybook › Crane Web › Flow is the same app in a frame.
+- Web sizing: shared form/feedback components switch to web sizes inside `.crane-web` via `in-[.crane-web]:` variants;
+  Button has explicit `web-sm | web-md | web-lg` sizes.
+
 ## Conventions (from Untitled UI / Fox)
 
 - Files are **kebab-case**. Imports from `react-aria-components` are prefixed `Aria*`
@@ -67,7 +96,7 @@ Reference screenshots (`references/`, 1206 × 2622 @3x) are iPhone 17. Every scr
 
 ## Story categories (sidebar order)
 
-Introduction · Foundations · Components · Sign in ∕ Sign up · Profile ∕ Account · App Chrome
+Introduction · Foundations · Components · Sign in ∕ Sign up · Profile ∕ Account · App Chrome · Crane Web
 
 ## Hosting
 

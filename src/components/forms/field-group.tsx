@@ -15,7 +15,7 @@ export interface FieldGroupProps {
 export const FieldGroup = ({ children, className }: FieldGroupProps) => {
     const rows = Children.toArray(children).filter(isValidElement);
     return (
-        <div className={cx("overflow-hidden rounded-ios-control bg-primary ring-1 ring-primary ring-inset", className)}>
+        <div className={cx("overflow-hidden rounded-ios-control bg-primary ring-1 ring-primary ring-inset in-[.crane-web]:rounded-lg", className)}>
             {rows.map((r, i) => (
                 <Fragment key={r.key ?? i}>
                     {i > 0 && <div className="h-px bg-border-primary" />}
@@ -41,12 +41,12 @@ export interface FieldCellProps extends Omit<AriaTextFieldProps, "children" | "c
 /** A single labelled input cell inside a FieldGroup. */
 export const FieldCell = ({ label, placeholder, inputMode, autoComplete, ...props }: FieldCellProps) => (
     <AriaTextField {...props} className="group flex flex-col gap-1 px-3.5 pt-3 pb-2.5 focus-within:bg-brand-primary_alt/40">
-        <AriaLabel className="text-ios-caption1 font-medium tracking-[0.04em] text-tertiary uppercase">{label}</AriaLabel>
+        <AriaLabel className="text-ios-caption1 font-medium tracking-[0.04em] text-tertiary uppercase in-[.crane-web]:text-xs">{label}</AriaLabel>
         <AriaInput
             placeholder={placeholder}
             inputMode={inputMode}
             autoComplete={autoComplete}
-            className="h-[28px] bg-transparent text-ios-body text-primary outline-none placeholder:text-placeholder"
+            className="h-[28px] bg-transparent text-ios-body text-primary outline-none placeholder:text-placeholder in-[.crane-web]:text-md"
         />
     </AriaTextField>
 );

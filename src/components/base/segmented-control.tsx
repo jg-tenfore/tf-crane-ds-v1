@@ -42,8 +42,8 @@ export const SegmentedControl = ({ options, value, onChange, variant = "ios", cl
                 className={cx(
                     "flex-1 cursor-pointer outline-none focus-visible:ring-4 focus-visible:ring-brand-300/60 disabled:cursor-not-allowed disabled:opacity-50",
                     variant === "ios"
-                        ? "h-[30px] rounded-[7px] text-ios-subheadline font-medium text-primary transition duration-150 ease-ios data-[selected]:bg-primary data-[selected]:font-semibold data-[selected]:shadow-[0_3px_8px_rgba(0,0,0,0.12),0_3px_1px_rgba(0,0,0,0.04)]"
-                        : "press-scale h-[44px] rounded-ios-control bg-tertiary text-ios-body font-medium text-tertiary data-[selected]:bg-brand-solid data-[selected]:font-semibold data-[selected]:text-white",
+                        ? "h-[30px] rounded-[7px] text-ios-subheadline font-medium text-primary transition duration-150 ease-ios data-[selected]:bg-primary data-[selected]:font-semibold data-[selected]:shadow-[0_3px_8px_rgba(0,0,0,0.12),0_3px_1px_rgba(0,0,0,0.04)] in-[.crane-web]:text-sm"
+                        : "press-scale h-[44px] rounded-ios-control bg-tertiary text-ios-body font-medium text-tertiary data-[selected]:bg-brand-solid data-[selected]:font-semibold data-[selected]:text-white in-[.crane-web]:rounded-lg in-[.crane-web]:text-md",
                 )}
             >
                 {o.label}

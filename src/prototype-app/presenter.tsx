@@ -245,6 +245,13 @@ export const Presenter = () => {
                             <ArrowUpRight className="size-4" aria-hidden="true" />
                         </a>
                     </div>
+                    <a
+                        href="web/"
+                        className="flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold text-brand-secondary ring-1 ring-brand transition duration-100 ease-linear ring-inset hover:bg-brand-primary_alt"
+                    >
+                        Open the Crane Web prototype
+                        <ArrowUpRight className="size-4" aria-hidden="true" />
+                    </a>
                     <p className="text-xs text-quaternary">State is saved in this browser. On an iPhone, open this page and Add to Home Screen to run it full-screen.</p>
                 </div>
             </aside>

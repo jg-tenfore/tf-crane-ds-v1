@@ -29,7 +29,7 @@ const bannerTones = sortCx({
 export const StatusBanner = ({ tone = "error", icon, children, className }: StatusBannerProps) => {
     const Icon = icon ?? (tone === "error" ? Clock : toneIcon[tone]);
     return (
-        <div role="status" className={cx("flex items-center justify-center gap-2 px-gutter py-2.5 text-ios-subheadline font-medium", bannerTones[tone], className)}>
+        <div role="status" className={cx("flex items-center justify-center gap-2 px-gutter py-2.5 text-ios-subheadline font-medium in-[.crane-web]:text-sm", bannerTones[tone], className)}>
             <Icon className="size-[18px]" aria-hidden="true" />
             {children}
         </div>
@@ -63,7 +63,7 @@ export const Notice = ({ tone = "info", title, children, variant = "soft", class
 
     if (variant === "accent") {
         return (
-            <div role="note" className={cx("rounded-ios-control border-l-4 px-4 py-3.5 text-ios-subheadline shadow-ios-card", t.rule, t.box, "text-primary", className)}>
+            <div role="note" className={cx("rounded-ios-control border-l-4 px-4 py-3.5 text-ios-subheadline shadow-ios-card in-[.crane-web]:rounded-lg in-[.crane-web]:text-sm", t.rule, t.box, "text-primary", className)}>
                 {title && <div className="mb-0.5 font-semibold">{title}</div>}
                 {children}
             </div>
@@ -76,8 +76,8 @@ export const Notice = ({ tone = "info", title, children, variant = "soft", class
                 <span className={cx("flex size-7 shrink-0 items-center justify-center rounded-full", t.badge)}>
                     <Icon className="size-4" aria-hidden="true" />
                 </span>
-                <div className="min-w-0 flex-1 text-ios-subheadline text-tertiary">
-                    {title && <div className="mb-0.5 text-ios-headline text-primary">{title}</div>}
+                <div className="min-w-0 flex-1 text-ios-subheadline text-tertiary in-[.crane-web]:text-sm">
+                    {title && <div className="mb-0.5 text-ios-headline text-primary in-[.crane-web]:text-md">{title}</div>}
                     {children}
                 </div>
             </div>
@@ -85,7 +85,7 @@ export const Notice = ({ tone = "info", title, children, variant = "soft", class
     }
 
     return (
-        <div role="note" className={cx("flex gap-2.5 rounded-ios-control px-3.5 py-3 text-ios-subheadline", t.box, className)}>
+        <div role="note" className={cx("flex gap-2.5 rounded-ios-control px-3.5 py-3 text-ios-subheadline in-[.crane-web]:rounded-lg in-[.crane-web]:text-sm", t.box, className)}>
             <Icon className={cx("mt-0.5 size-[18px] shrink-0", t.icon)} aria-hidden="true" />
             <div className="min-w-0 flex-1 text-primary">
                 {title && <div className="font-semibold">{title}</div>}

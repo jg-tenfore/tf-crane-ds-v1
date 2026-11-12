@@ -1,0 +1,46 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Crane Web/Overview" />
+
+# Crane Web
+
+**Crane Web** (crane.tenfore.golf) is the responsive web version of the Crane app. It's replacing **Fox** as TenFore's web shop and booking site. This category remaps the Fox web layouts into the Crane design system. Fox stays as an archive: its edge cases and flows are the starting point, and its look is not.
+
+## What's the same as Crane mobile, and what's different
+
+**The same:** brand green `#2C7C4D`, the semantic color tokens, Warm Dark, the pale status badges, buttons, fields and notices.
+
+**Different on the web:**
+
+- **Font:** Outfit, matching live CraneWeb. iPhone screens keep SF Pro. The font is scoped by `WebFrame`, so the two never mix.
+- **Chrome:** a plain white two-row header with no glass:
+  - Top row: location, cart total, account.
+  - Main row: the course switcher and uppercase, letter-spaced section links (Tee Times · Shop · Activities · Clinics · Leagues · Restaurant · Events · Calendar).
+- **Course switching:** a left drawer with search, like the live site.
+- **Footer:** course address, Contact, and "Powered by TenFore Golf".
+
+## Try it
+
+- **Clickable prototype (full window):** `npm run prototype`, then open http://localhost:6022/web/. Once published, it's at https://jg-tenfore.github.io/tf-crane-ds-v1/prototype/web/.
+- **In Storybook:** **Crane Web › Flow** shows the whole app in a browser frame.
+
+## Sizes
+
+Every screen is reviewed in a browser frame at **1440** (desktop), **1024** (laptop) and **390** (mobile web). The page inside the frame is a CSS container, so components respond to the frame's width (`@tablet:` 768+ and `@desktop:` 1024+) rather than the Storybook window. Below 768 the layout matches the native app: menu · course · cart, with section tabs underneath.
+
+## What's here
+
+- **Tee Times:** tee sheet grid with a selector bar, the hold-timer checkout, confirmation and My Rounds.
+- **Shop:** the Fox Shop and Shop Checkout designs. Cart → Add More → Checkout → Confirmation, with Club Offerings, gift and punch cards.
+- **Restaurant:** order ahead for pickup at the Grill, at a set time or "at the turn".
+- **Events, Clinics, Leagues, Activities, Calendar.**
+- **Profile ∕ Account:** Fox's six sections (Overview, My Account, Activity, Wallet, Golf Buddies, Events) plus Memberships.
+- **Sign in ∕ Sign up.**
+
+## From the Nov 11 CraneWeb call
+
+- **Fox-style routing:** groups → subgroups → products. Every level has its own deep link, for example `/shop/golf-balls/dozens`, which a course can put on its website or in an email. Two category-navigation variants are built for review: **Tabs**, as CraneWeb has today, and **Sidebar**, as Fox had.
+- **Mobile web:** a category menu and search, instead of one long scroll.
+- **Checkout with a shipping address**, so tax is charged for where the order is going (state, county and city). Pick up at the course is also offered, and food orders are pickup-only.
+- **Food & drinks and pro shop items check out separately**, the same rule as live CraneWeb.
+
