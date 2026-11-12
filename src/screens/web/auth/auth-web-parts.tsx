@@ -42,7 +42,7 @@ import mist from "./images/sign-in-mist.webp";
 
 /**
  * Brand-panel photography (Higgsfield, from Sagamore course references), portrait 2:3 at
- * 1000px. `mist` is the default; the others are kept as options for review.
+ * 1000px. `green` (the putting green) is the default everywhere — web and the iPhone Welcome screen; the others are kept as options.
  */
 export const AUTH_BACKGROUNDS = {
   mist,
@@ -51,7 +51,7 @@ export const AUTH_BACKGROUNDS = {
 } as const;
 export type AuthBackground = keyof typeof AUTH_BACKGROUNDS;
 /** Lets stories (and later a course setting) pick the brand-panel photo. */
-export const AuthBackgroundContext = createContext<AuthBackground>("mist");
+export const AuthBackgroundContext = createContext<AuthBackground>("green");
 
 export {
   formatSeconds,

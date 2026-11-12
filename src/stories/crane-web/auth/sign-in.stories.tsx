@@ -53,7 +53,7 @@ export const MobileWeb: Story = {
     ),
 };
 
-/** Brand-panel photo options (Sagamore course imagery under a deep-green wash). Mist is the default. */
+/** Brand-panel photo options (Sagamore course imagery under a deep-green wash). Green is the default. */
 const WithBackground = ({ background }: { background: AuthBackground }) => (
     <AuthBackgroundContext.Provider value={background}>
         <WebScreen path="/sign-in" signedIn={false}>
@@ -62,4 +62,4 @@ const WithBackground = ({ background }: { background: AuthBackground }) => (
     </AuthBackgroundContext.Provider>
 );
 export const BackgroundGoldenHour: Story = { name: "Background · Golden hour", render: () => <WithBackground background="golden-hour" /> };
-export const BackgroundGreen: Story = { name: "Background · Green", render: () => <WithBackground background="green" /> };
+export const BackgroundMist: Story = { name: "Background · Mist", render: () => <WithBackground background="mist" /> };

@@ -44,7 +44,7 @@ export const MobileWeb: Story = {
     ),
 };
 
-/* Brand-panel photo options on Sign up. Mist is the default (the Empty story above). */
+/* Brand-panel photo options on Sign up. Green is the default (the Empty story above). */
 const SignUpWith = ({ background }: { background: AuthBackground }) => (
     <AuthBackgroundContext.Provider value={background}>
         <WebScreen path="/sign-up" signedIn={false}>
@@ -53,4 +53,4 @@ const SignUpWith = ({ background }: { background: AuthBackground }) => (
     </AuthBackgroundContext.Provider>
 );
 export const BackgroundGoldenHour: Story = { name: "Background · Golden hour", render: () => <SignUpWith background="golden-hour" /> };
-export const BackgroundGreen: Story = { name: "Background · Green", render: () => <SignUpWith background="green" /> };
+export const BackgroundMist: Story = { name: "Background · Mist", render: () => <SignUpWith background="mist" /> };

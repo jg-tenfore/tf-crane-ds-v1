@@ -2,6 +2,7 @@ import { Screen } from "@/components/device/screen";
 import { Button } from "@/components/base/button";
 import { CraneLockup, TfLogo } from "@/components/foundations/logos";
 import { useStack } from "@/components/prototype/stack-navigator";
+import signInGreen from "@/screens/web/auth/images/sign-in-green.webp";
 import { SocialButtons } from "./auth-parts";
 
 export interface WelcomeScreenProps {
@@ -19,8 +20,13 @@ export const WelcomeScreen = ({ onSocial }: WelcomeScreenProps) => {
 
     return (
         <Screen background="plain">
-            {/* Soft brand wash behind the hero; fades to the plain background. */}
-            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[460px] bg-linear-to-b from-bg-brand-primary to-transparent dark:opacity-50" />
+            {/* Course photo behind the hero (same image as Crane Web's sign-in panel). A light veil
+                keeps the status bar readable; the bottom fades into the plain background. */}
+            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[450px] overflow-hidden">
+                <img src={signInGreen} alt="" className="size-full object-cover object-top" />
+                <div className="absolute inset-x-0 top-0 h-28 bg-linear-to-b from-white/70 to-transparent dark:from-black/50" />
+                <div className="absolute inset-x-0 bottom-0 h-56 bg-linear-to-b from-transparent via-bg-primary/85 to-bg-primary" />
+            </div>
 
             <div className="relative flex min-h-full flex-col px-gutter">
                 <div className="flex flex-1 flex-col items-center justify-center pb-6 text-center">

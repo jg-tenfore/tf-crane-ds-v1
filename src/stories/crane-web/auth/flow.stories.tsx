@@ -85,7 +85,7 @@ export const WithNext: Story = {
     ),
 };
 
-/* Brand-panel photo options — the whole flow with each background. Mist is the default (the Flow story above). */
+/* Brand-panel photo options — the whole flow with each background. Green is the default (the Flow story above). */
 const FlowWith = ({ background }: { background: AuthBackground }) => (
     <AuthBackgroundContext.Provider value={background}>
         <WebScreen path="/sign-in" signedIn={false}>
@@ -94,4 +94,4 @@ const FlowWith = ({ background }: { background: AuthBackground }) => (
     </AuthBackgroundContext.Provider>
 );
 export const BackgroundGoldenHour: Story = { name: "Background · Golden hour", render: () => <FlowWith background="golden-hour" /> };
-export const BackgroundGreen: Story = { name: "Background · Green", render: () => <FlowWith background="green" /> };
+export const BackgroundMist: Story = { name: "Background · Mist", render: () => <FlowWith background="mist" /> };
