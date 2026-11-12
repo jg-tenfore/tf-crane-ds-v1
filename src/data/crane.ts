@@ -26,10 +26,26 @@ export interface Course {
     address?: string;
     /** Saved to "My Courses". */
     saved?: boolean;
+    /**
+     * Logo image URL. Optional: Sagamore, MCG, FloGolf and Kettle Hills courses get theirs from
+     * `courseBrandFor()` (src/screens/chrome/course-brands.ts); others show initials.
+     */
+    logo?: string;
 }
 
 export const COURSES: Course[] = [
-    { id: "sagamore-spring", name: "Sagamore Spring Golf Club", shortName: "SSGC", city: "Lynnfield", state: "MA", distanceMi: 9.5, saved: true },
+    {
+        id: "sagamore-spring",
+        name: "Sagamore Spring Golf Club",
+        shortName: "SSGC",
+        city: "Lynnfield",
+        state: "MA",
+        distanceMi: 9.5,
+        saved: true,
+        phone: "(781) 555-0151",
+        email: "proshop@tenfore.golf",
+        address: "1287 Main Street, Lynnfield, MA 01940",
+    },
     { id: "mount-hood", name: "Mount Hood Golf Course", shortName: "Mount Hood", city: "Melrose", state: "MA", distanceMi: 2.3, saved: true },
     { id: "grand-view", name: "Grand View Lodge - The Pines", shortName: "The Pines", city: "Nisswa", state: "MN", saved: true },
     { id: "bushwood", name: "Bushwood Country Club", shortName: "Bushwood", city: "Spring Branch", state: "TX", saved: true },

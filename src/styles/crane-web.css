@@ -1,0 +1,37 @@
+/**
+ * Crane Web layer — the responsive web/desktop surface (crane.tenfore.golf).
+ *
+ * Fonts are scoped per surface: iPhone screens keep SF Pro (cupertino.css); anything
+ * inside `.crane-web` (WebFrame adds it) switches to Outfit, matching live CraneWeb.
+ * Colour, Warm Dark, status badges and components are shared with Crane mobile.
+ */
+
+@theme {
+    --font-web: "Outfit Variable", "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+    /* Container sizes for the web frame. Components respond to the FRAME width (@container),
+       not the Storybook viewport, so a 1440 story and a 390 story render correctly side by side.
+       Use as @tablet: (≥768) and @desktop: (≥1024). */
+    --container-tablet: 48rem;
+    --container-desktop: 64rem;
+    --container-wide: 80rem; /* ≥1280: roomier header nav */
+
+    /* Page widths */
+    --container-web: 1200px; /* header/footer rail */
+    --container-web-content: 1080px; /* checkout / cart columns */
+}
+
+.crane-web {
+    --font-body: var(--font-web);
+    --font-display: var(--font-web);
+    font-family: var(--font-web);
+}
+
+/* Uppercase, letter-spaced labels — CraneWeb nav, tabs, eyebrows, small buttons. */
+@utility caps {
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}

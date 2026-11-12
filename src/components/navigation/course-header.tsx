@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Menu01, ShoppingCart01 } from "@untitledui/icons";
 import { Button as AriaButton } from "react-aria-components";
 import { cx } from "@/utils/cx";
@@ -7,6 +8,8 @@ import { useSafeArea } from "@/components/device/iphone-frame";
 export interface CourseHeaderProps {
     courseName: string;
     city?: string;
+    /** Club logo shown beside the name (e.g. `<CourseLogo size={32} />` for courses with real artwork). */
+    logo?: ReactNode;
     cartCount?: number;
     onMenu?: () => void;
     onCart?: () => void;
@@ -20,7 +23,7 @@ export interface CourseHeaderProps {
  * course name + city, and the cart. Course context is global: everything below it
  * (tee sheet, store, clinics) is scoped to this course.
  */
-export const CourseHeader = ({ courseName, city, cartCount = 0, onMenu, onCart, onCourseInfo, className }: CourseHeaderProps) => {
+export const CourseHeader = ({ courseName, city, logo, cartCount = 0, onMenu, onCart, onCourseInfo, className }: CourseHeaderProps) => {
     const { top: safeTop } = useSafeArea();
     return (
         <header className={cx("bg-primary/85 backdrop-blur-xl backdrop-saturate-150", className)} style={{ paddingTop: safeTop - 8 }}>
@@ -35,10 +38,13 @@ export const CourseHeader = ({ courseName, city, cartCount = 0, onMenu, onCart, 
                 <AriaButton
                     onPress={onCourseInfo}
                     aria-label={`${courseName} course info`}
-                    className="flex min-w-0 flex-1 cursor-pointer flex-col items-center rounded-lg outline-none focus-visible:ring-4 focus-visible:ring-brand-300/60"
+                    className="flex min-w-0 flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg outline-none focus-visible:ring-4 focus-visible:ring-brand-300/60"
                 >
-                    <span className="max-w-full truncate text-ios-headline text-primary">{courseName}</span>
-                    {city && <span className="text-ios-caption1 text-tertiary">{city}</span>}
+                    {logo}
+                    <span className={cx("flex min-w-0 flex-col", logo ? "items-start" : "items-center")}>
+                        <span className="max-w-full truncate text-ios-headline text-primary">{courseName}</span>
+                        {city && <span className="text-ios-caption1 text-tertiary">{city}</span>}
+                    </span>
                 </AriaButton>
                 <AriaButton
                     aria-label={cartCount ? `Cart, ${cartCount} items` : "Cart"}

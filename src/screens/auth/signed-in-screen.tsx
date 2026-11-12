@@ -3,6 +3,8 @@ import { Screen } from "@/components/device/screen";
 import { Button } from "@/components/base/button";
 import { useStack } from "@/components/prototype/stack-navigator";
 import { COURSES, USER } from "@/data/crane";
+import { hasCourseBrand } from "@/screens/chrome/course-brands";
+import { CourseLogo } from "@/screens/chrome/course-logo";
 import { AuthFooter } from "./auth-parts";
 
 export interface SignedInScreenProps {
@@ -46,7 +48,11 @@ export const SignedInScreen = ({ mode = "sign-in", courses = [], onDone }: Signe
                         <ul className="divide-y divide-border-secondary overflow-hidden rounded-ios-card bg-secondary">
                             {chosen.map((c) => (
                                 <li key={c.id} className="flex items-center gap-3 px-4 py-3">
-                                    <Flag01 className="size-5 shrink-0 text-fg-brand-primary" aria-hidden="true" />
+                                    {hasCourseBrand(c) ? (
+                                        <CourseLogo course={c} size={24} className="-my-0.5 rounded-md" />
+                                    ) : (
+                                        <Flag01 className="size-5 shrink-0 text-fg-brand-primary" aria-hidden="true" />
+                                    )}
                                     <span className="min-w-0 flex-1 truncate text-ios-body text-primary">{c.name}</span>
                                     <span className="text-ios-subheadline text-tertiary">{c.state}</span>
                                 </li>

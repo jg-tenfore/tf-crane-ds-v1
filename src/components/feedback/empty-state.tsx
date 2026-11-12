@@ -22,8 +22,8 @@ export const EmptyState = ({ icon: Icon, title, description, action, variant = "
         return (
             <div className={cx("flex flex-1 flex-col items-center justify-center px-10 text-center", className)}>
                 <IconTile icon={Icon} size="xl" shape="circle" className="mb-4 size-[100px] [&>svg]:size-11" />
-                <h2 className="text-ios-title3 text-primary">{title}</h2>
-                {description && <p className="mt-1.5 text-ios-subheadline text-tertiary">{description}</p>}
+                <h2 className="text-ios-title3 text-primary in-[.crane-web]:text-lg">{title}</h2>
+                {description && <p className="mt-1.5 text-ios-subheadline text-tertiary in-[.crane-web]:text-sm">{description}</p>}
                 {action && <div className="mt-6">{action}</div>}
             </div>
         );
@@ -32,8 +32,8 @@ export const EmptyState = ({ icon: Icon, title, description, action, variant = "
     return (
         <div className={cx("flex flex-col items-center px-10 pt-12 text-center", className)}>
             <Icon className="mb-3 size-[60px] text-fg-quaternary" strokeWidth={1.4} aria-hidden="true" />
-            <h2 className={cx("text-ios-callout", description ? "font-semibold text-tertiary" : "text-quaternary")}>{title}</h2>
-            {description && <p className="mt-1 text-ios-subheadline text-quaternary">{description}</p>}
+            <h2 className={cx("text-ios-callout in-[.crane-web]:text-md", description ? "font-semibold text-tertiary" : "text-quaternary")}>{title}</h2>
+            {description && <p className="mt-1 text-ios-subheadline text-quaternary in-[.crane-web]:text-sm">{description}</p>}
             {action && <div className="mt-5">{action}</div>}
         </div>
     );

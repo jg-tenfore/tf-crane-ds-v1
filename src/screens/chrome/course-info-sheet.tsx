@@ -3,6 +3,8 @@ import { Dialog as AriaDialog, Heading as AriaHeading, Modal as AriaModal, Modal
 import { GlassIconButton } from "@/components/base/glass-button";
 import { ListGroup, ListRow } from "@/components/lists/list";
 import { useCourse } from "./course-context";
+import { hasCourseBrand } from "./course-brands";
+import { CourseLogo } from "./course-logo";
 
 /**
  * Course info — opened by tapping the course name in the header. Hero logo/photo,
@@ -21,12 +23,16 @@ export const CourseInfoSheet = () => {
                 <AriaDialog className="relative flex h-full flex-col outline-none">
                     {({ close }) => (
                         <>
-                            {/* Placeholder hero until real course imagery is wired up. */}
+                            {/* Placeholder hero until real course imagery is wired up; clubs with artwork show their logo. */}
                             <div
                                 data-placeholder-asset="course-hero"
                                 className="relative flex h-[200px] shrink-0 items-center justify-center bg-gradient-to-br from-brand-500 to-brand-800"
                             >
-                                <Flag01 className="size-16 text-white/85" aria-hidden="true" />
+                                {hasCourseBrand(course) ? (
+                                    <CourseLogo course={course} size={112} className="rounded-2xl shadow-ios-float ring-0" />
+                                ) : (
+                                    <Flag01 className="size-16 text-white/85" aria-hidden="true" />
+                                )}
                                 <GlassIconButton icon={XClose} aria-label="Close" onPress={close} className="absolute top-3 right-3" />
                             </div>
                             <AriaHeading slot="title" className="px-gutter pt-4 pb-3 text-ios-title2 text-primary">

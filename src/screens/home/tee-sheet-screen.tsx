@@ -8,6 +8,8 @@ import { TeeTimeCard, type TeeTime } from "@/components/lists/tee-time-card";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { COURSE_SECTIONS, TODAY, teeSheet } from "@/data/crane";
 import { useCourse } from "@/screens/chrome/course-context";
+import { hasCourseBrand } from "@/screens/chrome/course-brands";
+import { CourseLogo } from "@/screens/chrome/course-logo";
 import { useBookings } from "@/screens/bookings/bookings-store";
 import { useToast } from "@/components/feedback/toast";
 import { useAppShell } from "@/components/prototype/app-shell";
@@ -44,6 +46,7 @@ export const TeeSheetScreen = ({ openTeeTimeIndex, bookingStep, cartCount = 0 }:
             <CourseHeader
                 courseName={course.name}
                 city={course.city}
+                logo={hasCourseBrand(course) ? <CourseLogo course={course} size={32} className="rounded-md" /> : undefined}
                 cartCount={cartCount}
                 onMenu={() => setDrawerOpen(true)}
                 onCourseInfo={() => setInfoOpen(true)}

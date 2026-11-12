@@ -78,7 +78,7 @@ export interface PillProps {
 export const Pill = ({ children, icon: Icon, tone = "gray", className }: PillProps) => (
     <span
         className={cx(
-            "inline-flex h-[24px] items-center gap-1 rounded-full px-2.5 text-ios-footnote font-medium",
+            "inline-flex h-[24px] items-center gap-1 rounded-full px-2.5 text-ios-footnote font-medium in-[.crane-web]:text-xs",
             tone === "brand" ? "bg-brand-solid text-white" : "bg-primary text-secondary ring-1 ring-secondary",
             className,
         )}
@@ -111,7 +111,7 @@ export interface StatusBadgeProps {
 export const StatusBadge = ({ children, tone = "success", className }: StatusBadgeProps) => (
     <span
         className={cx(
-            "inline-flex h-[24px] shrink-0 items-center rounded-md px-2 text-ios-footnote font-semibold whitespace-nowrap",
+            "inline-flex h-[24px] shrink-0 items-center rounded-md px-2 text-ios-footnote font-semibold whitespace-nowrap in-[.crane-web]:text-xs",
             statusTones[tone],
             className,
         )}

@@ -51,7 +51,10 @@ export const PrototypeLink = () => {
                 <span className="flex min-w-[260px] flex-1 flex-col" style={{ gap: 18 }}>
                     <span className="flex items-center gap-3">
                         <CraneAppIcon size={52} />
-                        <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold tracking-wide text-white uppercase">Interactive prototype</span>
+                        <span className="flex min-w-0 flex-col" style={{ gap: 2 }}>
+                            <span className="text-xs font-semibold tracking-wide whitespace-nowrap text-white/70 uppercase">Interactive prototype</span>
+                            <span className="text-md font-semibold whitespace-nowrap text-white">Crane · iPhone app</span>
+                        </span>
                     </span>
                     <span className="flex flex-col" style={{ gap: 8 }}>
                         <span className="block font-bold tracking-tight text-white" style={{ fontSize: 36, lineHeight: "42px" }}>

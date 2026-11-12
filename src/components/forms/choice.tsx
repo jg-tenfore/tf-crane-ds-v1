@@ -29,22 +29,22 @@ export interface RadioCardGroupProps {
 /** Stacked full-width radio rows; the selected row tints green. "Walking / Golf Car". */
 export const RadioCardGroup = ({ label, options, value, onChange, className }: RadioCardGroupProps) => (
     <AriaRadioGroup value={value} onChange={onChange} aria-label={label} className={cx("flex flex-col gap-2", className)}>
-        {label && <AriaLabel className="mb-1 text-ios-headline text-primary">{label}</AriaLabel>}
+        {label && <AriaLabel className="mb-1 text-ios-headline text-primary in-[.crane-web]:text-md">{label}</AriaLabel>}
         {options.map((o) => (
             <AriaRadio
                 key={o.id}
                 value={o.id}
                 isDisabled={o.isDisabled}
-                className="group flex min-h-[52px] cursor-pointer items-center gap-3 rounded-ios-control bg-secondary px-4 py-3 outline-none transition duration-100 ease-linear data-[focus-visible]:ring-4 data-[focus-visible]:ring-brand-300/60 data-[selected]:bg-brand-primary_alt dark:data-[selected]:ring-1 dark:data-[selected]:ring-brand dark:data-[selected]:ring-inset disabled:cursor-not-allowed disabled:opacity-50"
+                className="group flex min-h-[52px] cursor-pointer items-center gap-3 rounded-ios-control bg-secondary px-4 py-3 outline-none transition duration-100 ease-linear data-[focus-visible]:ring-4 data-[focus-visible]:ring-brand-300/60 data-[selected]:bg-brand-primary_alt dark:data-[selected]:ring-1 dark:data-[selected]:ring-brand dark:data-[selected]:ring-inset disabled:cursor-not-allowed disabled:opacity-50 in-[.crane-web]:min-h-11 in-[.crane-web]:rounded-lg"
             >
                 <span className="flex size-[22px] shrink-0 items-center justify-center rounded-full bg-primary ring-1 ring-primary group-data-[selected]:bg-brand-solid group-data-[selected]:ring-0">
                     <span className="size-2 rounded-full bg-white opacity-0 group-data-[selected]:opacity-100" />
                 </span>
                 <span className="flex min-w-0 flex-1 flex-col">
-                    <span className="text-ios-subheadline font-medium tracking-[0.02em] text-primary uppercase">{o.label}</span>
-                    {o.description && <span className="text-ios-footnote text-tertiary">{o.description}</span>}
+                    <span className="text-ios-subheadline font-medium tracking-[0.02em] text-primary uppercase in-[.crane-web]:text-sm">{o.label}</span>
+                    {o.description && <span className="text-ios-footnote text-tertiary in-[.crane-web]:text-xs">{o.description}</span>}
                 </span>
-                {o.detail && <span className="text-ios-subheadline font-semibold text-primary tabular-nums">{o.detail}</span>}
+                {o.detail && <span className="text-ios-subheadline font-semibold text-primary tabular-nums in-[.crane-web]:text-sm">{o.detail}</span>}
             </AriaRadio>
         ))}
     </AriaRadioGroup>
@@ -76,7 +76,7 @@ export const ChoiceChips = ({ options, value, onChange, className, ...props }: C
                 key={o.id}
                 id={o.id}
                 isDisabled={o.isDisabled}
-                className="press-scale flex size-[44px] cursor-pointer items-center justify-center rounded-full bg-tertiary text-ios-headline text-primary outline-none focus-visible:ring-4 focus-visible:ring-brand-300/60 disabled:cursor-not-allowed disabled:opacity-40 data-[selected]:bg-brand-solid data-[selected]:text-white"
+                className="press-scale flex size-[44px] cursor-pointer items-center justify-center rounded-full bg-tertiary text-ios-headline text-primary outline-none focus-visible:ring-4 focus-visible:ring-brand-300/60 disabled:cursor-not-allowed disabled:opacity-40 data-[selected]:bg-brand-solid data-[selected]:text-white in-[.crane-web]:text-md"
             >
                 {o.label}
             </AriaToggleButton>

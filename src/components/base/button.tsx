@@ -11,6 +11,10 @@ export const buttonStyles = sortCx({
         sm: { root: "h-[34px] rounded-full px-3.5 text-ios-subheadline font-semibold", icon: "size-4" },
         md: { root: "h-[44px] rounded-ios-control px-4 text-ios-body font-semibold", icon: "size-5" },
         lg: { root: "h-[50px] rounded-ios-control px-5 text-ios-headline", icon: "size-5" },
+        /* Crane Web sizes (Outfit web scale, 8px corners). Use inside WebFrame. */
+        "web-sm": { root: "h-9 rounded-lg px-3.5 text-sm font-semibold", icon: "size-4" },
+        "web-md": { root: "h-10 rounded-lg px-4 text-sm font-semibold", icon: "size-4" },
+        "web-lg": { root: "h-12 rounded-lg px-5 text-md font-semibold", icon: "size-5" },
     },
     colors: {
         /** Solid brand green — the one primary action on a screen. */
