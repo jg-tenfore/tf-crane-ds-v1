@@ -12,7 +12,7 @@ import { ScreenFiller } from "../story-kit";
  * it never escapes the phone. Press the button on each screen to open it.
  */
 const meta: Meta<typeof AlertDialog> = {
-    title: "Components/Overlays/Alert Dialog",
+    title: "Design System/Components/Overlays/Alert Dialog",
     component: AlertDialog,
     parameters: { phone: true },
 };

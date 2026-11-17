@@ -12,7 +12,7 @@ import { WebScreen } from "../web-story-kit";
  * Leagues, Activities and Calendar from the header. Paths outside these sections show a stub.
  */
 const meta: Meta = {
-    title: "Crane Web/Events/Flow",
+    title: "Prototypes/Crane Web/Events/Flow",
     parameters: { layout: "fullscreen" },
 };
 export default meta;

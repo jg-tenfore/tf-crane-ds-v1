@@ -16,7 +16,7 @@ import { Panel } from "../story-kit";
 const BASE: TeeTime = { id: "t-1", time: "9:30 AM", price: 53, spots: 4, holes: 18, course: "SHGC" };
 
 const meta: Meta<typeof TeeTimeCard> = {
-    title: "Components/Lists & Cards/Tee Time Card",
+    title: "Design System/Components/Lists & Cards/Tee Time Card",
     component: TeeTimeCard,
     tags: ["autodocs"],
     args: { teeTime: BASE },

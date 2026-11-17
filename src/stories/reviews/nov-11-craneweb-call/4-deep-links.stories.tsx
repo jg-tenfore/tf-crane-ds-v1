@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { WebWidth } from "@/components/web/web-frame";
 import { productById, productPath } from "@/data/shop";
 import { CraneWebRoutes, webRoutes } from "@/screens/web/web-app";
-import { WebScreen } from "../crane-web/web-story-kit";
+import { WebScreen } from "../../crane-web/web-story-kit";
 
 const caption = (story: string) => ({ docs: { description: { story } } });
 
@@ -22,7 +22,7 @@ const OpenAt = ({ path, width, sidebar, height }: { path: string; width?: WebWid
 const PRO_V1 = productPath(productById("ball-titleist-pro-v1-dozen")!);
 
 const meta: Meta = {
-    title: "Nov 11, 2026 Issues/4. Deep links",
+    title: "Reviews/Nov 11 – CraneWeb call/Changes/4. Deep links",
     parameters: {
         layout: "fullscreen",
         docs: {

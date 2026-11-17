@@ -3,7 +3,7 @@ import { KioskSignInScreen } from "@/screens/profile";
 import { ProfileStack } from "./profile-story-helpers";
 
 const meta: Meta = {
-    title: "Profile ∕ Account/Kiosk Sign-In",
+    title: "Prototypes/iPhone app/Profile ∕ Account/Kiosk Sign-In",
     parameters: {
         phone: true,
         docs: { description: { component: "Recreates **IMG_2178**. Kiosk Sign-In — QR + monospace code on a white card. The pill counts down from 30s and a new code is issued at zero." } },

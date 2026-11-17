@@ -9,7 +9,7 @@ const PRO_SHOP = linesFrom([
 ]);
 
 const meta: Meta = {
-    title: "Crane Web/Restaurant/Mixed Cart Dialog",
+    title: "Prototypes/Crane Web/Restaurant/Mixed Cart Dialog",
     parameters: {
         layout: "fullscreen",
         docs: {

@@ -8,7 +8,7 @@ import { WebScreen } from "../web-story-kit";
  * league" strip links straight to standings when the golfer is already on a team.
  */
 const meta: Meta = {
-    title: "Crane Web/Leagues/Browse",
+    title: "Prototypes/Crane Web/Leagues/Browse",
     parameters: { layout: "fullscreen" },
 };
 export default meta;

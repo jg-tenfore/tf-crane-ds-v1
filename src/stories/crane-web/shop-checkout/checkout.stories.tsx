@@ -4,7 +4,7 @@ import { CheckoutPage, FOOD_CART, RETAIL_CART } from "@/screens/web/checkout";
 import { WebScreen } from "../web-story-kit";
 
 const meta: Meta = {
-    title: "Crane Web/Shop/6. Checkout",
+    title: "Prototypes/Crane Web/Shop/6. Checkout",
     parameters: {
         layout: "fullscreen",
         docs: {

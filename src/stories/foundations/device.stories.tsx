@@ -8,7 +8,7 @@ import { NAV_CHROME_HEIGHT, TAB_BAR_CHROME_HEIGHT } from "@/components/device/sc
  * chrome heights that `Screen` uses to lay content out.
  */
 const meta = {
-    title: "Foundations/Device",
+    title: "Design System/Styles/Device",
     parameters: { layout: "centered" },
 } satisfies Meta;
 export default meta;

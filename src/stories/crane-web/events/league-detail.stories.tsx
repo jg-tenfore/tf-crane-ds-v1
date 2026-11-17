@@ -9,7 +9,7 @@ import { WebScreen } from "../web-story-kit";
  * place, points and request-a-sub for a league the golfer already plays.
  */
 const meta: Meta = {
-    title: "Crane Web/Leagues/League Details",
+    title: "Prototypes/Crane Web/Leagues/League Details",
     parameters: { layout: "fullscreen" },
 };
 export default meta;

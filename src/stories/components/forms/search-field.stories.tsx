@@ -10,7 +10,7 @@ import { Panel } from "../story-kit";
  * text. Escape also clears. Built on React Aria SearchField.
  */
 const meta: Meta<typeof SearchField> = {
-    title: "Components/Forms/Search Field",
+    title: "Design System/Components/Forms/Search Field",
     component: SearchField,
     tags: ["autodocs"],
     args: { placeholder: "Search courses" },

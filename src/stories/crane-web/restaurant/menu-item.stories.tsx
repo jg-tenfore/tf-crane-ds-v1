@@ -3,7 +3,7 @@ import { RestaurantPage } from "@/screens/web/restaurant";
 import { WebScreen } from "../web-story-kit";
 
 const meta: Meta = {
-    title: "Crane Web/Restaurant/Menu Item",
+    title: "Prototypes/Crane Web/Restaurant/Menu Item",
     parameters: {
         layout: "fullscreen",
         docs: {

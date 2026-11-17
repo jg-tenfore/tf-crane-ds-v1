@@ -8,7 +8,7 @@ import { authScreens } from "@/screens/auth";
  * or Welcome → I already have an account → Sign In (→ Forgot password) → You're all set.
  */
 const meta: Meta<typeof StackNavigator> = {
-    title: "Sign in ∕ Sign up/Flow",
+    title: "Prototypes/iPhone app/Sign in ∕ Sign up/Flow",
     component: StackNavigator,
     parameters: { phone: true },
 };

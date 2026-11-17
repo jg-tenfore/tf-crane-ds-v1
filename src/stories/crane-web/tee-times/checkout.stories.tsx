@@ -10,7 +10,7 @@ import { WebScreen } from "../web-story-kit";
  * cancellation warning and golf-car cutoff.
  */
 const meta: Meta = {
-    title: "Crane Web/Tee Times/Checkout",
+    title: "Prototypes/Crane Web/Tee Times/Checkout",
     parameters: { layout: "fullscreen" },
 };
 export default meta;

@@ -1,0 +1,223 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Banner, DocButton, DocPage, Grid, NavCard, Pill, Section, iphonePrototype, screen, webPrototype } from "../docs-kit/docs-kit";
+import { Bullets, Code, Rule, Swatch } from "./parts";
+
+<Meta title="Start Here/Style guide" />
+
+<DocPage>
+
+<Banner
+    eyebrow="The Crane style guide"
+    title="Eight rules, each with a screen that follows it."
+    pills={<><Pill>Colour</Pill><Pill>Type</Pill><Pill>iPhone canvas</Pill><Pill>Crane Web layout</Pill><Pill>Badges</Pill><Pill>Logos and imagery</Pill><Pill>Tee times</Pill><Pill>Dialogs and data</Pill></>}
+    actions={<><DocButton href={webPrototype("/tee-times")}>See it in Crane Web</DocButton><DocButton variant="secondary" to="design-system-styles-colors--brand">Colours</DocButton></>}
+>
+    One set of rules for the iPhone app and Crane Web. Each rule sits beside a real screen from the prototypes, and links to the Design System page behind it.
+</Banner>
+
+<Rule
+    n={1}
+    eyebrow="Colour"
+    title="Crane green, on Fox's semantic tokens"
+    img={screen("web-checkout")}
+    caption="Checkout · Crane Web"
+    links={[
+        { label: "Brand colours", to: "design-system-styles-colors--brand" },
+        { label: "Text colours", to: "design-system-styles-colors--text" },
+        { label: "Open this screen", href: webPrototype("/checkout") },
+    ]}
+>
+    <Bullets
+        items={[
+            ["Crane green is the brand.", <>brand-600 <Code>#2C7C4D</Code> for buttons, selected options and links; brand-500 <Code>#339C5E</Code> beside it. Both match the Crane app.</>],
+            ["Fox's tokens do the rest.", <>Style with semantic classes such as <Code>text-primary</Code>, <Code>bg-brand-solid</Code> and <Code>border-secondary</Code>, never raw greys like <Code>text-gray-900</Code>.</>],
+            ["Light and Warm Dark.", "The same tokens switch for Crane's dark theme, so no screen picks its own dark colours."],
+        ]}
+    />
+</Rule>
+
+<div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <Swatch color="#2C7C4D" name="brand-600" value="#2C7C4D" use="Buttons, selected options, links. White on it is 5.1:1." />
+    <Swatch color="#339C5E" name="brand-500" value="#339C5E" use="The lighter brand green." />
+    <Swatch color="#24663F" name="brand-700" value="#24663F" use="Hover and pressed brand." />
+    <Swatch color="#ECFAF1" name="brand-50" value="#ECFAF1" use="Pale green fills and tints." ring />
+</div>
+
+<Rule
+    n={2}
+    eyebrow="Type"
+    title="One typeface per surface"
+    img={screen("iphone-profile")}
+    frame="phone"
+    caption="Profile · iPhone app"
+    flip
+    links={[
+        { label: "iPhone type", to: "design-system-styles-typography--dynamic-type" },
+        { label: "Crane Web type", to: "design-system-crane-web-foundations--typography" },
+        { label: "Open this screen", href: iphonePrototype("/profile") },
+    ]}
+>
+    <Bullets
+        items={[
+            ["SF Pro on iPhone screens,", "on the iOS Dynamic Type scale, as the app has it."],
+            ["Outfit on Crane Web,", "matching the live site. WebFrame adds the scope, so Outfit never leaks into a phone screen."],
+            ["Web sizes inside the web.", <>Shared fields and buttons switch to web sizes inside <Code>.crane-web</Code>; Button has <Code>web-sm</Code>, <Code>web-md</Code> and <Code>web-lg</Code>.</>],
+        ]}
+    />
+</Rule>
+
+<Rule
+    n={3}
+    eyebrow="iPhone canvas"
+    title="iPhone 17, 402 × 874, with Liquid Glass chrome"
+    img={screen("iphone-home")}
+    frame="phone"
+    caption="Home · iPhone app"
+    links={[
+        { label: "Liquid Glass", to: "design-system-styles-liquid-glass--surfaces" },
+        { label: "Device", to: "design-system-styles-device--frames" },
+        { label: "Tab bar", to: "design-system-components-navigation-tab-bar--default" },
+        { label: "Open this screen", href: iphonePrototype("/home") },
+    ]}
+>
+    <Bullets
+        items={[
+            ["Every phone screen is 402 × 874,", "the same size as the reference screenshots. The toolbar's Frame shows it with or without the bezel."],
+            ["Liquid Glass on the nav bar and the floating tab bar.", "The look is ported from react-cupertino-ui and re-skinned in Crane's colours, not installed."],
+            ["Touch first.", <>Pressed states use React Aria's <Code>data-[pressed]</Code>. Nothing depends on hover.</>],
+        ]}
+    />
+</Rule>
+
+<Rule
+    n={4}
+    eyebrow="Crane Web layout"
+    title="A plain white header, and layouts that follow the frame"
+    img={screen("web-shop")}
+    caption="Shop · Crane Web at 1440"
+    flip
+    links={[
+        { label: "Widths", to: "design-system-crane-web-foundations--widths" },
+        { label: "Header & footer", to: "design-system-crane-web-components-header-footer--desktop" },
+        { label: "Open this screen", href: webPrototype("/shop") },
+    ]}
+>
+    <Bullets
+        items={[
+            ["Two-row white header, no glass.", "Location, cart and account on top; the club and its sections below."],
+            ["Container queries, not the window.", <>Components respond to the frame's width: <Code>@tablet</Code> 768, <Code>@desktop</Code> 1024, <Code>@wide</Code> 1280.</>],
+            ["Four review widths.", "1440, 1024, 768 and 390. Every Crane Web page has a story at desktop, laptop and mobile web."],
+        ]}
+    />
+</Rule>
+
+<Rule
+    eyebrow="Crane Web layout · mobile"
+    title="Under 768, the shop gets a sticky bar"
+    img={screen("web-mobile-shop")}
+    frame="phone"
+    caption="Golf Balls › Dozens · Crane Web at 390"
+    links={[
+        { label: "Mobile categories", to: "reviews-nov-11-craneweb-call-changes-2-mobile-categories-search--categories-menu" },
+        { label: "Open this screen", href: webPrototype("/shop/golf-balls/dozens") },
+    ]}
+>
+    A search field, a <strong>Categories</strong> button and a row of chips sit under the header. Inside a group, the chips switch to its subgroups. The Restaurant menu works the same way. Added after the Nov 11 call.
+</Rule>
+
+<Rule
+    n={5}
+    eyebrow="Badges"
+    title="Status badges stay pale"
+    img={screen("iphone-punch-cards")}
+    frame="phone"
+    caption="Punch Cards · iPhone app"
+    flip
+    links={[
+        { label: "Badges & tags", to: "design-system-components-feedback-badges-tags--docs" },
+        { label: "Status badges", to: "design-system-components-feedback-progress-status--status-badges" },
+        { label: "Open this screen", href: iphonePrototype("/profile/punch-cards") },
+    ]}
+>
+    <Bullets
+        items={[
+            ["Pale fill, dark text.", "Active, Expiring Soon and the rest, drawn the way the Crane app draws them."],
+            ["Pale in Warm Dark too.", "Badges don't turn into solid blocks in dark mode."],
+            ["A word, not only a colour.", "Every status has a label, so it reads without colour."],
+        ]}
+    />
+</Rule>
+
+<Rule
+    n={6}
+    eyebrow="Logos"
+    title="Real club logos, initials for the rest"
+    img={screen("iphone-locations")}
+    frame="phone"
+    caption="My Locations · iPhone app"
+    links={[
+        { label: "Course logos", to: "design-system-styles-logos--course-logos" },
+        { label: "Open this screen", href: iphonePrototype("/home") },
+    ]}
+>
+    The sample courses with a real logo show it: Sagamore, the MCG courses, FloGolf, Kettle Hills and Memorial Park. Every other course gets its initials on a pale green tile, so a list never mixes real logos with made-up ones.
+</Rule>
+
+<Rule
+    eyebrow="Imagery"
+    title="Real course photos, and art made from them"
+    img={screen("web-sign-in")}
+    caption="Sign in · Crane Web"
+    flip
+    links={[
+        { label: "Course info", to: "prototypes-iphone-app-app-chrome-locations--course-info-with-photo" },
+        { label: "Sign-in photos", to: "prototypes-crane-web-sign-in-∕-sign-up-sign-in--background-mist" },
+        { label: "Events", to: "prototypes-crane-web-events-browse--desktop" },
+    ]}
+>
+    <Bullets
+        items={[
+            ["Real course photography", "where a course has it, such as the course info sheet for the courses with real logos."],
+            ["Art made in Higgsfield from course references", "for the rest: the sign-in panel and the event and clinic cards. It should look like the club, not a stock photo."],
+            ["The putting green is the sign-in image,", "on the web and on the iPhone Welcome screen. Mist and Golden hour are built as alternatives."],
+        ]}
+    />
+</Rule>
+
+<Rule
+    n={7}
+    eyebrow="Tee times"
+    title="A 7-day strip, and More dates for courses that book further out"
+    img={screen("web-tee-times-advance")}
+    caption="Tee Times, advance booking · Crane Web"
+    links={[
+        { label: "Advance date", to: "prototypes-crane-web-tee-times-tee-times--advance-date" },
+        { label: "7-day course", to: "prototypes-crane-web-tee-times-tee-times--seven-day-course" },
+        { label: "Indoor venue", to: "prototypes-crane-web-tee-times-tee-times--indoor-venue" },
+        { label: "Date strip", to: "design-system-components-navigation-date-strip--default" },
+    ]}
+>
+    <Bullets
+        items={[
+            ["Seven days, today first.", "Each day shows its lowest price, or Closed."],
+            ["More dates, up to about 3 months.", "An eighth tile opens a month calendar for advance-booking courses: the Sagamore courses, The Pines and Woodstock. Others say \"Book up to 7 days ahead\"."],
+            ["Indoor venues say so.", "FloGolf has no tee sheet, so Tee Times explains that and points to bay booking."],
+        ]}
+    />
+</Rule>
+
+<Section title="8 · Dialogs, sample data and accessibility">
+<Grid cols={3}>
+    <NavCard eyebrow="8 · Dialogs" title="Under the nav on web, a sheet on phones" to="prototypes-crane-web-events-event-details--registration-dialog" cta="A web dialog">
+        On Crane Web at tablet width and up, a dialog sits just below the global nav, not centred. On mobile web it's a bottom sheet. The iPhone app uses iOS sheets and alerts.
+    </NavCard>
+    <NavCard eyebrow="Sample data" title="Everything is fictional" to="design-system-styles-logos--course-logos" cta="The sample courses">
+        The sample club is Sagamore Spring Golf Club in Lynnfield, MA, and "today" is Oct 9, 2026. Phone numbers are 555 numbers and emails are @tenfore.golf. No real personal details, because the repo is public.
+    </NavCard>
+    <NavCard eyebrow="Accessibility" title="Built on React Aria" to="design-system-components-actions-button--docs" cta="Button">
+        React Aria Components handle focus, keyboard and screen readers. Decorative icons are hidden from screen readers, and disabled controls fade to 50% rather than changing colour.
+    </NavCard>
+</Grid>
+</Section>
+
+</DocPage>

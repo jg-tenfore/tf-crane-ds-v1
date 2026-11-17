@@ -3,7 +3,7 @@ import { SignInScreen } from "@/screens/auth";
 import { USER } from "@/data/crane";
 
 const meta: Meta<typeof SignInScreen> = {
-    title: "Sign in ∕ Sign up/Sign In",
+    title: "Prototypes/iPhone app/Sign in ∕ Sign up/Sign In",
     component: SignInScreen,
     parameters: { phone: true },
 };

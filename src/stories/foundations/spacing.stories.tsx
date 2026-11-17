@@ -60,7 +60,7 @@ const steps: { n: number; utility: string }[] = [
 ];
 
 const meta = {
-    title: "Foundations/Spacing",
+    title: "Design System/Styles/Spacing",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

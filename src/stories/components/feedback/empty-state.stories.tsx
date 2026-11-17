@@ -12,7 +12,7 @@ import { NavigationBar } from "@/components/navigation/navigation-bar";
  * vertically centred (Waitlist).
  */
 const meta: Meta<typeof EmptyState> = {
-    title: "Components/Feedback/Empty State",
+    title: "Design System/Components/Feedback/Empty State",
     component: EmptyState,
     tags: ["autodocs"],
     parameters: { phone: true },

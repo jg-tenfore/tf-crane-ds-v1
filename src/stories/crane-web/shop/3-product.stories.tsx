@@ -6,7 +6,7 @@ import { GALLERY_SHOE_ID } from "@/screens/web/browse/product-page";
 import { ShopStory } from "./shop-story";
 
 const meta: Meta = {
-    title: "Crane Web/Shop/3. Product",
+    title: "Prototypes/Crane Web/Shop/3. Product",
     parameters: {
         layout: "fullscreen",
         docs: {

@@ -1,0 +1,219 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { DocButton, DocPage, Grid, Hero, HeroScreen, NavCard, Pill, ScreenCard, Section, iphonePrototype, screen, webPrototype } from "../docs-kit/docs-kit";
+import { Code, P, SubHead } from "./parts";
+import { MockupStage } from "../device-mockups";
+
+<Meta title="Start Here/Overview" />
+
+<DocPage>
+
+<Hero
+    eyebrow="TF Crane design system"
+    title="TenFore Golf for golfers, on iPhone and the web."
+    art="docs/hero-overview-art.webp"
+    pills={<><Pill>2 prototypes</Pill><Pill>277 stories</Pill><Pill>14 areas</Pill><Pill>Sample data only</Pill></>}
+    actions={<><DocButton href={webPrototype("/tee-times")}>Open Crane Web</DocButton><DocButton variant="secondary" to="start-here-how-to-review--docs">How to review</DocButton></>}
+    screens={<>
+        <HeroScreen src={screen("web-tee-times")} label="Crane Web · Tee Times" href={webPrototype("/tee-times")} />
+        <HeroScreen src={screen("iphone-home")} frame="phone" label="iPhone app · Home" href={iphonePrototype("/home")} />
+        <HeroScreen src={screen("web-checkout")} label="Crane Web · Checkout" href={webPrototype("/checkout")} />
+    </>}
+    footnote="Live screens from the two prototypes. The courses are real clubs; every golfer, order and price is sample data."
+>
+    Crane is the golfer side of TenFore: the iPhone app and Crane Web, the web app that replaces Fox. This Storybook is where their screens and UX are designed and reviewed, before they're built.
+</Hero>
+
+<P>
+    <strong>The iPhone app</strong> books tee times and holds bookings, the wallet and the profile. It's drawn at iPhone 17 (402 × 874) and will be built in Expo. <strong>Crane Web</strong> (crane.tenfore.golf) replaces Fox as TenFore's web shop and booking site, at 1440, 1024, 768 and 390 wide. Both use the same account, the same tokens and the same sample club: Sagamore Spring Golf Club in Lynnfield, MA, where "today" is Oct 9, 2026.
+</P>
+
+<div style={{ marginTop: 24 }}>
+<Grid cols={4}>
+    <NavCard eyebrow="The rules" title="Style guide" to="start-here-style-guide--docs" cta="Read the style guide">
+        Colour, type, the iPhone canvas, Crane Web's layout, badges, logos and imagery, tee times and dialogs, each with a real screen.
+    </NavCard>
+    <NavCard eyebrow="The plan" title="Process & roadmap" to="start-here-process-roadmap--docs" cta="See the roadmap">
+        The four steps from Storybook to the courses, the milestones so far and the decisions still open.
+    </NavCard>
+    <NavCard eyebrow="Your turn" title="How to review" to="start-here-how-to-review--docs" cta="Start reviewing">
+        Open the prototype beside Storybook and go through the pages that matter most, in order.
+    </NavCard>
+    <NavCard eyebrow="The calls" title="Reviews" to="reviews-nov-12-shop-checkout-summary--docs" cta="Open the latest">
+        Every review with product, newest first: what was decided and what was left open.
+    </NavCard>
+</Grid>
+</div>
+
+<Section title="Open Crane Web, area by area" intro="Six areas. Every page is a deep link in the prototype, and every state has a story.">
+<Grid cols={3}>
+    <ScreenCard
+        src={screen("web-tee-times")}
+        badge="Start here"
+        eyebrow="1 · Tee Times · 26 stories"
+        title="The tee sheet, checkout and My Rounds"
+        lookAt="the 7-day date strip and More dates, the time cards, the 1 to 4 player checkout."
+        links={[
+            { label: "Open the prototype", href: webPrototype("/tee-times") },
+            { label: "Stories", to: "prototypes-crane-web-tee-times-tee-times--desktop" },
+        ]}
+    >
+        Pick a course, day and players, hold a time and pay. Includes advance booking, a day with no times and an indoor venue.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-shop")}
+        eyebrow="2 · Shop · 46 stories"
+        title="The pro shop, through checkout"
+        lookAt="the category chips, the product page, the checkout's Ship or Pick up choice and its tax row."
+        links={[
+            { label: "Open the prototype", href: webPrototype("/shop") },
+            { label: "Stories", to: "prototypes-crane-web-shop-1-shop--desktop-tabs" },
+        ]}
+    >
+        Shop, category, product, cart, add more, checkout and confirmation, plus gift cards and punch cards. Tax is charged where the order ships.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-restaurant")}
+        eyebrow="3 · Restaurant · 21 stories"
+        title="Order food and drinks ahead"
+        lookAt="the menu sections, the item dialog, the pickup time, what happens when the kitchen is closed."
+        links={[
+            { label: "Open the prototype", href: webPrototype("/restaurant") },
+            { label: "Stories", to: "prototypes-crane-web-restaurant-restaurant--desktop" },
+        ]}
+    >
+        The clubhouse menu with pickup only. Food and pro shop items check out separately, and a dialog explains it when the cart is mixed.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-events")}
+        eyebrow="4 · Events, Clinics, Leagues · 41 stories"
+        title="Register for what's on at the club"
+        lookAt="the event cards and their badges, the registration dialog, waitlists, members-only events."
+        links={[
+            { label: "Open the prototype", href: webPrototype("/events") },
+            { label: "Events", to: "prototypes-crane-web-events-browse--desktop" },
+            { label: "Clinics", to: "prototypes-crane-web-clinics-browse--desktop" },
+            { label: "Leagues", to: "prototypes-crane-web-leagues-browse--desktop" },
+        ]}
+    >
+        Scrambles, charity outings and social nights; multi-week clinics; leagues with standings, schedules and team sign-up.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-activities")}
+        eyebrow="5 · Activities, Calendar · 13 stories"
+        title="Simulator bays and the club calendar"
+        lookAt="picking a bay and a time for a group, the calendar's month and list views."
+        links={[
+            { label: "Open the prototype", href: webPrototype("/activities") },
+            { label: "Activities", to: "prototypes-crane-web-activities-simulator-bays--desktop" },
+            { label: "Calendar", to: "prototypes-crane-web-calendar-calendar--month" },
+        ]}
+    >
+        Book a simulator bay by the hour, including at the FloGolf indoor venue, and see every event, clinic and league on one calendar.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-account")}
+        eyebrow="6 · Profile ∕ Account, Sign in · 64 stories"
+        title="The golfer's account"
+        lookAt="the overview tiles, the wallet, and the sign-in page's photo and copy."
+        links={[
+            { label: "Open the prototype", href: webPrototype("/account") },
+            { label: "Account", to: "prototypes-crane-web-profile-∕-account-overview--desktop" },
+            { label: "Sign in", to: "prototypes-crane-web-sign-in-∕-sign-up-sign-in--default" },
+        ]}
+    >
+        Overview, my account, activity and receipts, wallet, golf buddies, events and memberships. Sign in, sign up, verify email and choose a home course.
+    </ScreenCard>
+</Grid>
+</Section>
+
+<Section title="Open the iPhone app, area by area" intro="Three areas, plus Global Nav: the whole app in one clickable story.">
+<Grid cols={3}>
+    <ScreenCard
+        src={screen("iphone-home")}
+        frame="phone"
+        eyebrow="1 · App Chrome · 15 stories"
+        title="Home, locations and bookings"
+        lookAt="the floating tab bar, the course header, the booking sheet, the My Locations switcher."
+        links={[
+            { label: "Open the prototype", href: iphonePrototype("/home") },
+            { label: "Stories", to: "prototypes-iphone-app-app-chrome-home--tee-sheet" },
+            { label: "Global Nav", to: "prototypes-iphone-app-global-nav--prototype" },
+        ]}
+    >
+        The Home tee sheet with its booking sheet, switching courses, course info, and Bookings with reservations and purchases.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("iphone-profile")}
+        frame="phone"
+        eyebrow="2 · Profile ∕ Account · 28 stories"
+        title="Profile and wallet"
+        lookAt="the balance, punch cards, rain checks and gift cards, and each one's empty state."
+        links={[
+            { label: "Open the prototype", href: iphonePrototype("/profile") },
+            { label: "Stories", to: "prototypes-iphone-app-profile-∕-account-profile--default" },
+            { label: "Flow", to: "prototypes-iphone-app-profile-∕-account-flow--flow" },
+        ]}
+    >
+        Profile, balance, payment methods, golf buddies, memberships, appearance, kiosk QR sign-in and community.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("iphone-welcome")}
+        frame="phone"
+        eyebrow="3 · Sign in ∕ Sign up · 16 stories"
+        title="Getting in"
+        lookAt="the welcome screen, field errors, the email code, choosing a home course."
+        links={[
+            { label: "Open the prototype", href: iphonePrototype("/auth/welcome") },
+            { label: "Stories", to: "prototypes-iphone-app-sign-in-∕-sign-up-welcome--default" },
+            { label: "Flow", to: "prototypes-iphone-app-sign-in-∕-sign-up-flow--flow" },
+        ]}
+    >
+        Welcome, sign in or sign up, verify the email and choose a home course. Forgot password is here too.
+    </ScreenCard>
+</Grid>
+</Section>
+
+<Section title="Where things are" intro="Four folders in the sidebar, in this order.">
+<Grid cols={4}>
+    <NavCard eyebrow="1 · You are here" title="Start Here">
+        This page, the style guide, the process and roadmap, and how to review.
+    </NavCard>
+    <NavCard eyebrow="2" title="Prototypes" to="prototypes-crane-web-about-crane-web--docs" cta="About Crane Web">
+        Every screen and state, one story each: the iPhone app (Global Nav is the whole app) and Crane Web (Flow is the whole site).
+    </NavCard>
+    <NavCard eyebrow="3" title="Design System" to="design-system-styles-colors--brand" cta="See the colours">
+        Styles (colour, type, spacing, Liquid Glass, logos), the components, and Crane Web's widths, type and header.
+    </NavCard>
+    <NavCard eyebrow="4" title="Reviews" to="reviews-nov-12-shop-checkout-summary--docs" cta="Open the latest">
+        One folder per review call, newest first. Each opens on a summary, with the changes as stories.
+    </NavCard>
+</Grid>
+</Section>
+
+<Section title="Try the prototypes" intro="Both are separate Vite apps built from the same source as these stories, so they can't drift from them.">
+<div style={{ marginBottom: 16 }}><MockupStage /></div>
+<Grid cols={2}>
+    <NavCard eyebrow="iPhone app" title="Run it, and what works" href={iphonePrototype()} cta="Open the iPhone prototype">
+        <Code>npm run prototype</Code>, then localhost:6022. Live on GitHub Pages at /prototype/. Sign up or sign in, reserve a tee time, see it in Bookings and cancel it. Switch courses, set Appearance, sign out. State survives a reload, every screen has a deep link (for example <Code>#/profile/edit-profile</Code>), a side panel jumps to any screen, and <Code>#/reset</Code> starts over.
+    </NavCard>
+    <NavCard eyebrow="Crane Web" title="Run it, and the review panel" href={webPrototype("/tee-times")} cta="Open the Crane Web prototype">
+        <Code>npm run prototype:web</Code>, then localhost:6024/web/. Live on GitHub Pages at /prototype/web/. The review panel jumps to any page and switches the width (1440, 1024, 768, 390), light or dark, and Tabs or Sidebar shop navigation, or opens the site full-window. Every page is a deep link (for example <Code>#/shop/golf-balls/dozens</Code>) and browser Back works.
+    </NavCard>
+</Grid>
+</Section>
+
+<Section title="Using this Storybook">
+<Grid cols={3}>
+    <NavCard eyebrow="Toolbar" title="Theme and Frame">
+        <strong>Theme</strong> switches every phone story between light and dark. <strong>Frame</strong> shows the iPhone 17 bezel or the bare 402 × 874 screen.
+    </NavCard>
+    <NavCard eyebrow="Links" title="Every story has a link">
+        Every story has its own URL. Copy it from the address bar to point someone at an exact screen and state.
+    </NavCard>
+    <NavCard eyebrow="For engineering" title="Conventions" href="https://github.com/jg-tenfore/tf-crane-ds-v1/blob/main/CLAUDE.md" cta="CLAUDE.md">
+        Kebab-case files, React Aria imports prefixed <Code>Aria*</Code>, icons from <Code>@untitledui/icons</Code>, sample data in <Code>src/data/crane.ts</Code>.
+    </NavCard>
+</Grid>
+</Section>
+
+</DocPage>

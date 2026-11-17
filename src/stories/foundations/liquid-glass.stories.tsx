@@ -12,7 +12,7 @@ import { BackButton, GlassIconButton, GlassPillButton } from "@/components/base/
  * lists) stays on solid `bg-primary` so text contrast never depends on what's behind it.
  */
 const meta = {
-    title: "Foundations/Liquid Glass",
+    title: "Design System/Styles/Liquid Glass",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 export default meta;

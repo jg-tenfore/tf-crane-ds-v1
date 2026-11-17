@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
  * what ships, in both light and dark mode.
  */
 const meta = {
-    title: "Foundations/Colors",
+    title: "Design System/Styles/Colors",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

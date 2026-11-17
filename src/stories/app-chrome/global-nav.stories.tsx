@@ -14,7 +14,7 @@ import { profileScreens } from "@/screens/profile";
  * 3. **Push navigation** inside each tab (glass back capsule titled with the previous screen).
  */
 const meta: Meta = {
-    title: "App Chrome/Global Nav",
+    title: "Prototypes/iPhone app/Global Nav",
     parameters: { phone: true },
 };
 export default meta;

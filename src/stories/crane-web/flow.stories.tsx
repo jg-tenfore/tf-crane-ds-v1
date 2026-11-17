@@ -7,7 +7,7 @@ import { WebScreen } from "./web-story-kit";
  * between sections; the address bar shows each page's deep link.
  */
 const meta: Meta = {
-    title: "Crane Web/Flow",
+    title: "Prototypes/Crane Web/Flow",
     parameters: { layout: "fullscreen" },
 };
 export default meta;

@@ -52,10 +52,10 @@ Reference screenshots (`references/`, 1206 × 2622 @3x) are iPhone 17. Every scr
 - `CranePrototype` covers the signed-out auth stack → the signed-in `AppShell`. All state is in `PrototypeState` (`prototype-state.ts`): it's persisted to localStorage and mirrored to the URL hash (`#/profile/edit-profile`, `#/auth/welcome/sign-in`, `#/reset`).
 - Screens stay prototype-agnostic: they talk to optional contexts that no-op in Storybook. These are `useBookings()`, `useToast()`, `useAppShell()`, `useCourse()` and `useSafeArea()`. Never hard-code the 62/34 insets; use `useSafeArea()` / `useNavChromeHeight()`.
 - The `brand/` and `crane-logo/` folders are served and copied by a small plugin in `vite.prototype.config.ts`.
-- The Introduction's hero (`src/stories/prototype-link.tsx`) shows real screenshots from `public/prototype-preview/`.
+- Docs pages (Start Here, Screen indexes, Reviews) are built from `src/stories/docs-kit/docs-kit.tsx` and use real screenshots in `public/docs/screens/` (plus the Higgsfield hero art `public/docs/hero-overview*.webp`); the Overview also shows the Green stage banner (`src/stories/device-mockups.tsx`).
   After changing those screens, refresh them with `npm run prototype:preview` while the prototype is running. GitHub Pages publishes the build at `/tf-crane-ds-v1/prototype/`.
 
-## Crane Web (`Crane Web/*` stories, `src/components/web/`, `src/screens/web/`)
+## Crane Web (`Prototypes/Crane Web/*` + `Design System/Crane Web/*` stories, `src/components/web/`, `src/screens/web/`)
 
 The responsive web/desktop app (crane.tenfore.golf), replacing Fox. Fox web layouts are ported and restyled;
 Fox itself stays an archive (`tf-fox-ds-v1`).
@@ -81,7 +81,7 @@ Fox itself stays an archive (`tf-fox-ds-v1`).
   `restaurant/`, `tee-times/`, `events/` (events, clinics, leagues, activities, calendar), `account/`.
 - **Web prototype:** `npm run prototype:web` → http://localhost:6024/web/ (also :6022/web/). `prototype/web/main.tsx`
   renders `CraneWebPresenter` (`src/prototype-app/web-presenter.tsx`: jump list, width/appearance/shop-nav switches,
-  full-window) around the shared hash-routed app in `src/prototype-app/web-prototype.tsx`. Storybook › Crane Web › Flow
+  full-window) around the shared hash-routed app in `src/prototype-app/web-prototype.tsx`. Storybook › Prototypes › Crane Web › Flow
   is the same app in a frame.
 - **Event/clinic/league art:** `src/screens/web/events/images/art/<id>-card.webp` (1200×800, 3:2 cards) and
   `<id>-banner.webp` (2160×925, 21:9 detail heroes, subject centred so it crops to 3:1 / 5:2 / 16:9). Loaded via
@@ -103,7 +103,14 @@ Fox itself stays an archive (`tf-fox-ds-v1`).
 
 ## Story categories (sidebar order)
 
-Introduction · Foundations · Components · Sign in ∕ Sign up · Profile ∕ Account · App Chrome · Crane Web · Nov 11, 2026 Issues
+Four roots, ordered in `.storybook/preview.tsx` `storySort`:
+
+- **Start Here** — Overview, Style guide, Process & roadmap, How to review (`src/stories/start-here/*.mdx`, built from `src/stories/docs-kit/docs-kit.tsx` plus `start-here/parts.tsx`)
+- **Prototypes** — `iPhone app/` (Global Nav = the whole app, Sign in ∕ Sign up, Profile ∕ Account, App Chrome) · `Crane Web/` (About Crane Web, Flow, Tee Times, Shop, Restaurant, Events, Clinics, Leagues, Activities, Calendar, Profile ∕ Account, Sign in ∕ Sign up)
+- **Design System** — `Styles/` (was Foundations) · `Components/` · `Crane Web/` (Foundations, Components)
+- **Reviews** — one folder per review call, newest first (`src/stories/reviews/<date-topic>/`: `Summary` doc + `Changes/` stories)
+
+Story IDs come from titles, so retitling breaks `?path=/story/<id>` links (check ids in index.json; `·` survives in ids): grep for them after any move.
 
 ## Hosting
 

@@ -10,7 +10,7 @@ import { WebScreen } from "../web-story-kit";
  * highlighting the whole window. Other activities (range, lessons, juniors, outings) follow as cards.
  */
 const meta: Meta = {
-    title: "Crane Web/Activities/Simulator Bays",
+    title: "Prototypes/Crane Web/Activities/Simulator Bays",
     parameters: { layout: "fullscreen" },
 };
 export default meta;

@@ -14,7 +14,7 @@ import { CourseLogo } from "@/screens/chrome/course-logo";
  * is scoped to this course.
  */
 const meta: Meta<typeof CourseHeader> = {
-    title: "Components/Navigation/Course Header",
+    title: "Design System/Components/Navigation/Course Header",
     component: CourseHeader,
     parameters: { phone: true },
     args: {

@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { linesFrom } from "@/screens/web/cart-store";
 import { CheckoutPage, FOOD_CART, RETAIL_CART } from "@/screens/web/checkout";
-import { WebScreen } from "../crane-web/web-story-kit";
+import { WebScreen } from "../../crane-web/web-story-kit";
 
 const caption = (story: string) => ({ docs: { description: { story } } });
 
 const meta: Meta = {
-    title: "Nov 11, 2026 Issues/3. Shipping address & tax",
+    title: "Reviews/Nov 11 – CraneWeb call/Changes/3. Shipping address & tax",
     parameters: {
         layout: "fullscreen",
         docs: {

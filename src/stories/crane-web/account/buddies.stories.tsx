@@ -3,7 +3,7 @@ import { AccountBuddiesScreen } from "@/screens/web/account";
 import { WebScreen } from "../web-story-kit";
 
 const meta: Meta = {
-    title: "Crane Web/Profile ∕ Account/Golf Buddies",
+    title: "Prototypes/Crane Web/Profile ∕ Account/Golf Buddies",
     parameters: {
         layout: "fullscreen",
         docs: {

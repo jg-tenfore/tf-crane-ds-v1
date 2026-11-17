@@ -6,7 +6,7 @@ import { NavigationBar } from "@/components/navigation/navigation-bar";
 import { CRANE_TABS } from "@/components/prototype/app-shell";
 
 const meta: Meta<typeof TabBar> = {
-    title: "Components/Navigation/Tab Bar",
+    title: "Design System/Components/Navigation/Tab Bar",
     component: TabBar,
     parameters: { phone: true },
 };

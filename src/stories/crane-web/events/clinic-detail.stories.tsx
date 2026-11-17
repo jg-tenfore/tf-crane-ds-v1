@@ -9,7 +9,7 @@ import { WebScreen } from "../web-story-kit";
  * series, a spots meter, the waitlist when full and a confirmation dialog.
  */
 const meta: Meta = {
-    title: "Crane Web/Clinics/Clinic Details",
+    title: "Prototypes/Crane Web/Clinics/Clinic Details",
     parameters: { layout: "fullscreen" },
 };
 export default meta;

@@ -11,7 +11,7 @@ import { Caption, Panel, Specimen } from "../story-kit";
  * square/circle holding a line icon; **Divider** is the hairline between rows.
  */
 const meta: Meta<typeof Card> = {
-    title: "Components/Lists & Cards/Card",
+    title: "Design System/Components/Lists & Cards/Card",
     component: Card,
     tags: ["autodocs"],
     args: { padding: "md" },

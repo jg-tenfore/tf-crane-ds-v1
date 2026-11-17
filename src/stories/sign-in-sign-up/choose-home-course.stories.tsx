@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ChooseHomeCourseScreen } from "@/screens/auth";
 
 const meta: Meta<typeof ChooseHomeCourseScreen> = {
-    title: "Sign in ∕ Sign up/Choose Home Course",
+    title: "Prototypes/iPhone app/Sign in ∕ Sign up/Choose Home Course",
     component: ChooseHomeCourseScreen,
     parameters: { phone: true },
 };

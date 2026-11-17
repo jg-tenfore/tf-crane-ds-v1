@@ -11,7 +11,7 @@ import { WebScreen } from "../web-story-kit";
  * title and a sticky Register bar stays at the bottom.
  */
 const meta: Meta = {
-    title: "Crane Web/Events/Event Details",
+    title: "Prototypes/Crane Web/Events/Event Details",
     parameters: { layout: "fullscreen" },
 };
 export default meta;

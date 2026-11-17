@@ -11,7 +11,7 @@ import { WebScreen } from "../web-story-kit";
  * ("You're booked!", add to calendar, directions, manage booking).
  */
 const meta: Meta = {
-    title: "Crane Web/Tee Times/Confirmation",
+    title: "Prototypes/Crane Web/Tee Times/Confirmation",
     parameters: { layout: "fullscreen" },
 };
 export default meta;

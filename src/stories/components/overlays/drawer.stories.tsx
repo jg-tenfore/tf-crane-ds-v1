@@ -16,7 +16,7 @@ import { ScreenFiller } from "../story-kit";
  * Tap the scrim or press Escape to close. Opens on load; the hamburger reopens it.
  */
 const meta: Meta<typeof Drawer> = {
-    title: "Components/Overlays/Drawer",
+    title: "Design System/Components/Overlays/Drawer",
     component: Drawer,
     parameters: { phone: true },
 };

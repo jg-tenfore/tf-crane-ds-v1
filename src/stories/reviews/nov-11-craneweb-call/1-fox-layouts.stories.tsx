@@ -4,8 +4,8 @@ import { linesFrom } from "@/screens/web/cart-store";
 import { ProductPage, ShopHome } from "@/screens/web/browse";
 import { AddMorePage, CartPage, CheckoutPage, ConfirmationPage, MIXED_CART, RETAIL_CART } from "@/screens/web/checkout";
 import { RestaurantPage } from "@/screens/web/restaurant";
-import { ShopStory } from "../crane-web/shop/shop-story";
-import { WebScreen } from "../crane-web/web-story-kit";
+import { ShopStory } from "../../crane-web/shop/shop-story";
+import { WebScreen } from "../../crane-web/web-story-kit";
 
 /** Published Fox Storybook, so each caption can link to the original layout. */
 const FOX = "https://jg-tenfore.github.io/tf-fox-ds-v1/?path=/story/";
@@ -14,7 +14,7 @@ const fox = (label: string, id: string) => `[Fox › ${label}](${FOX}${id})`;
 const caption = (story: string) => ({ docs: { description: { story } } });
 
 const meta: Meta = {
-    title: "Nov 11, 2026 Issues/1. Fox layouts reused",
+    title: "Reviews/Nov 11 – CraneWeb call/Changes/1. Fox layouts reused",
     parameters: {
         layout: "fullscreen",
         docs: {

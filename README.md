@@ -49,7 +49,8 @@ Laptop 1024 · Tablet 768 · Mobile 390), appearance and shop nav, or goes full-
 
 Live Storybook (after merge to main): https://jg-tenfore.github.io/tf-crane-ds-v1/
 
-Storybook categories: **Foundations**, **Components**, **Sign in ∕ Sign up**, **Profile ∕ Account**,
-**App Chrome**, **Crane Web**. **App Chrome → Global Nav** is the whole iPhone app, clickable; **Crane Web → Flow** is the whole web app.
+Storybook sections: **Start Here** (overview), **Prototypes** (iPhone app · Crane Web), **Design System** (Styles ·
+Components · Crane Web), **Reviews** (one folder per review call). **Prototypes → iPhone app → Global Nav** is the whole
+iPhone app, clickable; **Prototypes → Crane Web → Flow** is the whole web app.
 
 Conventions and architecture are documented in [CLAUDE.md](CLAUDE.md).

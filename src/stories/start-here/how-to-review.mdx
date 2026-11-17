@@ -1,0 +1,211 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Banner, Callout, DocButton, DocLink, DocPage, Grid, NavCard, Pill, ScreenCard, Section, iphonePrototype, screen, webPrototype } from "../docs-kit/docs-kit";
+import { NumberedRow, P } from "./parts";
+
+<Meta title="Start Here/How to review" />
+
+<DocPage>
+
+<Banner
+    eyebrow="How to review"
+    title="Open the prototype beside Storybook, and go page by page."
+    pills={<><Pill>9 pages first</Pill><Pill>Two prototypes</Pill><Pill>Keep · change · mix</Pill></>}
+    actions={<><DocButton href={webPrototype("/tee-times")}>Open Crane Web</DocButton><DocButton variant="secondary" to="prototypes-crane-web-about-crane-web--docs">About Crane Web</DocButton></>}
+>
+    You're judging how each page works and reads: type, layout at each width, how clear booking is, checkout and tax, and the words on the page. Start with Crane Web, then the iPhone app.
+</Banner>
+
+<Section title="Two prototypes" intro="Both are built from the same source as the stories here, so what you see in one is what's in the other.">
+<Grid cols={2}>
+    <NavCard eyebrow="Crane Web" title="The web app replacing Fox" href={webPrototype("/tee-times")} cta="Open Crane Web">
+        crane.tenfore.golf: Tee Times, Shop through checkout, Restaurant, Events, Clinics, Leagues, Activities, Calendar, Profile ∕ Account and Sign in. It opens inside a review panel.
+    </NavCard>
+    <NavCard eyebrow="iPhone app" title="The golfer's iPhone app" href={iphonePrototype("/home")} cta="Open the iPhone app">
+        Book a tee time, see it in Bookings, and manage the profile and wallet. Drawn at iPhone 17 size. On an iPhone, Add to Home Screen runs it full-screen.
+    </NavCard>
+</Grid>
+</Section>
+
+<Section title="Set up">
+<NumberedRow
+    items={[
+        { title: "Side by side", body: "The prototype in one window and Storybook in the other. Storybook has every state, including the ones that are hard to reach by clicking." },
+        { title: "Use the review panel", body: "In Crane Web it jumps to any page and switches the width (1440, 1024, 768, 390), light or dark, and Tabs or Sidebar shop navigation." },
+        { title: "Go in order", body: "Start with Tee Times. For each page, say whether to keep it, change it or mix it with something else." },
+    ]}
+/>
+</Section>
+
+<Section title="The pages, most important first" intro="Nine pages cover most of what a golfer does. Open each in the prototype, and its stories for the other states.">
+<Grid cols={3}>
+    <ScreenCard
+        src={screen("web-tee-times")}
+        badge="1"
+        eyebrow="Crane Web · Tee Times"
+        title="The tee sheet"
+        lookAt="the 7-day strip and More dates, the course, date and players bar, Full and spots-left times."
+        links={[
+            { label: "Open the prototype", href: webPrototype("/tee-times") },
+            { label: "Stories", to: "prototypes-crane-web-tee-times-tee-times--desktop" },
+        ]}
+    />
+    <ScreenCard
+        src={screen("web-checkout")}
+        badge="2"
+        eyebrow="Crane Web · Shop"
+        title="Checkout"
+        lookAt="Ship or Pick up at the course, the address, and the tax row: does it say where it's charged?"
+        links={[
+            { label: "Open the prototype", href: webPrototype("/checkout") },
+            { label: "Stories", to: "prototypes-crane-web-shop-6-checkout--ship-to-ma" },
+        ]}
+    />
+    <ScreenCard
+        src={screen("web-shop-dozens")}
+        badge="3"
+        eyebrow="Crane Web · Shop"
+        title="Golf Balls › Dozens"
+        lookAt="the chip rows for each category level. Then switch the review panel to Sidebar and compare."
+        links={[
+            { label: "Open the prototype", href: webPrototype("/shop/golf-balls/dozens") },
+            { label: "Stories", to: "prototypes-crane-web-shop-2-category--subgroup-selected" },
+        ]}
+    />
+    <ScreenCard
+        src={screen("web-product")}
+        badge="4"
+        eyebrow="Crane Web · Shop"
+        title="A product"
+        lookAt="the pack options, stock, Add to cart, and the sold-out and on-sale states."
+        links={[
+            { label: "Open the prototype", href: webPrototype("/shop/golf-balls/dozens/ball-titleist-pro-v1-dozen") },
+            { label: "Stories", to: "prototypes-crane-web-shop-3-product--default" },
+        ]}
+    />
+    <ScreenCard
+        src={screen("web-event")}
+        badge="5"
+        eyebrow="Crane Web · Events"
+        title="An event"
+        lookAt="the price box, registering a group, and what a full event or a members-only event says."
+        links={[
+            { label: "Open the prototype", href: webPrototype("/events/fall-foliage-scramble") },
+            { label: "Stories", to: "prototypes-crane-web-events-event-details--desktop" },
+        ]}
+    />
+    <ScreenCard
+        src={screen("web-mobile-tee-times")}
+        frame="phone"
+        badge="6"
+        eyebrow="Crane Web · 390 wide"
+        title="Tee Times on a phone"
+        lookAt="the stacked filters, the scrolling date strip, and whether the times are easy to tap."
+        links={[
+            { label: "Open the prototype", href: webPrototype("/tee-times") },
+            { label: "Stories", to: "prototypes-crane-web-tee-times-tee-times--mobile-web" },
+        ]}
+    />
+    <ScreenCard
+        src={screen("iphone-home")}
+        frame="phone"
+        badge="7"
+        eyebrow="iPhone app · Home"
+        title="The tee sheet and booking sheet"
+        lookAt="tapping a time, the booking sheet, the booking summary."
+        links={[
+            { label: "Open the prototype", href: iphonePrototype("/home") },
+            { label: "Stories", to: "prototypes-iphone-app-app-chrome-home--tee-sheet" },
+        ]}
+    />
+    <ScreenCard
+        src={screen("iphone-bookings")}
+        frame="phone"
+        badge="8"
+        eyebrow="iPhone app · Bookings"
+        title="Reservations and purchases"
+        lookAt="upcoming and past rounds, a booking's details, cancelling."
+        links={[
+            { label: "Open the prototype", href: iphonePrototype("/bookings") },
+            { label: "Stories", to: "prototypes-iphone-app-app-chrome-bookings--reservations" },
+        ]}
+    />
+    <ScreenCard
+        src={screen("iphone-balance")}
+        frame="phone"
+        badge="9"
+        eyebrow="iPhone app · Profile"
+        title="The wallet"
+        lookAt="balance, punch cards, rain checks and gift cards, and each one's empty state."
+        links={[
+            { label: "Open the prototype", href: iphonePrototype("/profile/account-balance") },
+            { label: "Stories", to: "prototypes-iphone-app-profile-∕-account-account-balance--default" },
+        ]}
+    />
+</Grid>
+<P className="mt-5"><strong>Also worth a look:</strong></P>
+<div className="mt-2 flex flex-wrap gap-x-5 gap-y-2">
+    <DocLink href={webPrototype("/restaurant")}>Restaurant</DocLink>
+    <DocLink href={webPrototype("/activities")}>Simulator bays</DocLink>
+    <DocLink href={webPrototype("/leagues")}>Leagues</DocLink>
+    <DocLink href={webPrototype("/calendar")}>Calendar</DocLink>
+    <DocLink href={webPrototype("/account")}>Account</DocLink>
+    <DocLink href={webPrototype("/sign-in")}>Sign in</DocLink>
+    <DocLink href={iphonePrototype("/auth/welcome")}>iPhone sign up</DocLink>
+</div>
+</Section>
+
+<Section title="What to look at on each page">
+<Grid cols={3}>
+    <NavCard eyebrow="Type" title="Is the hierarchy clear?">
+        Does the page title, then the section, then the detail read in that order? SF Pro on iPhone, Outfit on the web.
+    </NavCard>
+    <NavCard eyebrow="Layout" title="Does it hold at every width?">
+        Try 1440, 1024, 768 and 390 in the review panel. Anything cramped, cut off or too far apart?
+    </NavCard>
+    <NavCard eyebrow="Booking" title="Is booking clear?">
+        Can you tell which times are open, what a round costs, and how far ahead you can book?
+    </NavCard>
+    <NavCard eyebrow="Checkout and tax" title="Would you trust it?">
+        Is it clear where the order ships or is picked up, and where the tax is charged?
+    </NavCard>
+    <NavCard eyebrow="Copy" title="Does it say the right thing?">
+        Labels, buttons and messages. Is anything missing, unclear or wrong for a golfer?
+    </NavCard>
+</Grid>
+</Section>
+
+<Section title="Different on purpose">
+<Grid cols={2}>
+    <NavCard eyebrow="Different on purpose" title="Sample data is fictional">
+        Golfers, orders, balances and prices are made up, because this Storybook is public. Phone numbers are 555 numbers.
+    </NavCard>
+    <NavCard eyebrow="Different on purpose" title="Sagamore is the sample course">
+        Most pages show Sagamore Spring Golf Club in Lynnfield, MA, and "today" is always Oct 9, 2026.
+    </NavCard>
+    <NavCard eyebrow="Different on purpose" title="Tax rates are samples">
+        The rates at checkout show how tax changes with the address. Real rates would come from a tax service.
+    </NavCard>
+    <NavCard eyebrow="Different on purpose" title="Some links go nowhere yet">
+        A few links and buttons are placeholders. If one matters to the flow, say so.
+    </NavCard>
+</Grid>
+</Section>
+
+<Section title="Leaving feedback" intro="For each page, name the screen (the story name or the prototype's page), then say one of three things.">
+<Grid cols={3}>
+    <NavCard eyebrow="Say" title="Keep">
+        This works as it is. Nothing more needed.
+    </NavCard>
+    <NavCard eyebrow="Say" title="Change">
+        What's wrong and what you'd expect instead. Point at the exact piece.
+    </NavCard>
+    <NavCard eyebrow="Say" title="Mix">
+        Take this part from one version and that part from another. A screenshot or a short screen recording works best.
+    </NavCard>
+</Grid>
+<Callout>
+Design folds each round of feedback back into Storybook, and the call gets its own folder in <DocLink to="reviews-nov-12-shop-checkout-summary--docs">Reviews</DocLink>: a summary of what was decided and left open, with the changes as stories.
+</Callout>
+</Section>
+
+</DocPage>

@@ -62,7 +62,7 @@ const Grid = ({ children }: { children: React.ReactNode }) => (
 );
 
 const meta = {
-    title: "Foundations/Border",
+    title: "Design System/Styles/Border",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 

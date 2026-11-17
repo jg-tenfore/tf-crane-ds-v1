@@ -10,7 +10,7 @@ import { WebScreen } from "../web-story-kit";
  * the selected day's list underneath.
  */
 const meta: Meta = {
-    title: "Crane Web/Calendar/Calendar",
+    title: "Prototypes/Crane Web/Calendar/Calendar",
     parameters: { layout: "fullscreen" },
 };
 export default meta;

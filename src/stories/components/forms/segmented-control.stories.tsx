@@ -9,7 +9,7 @@ import { Caption, Panel, Specimen } from "../story-kit";
  * Built on React Aria ToggleButtonGroup (arrow keys move between segments).
  */
 const meta: Meta<typeof SegmentedControl> = {
-    title: "Components/Forms/Segmented Control",
+    title: "Design System/Components/Forms/Segmented Control",
     component: SegmentedControl,
 };
 export default meta;

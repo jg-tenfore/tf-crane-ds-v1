@@ -13,7 +13,7 @@ const WORDS: Record<TagTone, string> = { brand: "Booker", gray: "Guest", error: 
  * **Pill** = rounded informational chip ("🏆 0", "Expires in 30s", "Added").
  */
 const meta: Meta<typeof Tag> = {
-    title: "Components/Feedback/Badges & Tags",
+    title: "Design System/Components/Feedback/Badges & Tags",
     component: Tag,
     tags: ["autodocs"],
     args: { children: "Full", tone: "error", variant: "solid" },

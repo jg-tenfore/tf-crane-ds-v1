@@ -11,7 +11,7 @@ import { TeeSheetScreen } from "@/screens/home";
  * the course name opens **Course info** (IMG_2194). Switching courses re-scopes the whole app.
  */
 const meta: Meta = {
-    title: "App Chrome/Locations",
+    title: "Prototypes/iPhone app/App Chrome/Locations",
     parameters: { phone: true },
 };
 export default meta;

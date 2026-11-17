@@ -13,7 +13,7 @@ import { WithCourse } from "./story-helpers";
  * **Dismissible Banner** and **18 Holes + Membership Ads**.
  */
 const meta: Meta = {
-    title: "Crane Web/Tee Times/Tee Times",
+    title: "Prototypes/Crane Web/Tee Times/Tee Times",
     parameters: { layout: "fullscreen" },
 };
 export default meta;

@@ -10,7 +10,7 @@ import { CourseLogo } from "@/screens/chrome/course-logo";
  * "Powered by" lockups and auth screens. Source files: `crane-logo/` and `brand/`.
  */
 const meta = {
-    title: "Foundations/Logos",
+    title: "Design System/Styles/Logos",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 export default meta;

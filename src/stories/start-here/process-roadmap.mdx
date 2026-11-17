@@ -1,0 +1,157 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Banner, Callout, Choice, DocButton, DocPage, DocTable, Grid, NavCard, Pill, Section, Status, Steps, Timeline, screen } from "../docs-kit/docs-kit";
+
+<Meta title="Start Here/Process & roadmap" />
+
+<DocPage>
+
+<Banner
+    eyebrow="Process & roadmap"
+    title="From Storybook to the courses, in four steps."
+    pills={<><Pill tone="brand">Step 1 of 4</Pill><Pill>Crane Web replaces Fox</Pill><Pill>Updated Nov 17, 2026</Pill></>}
+    actions={<><DocButton to="start-here-how-to-review--docs">Start the review</DocButton><DocButton variant="secondary" to="reviews-nov-11-craneweb-call-summary--docs">The Nov 11 call</DocButton></>}
+>
+    Screens are designed here and reviewed with product first. Then engineering builds the iPhone app in Expo and builds Crane Web, and both roll out to courses.
+</Banner>
+
+<Section title="The process" intro="Four steps, and we are on the first.">
+<Steps
+    steps={[
+        { label: "Step 1", status: "now", title: "Design in Storybook", body: "Every screen and state is drawn here, then stitched into the two working prototypes.", owner: "Design" },
+        { label: "Step 2", status: "next", title: "Review with product", body: "Weston reviews the screens on a call. Each call gets a folder in Reviews, and design folds the feedback back in.", owner: "Product, with design" },
+        { label: "Step 3", status: "next", title: "Build", body: "The iPhone app in Expo, and Crane Web at crane.tenfore.golf, from these screens.", owner: "Engineering" },
+        { label: "Step 4", status: "next", title: "Roll out to courses", body: "Crane Web takes over from Fox as TenFore's web shop and booking site." },
+    ]}
+/>
+<Callout title="Why Storybook comes first.">
+A screen is cheapest to change before it's built. Agreeing it here, with every state in front of everyone, means the build starts from screens product has already seen.
+</Callout>
+</Section>
+
+<Section title="Open work" intro="What the last two calls left open, and who has it.">
+<DocTable
+    columns={["Step", "From", "Owner", "Status"]}
+    widths={["52%", "16%", "16%", "16%"]}
+    rows={[
+        ["Show top chips and the left-hand list to other people before settling the shop filters", "Nov 12 call", "Product, Design", <Status tone="open">Open</Status>],
+        ["Build a side-by-side comparison page of the two filter layouts", "Nov 12 call", "Design", <Status tone="next">Next</Status>],
+        ["Add a third chip row for the third category level; show quick filters only when they apply", "Nov 12 call", "Design", <Status tone="next">Next</Status>],
+        ["Size the tax work: tax charged where the order ships, by state, county and city", "Nov 11 call", "Weston", <Status tone="open">Open</Status>],
+    ]}
+/>
+</Section>
+
+<Section title="Milestones" intro="How we got here, and what's next. All dates are 2026.">
+<Timeline
+    items={[
+        {
+            date: "Oct 9",
+            status: "done",
+            title: "Storybook and the iPhone prototype go live",
+            body: "The repo is set up, and Storybook and the iPhone prototype are published to GitHub Pages (PR #1).",
+            img: screen("iphone-home"),
+            frame: "phone",
+            link: { label: "Global Nav", to: "prototypes-iphone-app-global-nav--prototype" },
+        },
+        {
+            date: "Oct 9",
+            status: "done",
+            title: "The wallet fills up, and Warm Dark arrives",
+            body: "Punch Cards, Rain Checks, Gift Cards, Memberships and Golf Buddies get real sample content. Warm Dark is added, and status badges stay pale in it (PRs #2 and #3).",
+            img: screen("iphone-punch-cards"),
+            frame: "phone",
+            link: { label: "Profile ∕ Account", to: "prototypes-iphone-app-profile-∕-account-flow--flow" },
+        },
+        {
+            date: "Nov 11",
+            status: "done",
+            title: "CraneWeb call with Weston",
+            body: "Crane Web replaces Fox. Four asks: reuse Fox's layouts, browse by category on mobile, a shipping address with tax where it ships, and keep Fox's deep links.",
+            img: screen("web-mobile-shop"),
+            frame: "phone",
+            link: { label: "Nov 11 review", to: "reviews-nov-11-craneweb-call-summary--docs" },
+        },
+        {
+            date: "Nov 12",
+            status: "done",
+            title: "Crane Web built and merged",
+            body: "The Crane Web category and its prototype, with the review panel, are merged (PR #4) and live on GitHub Pages.",
+            img: screen("web-tee-times"),
+            link: { label: "About Crane Web", to: "prototypes-crane-web-about-crane-web--docs" },
+        },
+        {
+            date: "Nov 12",
+            status: "done",
+            title: "Weston reviews the shop and checkout",
+            body: "Top chips are preferred over a left-hand filter list, but both go in front of other people first. The checkout and shipping direction is approved.",
+            img: screen("web-shop-dozens"),
+            link: { label: "Nov 12 review", to: "reviews-nov-12-shop-checkout-summary--docs" },
+        },
+        {
+            date: "Nov 17",
+            status: "now",
+            title: "Storybook reorganised",
+            body: "Four folders: Start Here, Prototypes, Design System and Reviews, with this page, the style guide and how to review.",
+            link: { label: "Overview", to: "start-here-overview--docs" },
+        },
+        {
+            date: "Next",
+            status: "next",
+            title: "Shop filter comparison",
+            body: "The two filter layouts side by side, for wider feedback.",
+            link: { label: "Sidebar layout", to: "prototypes-crane-web-flow--desktop-sidebar-nav" },
+        },
+        {
+            date: "Then",
+            status: "next",
+            title: "Tax work sized, then the build",
+            body: "Weston sizes the tax work. Then steps 3 and 4: build, and roll out to courses.",
+        },
+    ]}
+/>
+</Section>
+
+<Section title="Open decisions" intro="Four choices made during the build that product may want to change. Each card shows what's built and the alternative.">
+<Grid cols={2}>
+    <Choice
+        title="Shop filters"
+        built={<>Top chips (Tabs), with the second and third category levels exposed.</>}
+        alternative={<>A left-hand category list (Sidebar). Built as a variant, and switchable in the prototype's review panel.</>}
+        to="prototypes-crane-web-shop-1-shop--desktop-tabs"
+    />
+    <Choice
+        title="Advance booking window"
+        built={<>About 3 months ahead for the Sagamore courses, The Pines and Woodstock. Other courses book 7 days ahead.</>}
+        alternative={<>Every course books up to 3 months ahead.</>}
+        to="prototypes-crane-web-tee-times-tee-times--advance-date"
+    />
+    <Choice
+        title="Default sign-in photo"
+        built={<>The putting green, on the web and on the iPhone Welcome screen.</>}
+        alternative={<>Mist or Golden hour, both built as options.</>}
+        to="prototypes-crane-web-sign-in-∕-sign-up-sign-in--default"
+    />
+    <Choice
+        title="Indoor venues"
+        built={<>FloGolf's Tee Times page explains there's no tee sheet and points to bay booking.</>}
+        alternative={<>Hide Tee Times for indoor venues.</>}
+        to="prototypes-crane-web-tee-times-tee-times--indoor-venue"
+    />
+</Grid>
+</Section>
+
+<Section title="Read more">
+<Grid cols={3}>
+    <NavCard eyebrow="Nov 11" title="The CraneWeb call" to="reviews-nov-11-craneweb-call-summary--docs" cta="Read the issues">
+        The five issues raised, and how Crane Web answers each one.
+    </NavCard>
+    <NavCard eyebrow="Nov 12" title="Shop & checkout" to="reviews-nov-12-shop-checkout-summary--docs" cta="Read the decisions">
+        The filter layouts compared, what was decided and what's left open.
+    </NavCard>
+    <NavCard eyebrow="The rules" title="Style guide" to="start-here-style-guide--docs" cta="Read the style guide">
+        What gets built: eight rules, each with a screen.
+    </NavCard>
+</Grid>
+</Section>
+
+</DocPage>

@@ -13,7 +13,7 @@ const Placeholder = ({ title, icon }: { title: string; icon: typeof Home02 }) =>
 );
 
 const meta: Meta = {
-    title: "Profile ∕ Account/Flow",
+    title: "Prototypes/iPhone app/Profile ∕ Account/Flow",
     parameters: {
         phone: true,
         docs: {

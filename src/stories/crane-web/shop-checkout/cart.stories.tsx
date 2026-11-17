@@ -4,7 +4,7 @@ import { CartPage, CheckoutFlow, DEMO_PROMO, FOOD_CART, MIXED_CART, RETAIL_CART 
 import { WebScreen } from "../web-story-kit";
 
 const meta: Meta = {
-    title: "Crane Web/Shop/4. Cart",
+    title: "Prototypes/Crane Web/Shop/4. Cart",
     parameters: {
         layout: "fullscreen",
         docs: {

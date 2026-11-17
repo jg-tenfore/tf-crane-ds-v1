@@ -4,7 +4,7 @@ import { WebScreen } from "../web-story-kit";
 
 /** My Rounds (`/tee-times/my-rounds`, `/past`). Ports Fox **Booking / Pages / My Rounds**: Upcoming / Past tabs, round rows, empty states. */
 const meta: Meta = {
-    title: "Crane Web/Tee Times/My Rounds",
+    title: "Prototypes/Crane Web/Tee Times/My Rounds",
     parameters: { layout: "fullscreen" },
 };
 export default meta;

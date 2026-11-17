@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CategoryPage, ShopHome } from "@/screens/web/browse";
 import { RestaurantPage } from "@/screens/web/restaurant";
-import { ShopStory } from "../crane-web/shop/shop-story";
-import { WebScreen } from "../crane-web/web-story-kit";
+import { ShopStory } from "../../crane-web/shop/shop-story";
+import { WebScreen } from "../../crane-web/web-story-kit";
 
 const caption = (story: string) => ({ docs: { description: { story } } });
 
 const meta: Meta = {
-    title: "Nov 11, 2026 Issues/2. Mobile categories & search",
+    title: "Reviews/Nov 11 – CraneWeb call/Changes/2. Mobile categories & search",
     parameters: {
         layout: "fullscreen",
         docs: {

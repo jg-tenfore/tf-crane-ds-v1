@@ -8,7 +8,7 @@ import { WebScreen } from "../web-story-kit";
  * focus, available. Fox's clinic month view now lives on **Crane Web/Calendar** (filter: Clinics).
  */
 const meta: Meta = {
-    title: "Crane Web/Clinics/Browse",
+    title: "Prototypes/Crane Web/Clinics/Browse",
     parameters: { layout: "fullscreen" },
 };
 export default meta;

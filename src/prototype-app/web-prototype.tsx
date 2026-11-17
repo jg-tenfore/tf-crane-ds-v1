@@ -19,7 +19,7 @@ export const pathFromHash = () => {
 
 const isLocal = () => typeof location !== "undefined" && /^(localhost|127\.|192\.168\.)/.test(location.hostname);
 /** Storybook › Crane Web overview: :6021 locally, two levels up from /prototype/web/ on GitHub Pages. */
-export const STORYBOOK_URL = isLocal() ? `${location.protocol}//${location.hostname}:6021/?path=/docs/crane-web-overview--docs` : "../../?path=/docs/crane-web-overview--docs";
+export const STORYBOOK_URL = isLocal() ? `${location.protocol}//${location.hostname}:6021/?path=/docs/prototypes-crane-web-about-crane-web--docs` : "../../?path=/docs/prototypes-crane-web-about-crane-web--docs";
 /** The iPhone prototype lives one level up (/ locally, /tf-crane-ds-v1/prototype/ on Pages). */
 export const IPHONE_URL = "../";
 

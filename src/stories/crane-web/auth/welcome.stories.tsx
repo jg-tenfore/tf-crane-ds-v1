@@ -3,7 +3,7 @@ import { SignedInPage } from "@/screens/web/auth";
 import { WebScreen } from "../web-story-kit";
 
 const meta: Meta = {
-    title: "Crane Web/Sign in ∕ Sign up/Welcome",
+    title: "Prototypes/Crane Web/Sign in ∕ Sign up/Welcome",
     parameters: {
         layout: "fullscreen",
         docs: {

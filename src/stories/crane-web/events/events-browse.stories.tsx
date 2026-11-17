@@ -9,7 +9,7 @@ import { WebScreen } from "../web-story-kit";
  * every card. On mobile web the chips scroll sideways and the grid drops to one column.
  */
 const meta: Meta = {
-    title: "Crane Web/Events/Browse",
+    title: "Prototypes/Crane Web/Events/Browse",
     parameters: { layout: "fullscreen" },
 };
 export default meta;

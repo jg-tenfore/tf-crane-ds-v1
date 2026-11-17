@@ -1,0 +1,170 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Banner, Callout, DocButton, DocLink, DocPage, DocTable, Grid, Pill, ScreenCard, Section, Status, screen, webPrototype } from "../../docs-kit/docs-kit";
+import { Code, TaxRateTable, courseTaxLabel } from "../parts";
+
+<Meta title="Reviews/Nov 11 – CraneWeb call/Summary" />
+
+export const FOX = "https://jg-tenfore.github.io/tf-fox-ds-v1/?path=/story/";
+
+<DocPage>
+
+<Banner
+    eyebrow="REVIEW · NOV 11, 2026"
+    title="CraneWeb call"
+    pills={<><Pill>Crane Web · shop & checkout</Pill><Pill>Nov 11, 2026</Pill><Pill tone="mint">4 of 5 built</Pill></>}
+    actions={<><DocButton href={webPrototype("/shop")}>Open the Crane Web prototype</DocButton><DocLink to="reviews-nov-11-craneweb-call-changes-1-fox-layouts-reused--shop-all">Changes</DocLink><DocLink to="prototypes-crane-web-flow--desktop">Crane Web flow</DocLink></>}
+>
+    Crane Web replaces Fox as TenFore's web shop and booking site. Rather than design it from scratch, it reuses Fox's layouts, with their checkout flows and edge cases. On this call Weston raised four gaps: browsing by category on mobile, a real shipping address with tax charged where the order ships, keeping Fox's deep links, and timing. Each one is answered below with the real Crane Web screens. Nothing here is a new design.
+</Banner>
+
+<Section title="Decisions">
+<DocTable
+    columns={["Topic", "Decision", "In the prototype"]}
+    widths={["18%", "47%", "35%"]}
+    rows={[
+        [
+            <strong>Fox layouts reused</strong>,
+            "Use Fox's web layouts, checkout flows and edge cases instead of designing CraneWeb from scratch. Fox itself stays an archive.",
+            <>Shop all, Product, Cart, Add more, Checkout, Confirmation and Restaurant are the Fox layouts, restyled in Crane and wired to CraneWeb's routes. Sold out, expired card and empty cart came with them. <Status tone="done">Built</Status></>,
+        ],
+        [
+            <strong>Mobile categories & search</strong>,
+            "On mobile there was no way to browse by category. The shop needs a menu at the top, or a search.",
+            <>Below 768px a sticky bar under the header holds a search field, a <strong>Categories</strong> button and category chips. Categories lists every group and subgroup with item counts; inside a group the chips switch to its subgroups. The Restaurant menu has the same search and chips. <Status tone="done">Built</Status></>,
+        ],
+        [
+            <strong>Shipping address & destination tax</strong>,
+            "Checkout needs a normal shipping address, and tax is charged where the item ships. Tax varies by state, county and city.",
+            <>Checkout asks <strong>Ship</strong> or <strong>Pick up at the course</strong>. The tax row names the destination and its rate and recalculates when the address changes; before an address is chosen it reads "Calculated after address". Pickup is taxed at the course ({courseTaxLabel}). <Status tone="open">Designed · tax work needs sizing</Status></>,
+        ],
+        [
+            <strong>Fox-style deep links</strong>,
+            "Keep Fox's deep links, so a button on the course website or in an email can open a specific page, such as Beer or the dozens of golf balls.",
+            <>Every level has its own URL and the address bar always shows it. Live CraneWeb's query-string links still work, and an old or mistyped link lands on a friendly Not found page. <Status tone="done">Built</Status></>,
+        ],
+        [
+            <strong>Food and pro shop check out separately</strong>,
+            "Food & drinks are pickup only, so they are always taxed at the course. They can't share a cart with pro shop items that ship.",
+            <>Adding food to a pro shop cart (or the reverse) opens a mixed-cart dialog; the cart and checkout handle each kind on its own. <Status tone="done">Built</Status></>,
+        ],
+        [
+            <strong>Timing</strong>,
+            "On the radar, not confirmed. Weston sizes the tax work first: looking up rates by state, county and city for each ship-to address.",
+            <>The screens are ready either way. <Status tone="open">Waiting on sizing</Status></>,
+        ],
+    ]}
+/>
+</Section>
+
+<Section title="Changes" intro="One story page per issue. Each opens the real Crane Web screens with a caption on what changed and where it came from.">
+<Grid cols={2}>
+    <ScreenCard
+        src={screen("web-cart")}
+        eyebrow="Change 1"
+        title="Fox layouts reused"
+        lookAt="the Fox layout under the Crane styling, and the edge cases that came with it (sold out, mixed cart, payment methods)."
+        links={[
+            { label: "1. Fox layouts reused", to: "reviews-nov-11-craneweb-call-changes-1-fox-layouts-reused--shop-all" },
+            { label: "Cart", to: "prototypes-crane-web-shop-4-cart--default" },
+            { label: "Checkout", to: "prototypes-crane-web-shop-6-checkout--ship-to-ma" },
+            { label: "Confirmation", to: "prototypes-crane-web-shop-7-confirmation--shipped" },
+        ]}
+    >
+        Shop all, Product, Cart, Add more, Checkout, Confirmation and Restaurant, each captioned with a link to its Fox original.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-mobile-shop")}
+        frame="phone"
+        eyebrow="Change 2"
+        title="Mobile categories & search"
+        lookAt="whether a shopper can reach any subgroup in two taps, and whether search is easy to find."
+        links={[
+            { label: "2. Mobile categories & search", to: "reviews-nov-11-craneweb-call-changes-2-mobile-categories-search--categories-menu" },
+            { label: "Categories open", to: "prototypes-crane-web-shop-1-shop--mobile-web-categories-open" },
+            { label: "Search active", to: "prototypes-crane-web-shop-2-category--mobile-web-search" },
+            { label: "Restaurant", to: "prototypes-crane-web-restaurant-restaurant--mobile-web" },
+        ]}
+    >
+        The sticky search + Categories bar, the full categories menu, subgroup chips and the Restaurant menu chips.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-checkout")}
+        eyebrow="Change 3"
+        title="Shipping address & tax"
+        lookAt="the tax row: it names where the order ships and changes when the address does."
+        links={[
+            { label: "3. Shipping address & tax", to: "reviews-nov-11-craneweb-call-changes-3-shipping-address-tax--ship-to-ga" },
+            { label: "Compare GA vs MA vs pickup", to: "reviews-nov-11-craneweb-call-changes-3-shipping-address-tax--compare" },
+            { label: "Ship to GA", to: "prototypes-crane-web-shop-6-checkout--ship-to-ga" },
+            { label: "Pick up at course", to: "prototypes-crane-web-shop-6-checkout--pick-up" },
+            { label: "Food order (pickup only)", to: "prototypes-crane-web-shop-6-checkout--food-order" },
+        ]}
+    >
+        Ship or pick up, saved and new addresses, the "Calculated after address" state, and food orders that are pickup only.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-shop-dozens")}
+        eyebrow="Change 4"
+        title="Deep links"
+        lookAt="the address bar: every group, subgroup, product and menu section has a link you can share."
+        links={[
+            { label: "4. Deep links", to: "reviews-nov-11-craneweb-call-changes-4-deep-links--golf-balls-dozens" },
+            { label: "Crane Web flow", to: "prototypes-crane-web-flow--desktop" },
+            { label: "Restaurant deep link", to: "prototypes-crane-web-restaurant-restaurant--category-deep-link" },
+        ]}
+    >
+        Each story opens the whole app at a URL, including live CraneWeb's query-string style and an old or mistyped link.
+    </ScreenCard>
+</Grid>
+</Section>
+
+<Section title="Sample tax rates" intro="The rates the prototype uses to show tax following the ship-to address. Real rates would come from a tax service once the tax work is sized.">
+<TaxRateTable />
+</Section>
+
+<Section title="Deep links" intro="Every level of the shop and restaurant has its own URL, so the course website or an email can link straight to it.">
+<DocTable
+    columns={["Link", "Opens"]}
+    widths={["55%", "45%"]}
+    rows={[
+        [<Code>/shop/golf-balls</Code>, "A group"],
+        [<Code>/shop/golf-balls/dozens</Code>, "A subgroup"],
+        [<Code>/shop/golf-balls/dozens/ball-titleist-pro-v1-dozen</Code>, "A product"],
+        [<Code>/restaurant/beer</Code>, "A Restaurant menu section (Beer & Seltzer)"],
+        [<Code>/shop/gift-cards</Code>, "Club Offerings"],
+        [<Code>/shop?category=golf-balls&subcategory=dozens</Code>, "Live CraneWeb's query-string style, still supported"],
+        [<><Code>/cart</Code> · <Code>/checkout</Code></>, "Cart and checkout"],
+    ]}
+/>
+<div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
+    <DocLink href={webPrototype("/shop/golf-balls/dozens")}>Open /shop/golf-balls/dozens in the prototype</DocLink>
+    <DocLink href={webPrototype("/restaurant/beer")}>Open /restaurant/beer in the prototype</DocLink>
+</div>
+</Section>
+
+<Section title="The Fox originals" intro="The published Fox Storybook, for comparing a Crane Web screen with the layout it came from.">
+<div className="flex flex-wrap gap-x-5 gap-y-2">
+    <DocLink href={`${FOX}shop-checkout-1-cart--default`}>Fox › Shop Checkout › 1. Cart</DocLink>
+    <DocLink href={`${FOX}shop-checkout-3-checkout--default`}>Fox › Shop Checkout › 3. Checkout</DocLink>
+    <DocLink href={`${FOX}global-nav-pro-shop-shop-all--default`}>Fox › Pro Shop › Shop All</DocLink>
+</div>
+</Section>
+
+<Section title="Left open">
+<DocTable
+    columns={["Step", "Owner", "Status"]}
+    widths={["58%", "16%", "26%"]}
+    rows={[
+        ["Size the tax work: looking up rates by state, county and city for each ship-to address", "Weston", <Status tone="open">Open</Status>],
+        ["Confirm timing for the shipping and tax changes", "Weston", <Status tone="next">After sizing</Status>],
+        ["Swap the prototype's sample rates for a tax service's real rates", "Weston", <Status tone="next">After sizing</Status>],
+        ["Fox layouts, mobile categories & search, deep links, separate food checkout", "Design", <Status tone="done">Done: built in Crane Web</Status>],
+    ]}
+/>
+</Section>
+
+<Callout title="The screens are ready either way.">
+Shipping and destination tax are fully designed in Crane Web. What's left is sizing the tax lookup behind them, and that decides the timing, not the design.
+</Callout>
+
+</DocPage>
