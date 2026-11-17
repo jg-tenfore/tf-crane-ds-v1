@@ -21,7 +21,7 @@ export const MCG_ORG: WebOrg = {
     logo: mcgLogo,
     location: "Montgomery County, MD",
     phone: "(301) 555-0100",
-    email: "info@mcggolf.com",
+    email: "info@mcg.example.com",
     courses: ["falls-road", "hampshire-greens", "laytonsville", "little-bennett", "northwest", "needwood", "crossvines", "rattlewood", "sligo-creek"],
     sections: [
         { id: "tee-times", label: "Tee Times", short: "Tee", href: "/tee-times" },

@@ -131,7 +131,7 @@ export const instructorPhoto = (x: AcademyInstructor): string => coachPhoto(x) ?
  */
 export const ACADEMY_CONTACT = {
     name: "MCG Golf Academy",
-    email: "academy@mcggolf.com",
+    email: "academy@mcg.example.com",
     phone: "(301) 555-0109",
 };
 

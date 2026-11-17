@@ -83,7 +83,7 @@ export const runChecks = (paths: string[]): Check[] => {
         check("Needwood clinics filter", needwoodClinics.length > 0 && needwoodClinics.every((o) => o.format === "clinic" && o.courseSlugs.includes("needwood")), needwoodClinics.map((o) => o.id)),
         check("no privates where no instructor teaches (Hampshire Greens)", offeringsAt("hampshire-greens").every((o) => o.format !== "private")),
         check("instructors have headshots (or the placeholder)", COACHES.every((c) => !!c.photo), COACHES.filter((c) => !c.photo).map((c) => c.id)),
-        check("instructor contact is the Academy's, never personal", COACHES.every((c) => c.contact.email === "academy@mcggolf.com" && /555-/.test(c.contact.phone))),
+        check("instructor contact is the Academy's, never personal", COACHES.every((c) => c.contact.email === "academy@mcg.example.com" && /555-/.test(c.contact.phone))),
         check("Doug Hamilton profile: 2 packs + monthly plan + 3 courses", !!doug && doug.packs.length === 2 && !!doug.plan && doug.courses.length === 3),
     ];
 };
