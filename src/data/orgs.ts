@@ -20,7 +20,8 @@ export const MCG_ORG: WebOrg = {
     shortName: "MCG",
     logo: mcgLogo,
     // MCG has its own Academy photos; the set only shows where one is missing (or with ?photos=<set>).
-    photos: { own: true, defaultSet: "morning-parkland" },
+    // No set of its own picked yet, so it gets the TenFore-wide default (Overcast classic).
+    photos: { own: true, defaultSet: "overcast-classic" },
     location: "Montgomery County, MD",
     phone: "(301) 555-0100",
     email: "info@mcg.example.com",

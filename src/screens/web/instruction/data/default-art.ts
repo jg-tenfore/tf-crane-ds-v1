@@ -3,7 +3,8 @@
  *
  * Decided on the Nov 17 call (Weston, Jared): courses often won't upload photos, so TenFore ships
  * six default sets, each covering the five Instruction categories. An organization picks one in
- * Buck's clinic template builder and can override any photo per course. There's no TenFore-logo
+ * Buck's clinic template builder (until then: TENFORE_DEFAULT_SET, Overcast classic) and can
+ * override any photo per course. There's no TenFore-logo
  * fallback. MCG has its own photos, so it only shows a set when asked (`?photos=<set>` demo, or
  * `photos.own: false` on the org).
  *
@@ -26,6 +27,12 @@ export const DEFAULT_PHOTO_SETS = [
 ] as const;
 
 export type DefaultPhotoSetId = (typeof DEFAULT_PHOTO_SETS)[number]["id"];
+
+/**
+ * The TenFore-wide default: the set a course gets until it picks its own (Justin's pick, Nov 17).
+ * Buck uses the same constant name (`TENFORE_DEFAULT_SET`).
+ */
+export const TENFORE_DEFAULT_SET: DefaultPhotoSetId = "overcast-classic";
 
 export const isDefaultPhotoSet = (id: string | undefined): id is DefaultPhotoSetId => DEFAULT_PHOTO_SETS.some((s) => s.id === id);
 

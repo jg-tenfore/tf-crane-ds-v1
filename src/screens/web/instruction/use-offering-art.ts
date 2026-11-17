@@ -1,9 +1,8 @@
 import { useWebSession } from "../web-shell";
-import { defaultArt, isDefaultPhotoSet, offeringById, type DefaultPhotoSetId, type OfferingFormat } from "./data";
+import { defaultArt, isDefaultPhotoSet, offeringById, TENFORE_DEFAULT_SET, type DefaultPhotoSetId, type OfferingFormat } from "./data";
 import { useInstructionQuery } from "./use-instruction-query";
 
 const DEMO_KEY = "crane-demo-photos";
-const FALLBACK_SET: DefaultPhotoSetId = "morning-parkland";
 
 /**
  * `?photos=<set>` turns on a default photo set for the session, as if the course had uploaded
@@ -31,7 +30,7 @@ export const useOfferingArt = () => {
     const { query } = useInstructionQuery();
     const forced = demoSet(query.extra.photos);
     const orgSet = org?.photos?.defaultSet;
-    const set: DefaultPhotoSetId = forced ?? (isDefaultPhotoSet(orgSet) ? orgSet : FALLBACK_SET);
+    const set: DefaultPhotoSetId = forced ?? (isDefaultPhotoSet(orgSet) ? orgSet : TENFORE_DEFAULT_SET);
     const defaultsOnly = !!forced || org?.photos?.own === false;
     /** `key`: the card's position in its list (neighbours never match), or an id (stable per program). */
     const art = (format: OfferingFormat, own?: string | null, key?: string | number) => (defaultsOnly || !own ? defaultArt(set, format, key) : own);

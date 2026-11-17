@@ -7,7 +7,8 @@ import { McgRoute } from "./mcg-story-kit";
  * Default photo sets: the fallback when a course hasn't uploaded its own photos (decided on the
  * Nov 17 call with Weston and Jared). TenFore ships six sets, each covering the five Instruction
  * categories. An organization picks one in Buck's clinic template builder and can override any photo
- * per course. There's no TenFore-logo fallback.
+ * per course. Until it picks one it gets the TenFore-wide default, **Overcast classic**
+ * (`TENFORE_DEFAULT_SET`, the same as Buck). There's no TenFore-logo fallback.
  *
  * In Crane Web the category tiles, clinic cards, clinic detail banner and program thumbnails all go
  * through `useOfferingArt()`: the course's own photo when there is one, otherwise the org's set.
@@ -75,10 +76,10 @@ const hub = (set: DefaultPhotoSetId, name: string): Story => ({
     parameters: { docs: { description: { story: `The Instruction landing for a course with no photos, using the **${DEFAULT_PHOTO_SETS.find((s) => s.id === set)!.label}** set.` } } },
 });
 
+export const HubOvercastClassic = hub("overcast-classic", "No course photos → Overcast classic (TenFore default)");
 export const HubMorningParkland = hub("morning-parkland", "No course photos → Morning parkland");
 export const HubBrightRange = hub("bright-range", "No course photos → Bright range");
 export const HubEveningLinks = hub("evening-links", "No course photos → Evening links");
-export const HubOvercastClassic = hub("overcast-classic", "No course photos → Overcast classic");
 export const HubIndoorStudio = hub("indoor-studio", "No course photos → Indoor studio");
 export const HubAutumn = hub("autumn", "No course photos → Autumn");
 
