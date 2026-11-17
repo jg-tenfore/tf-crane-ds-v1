@@ -185,7 +185,7 @@ export interface HeroProps {
  * reads, then the live screens in their own light band, then a one-line caption.
  */
 export const Hero = ({ eyebrow, title, children, pills, actions, art, screens, footnote }: HeroProps) => (
-    <section className="overflow-hidden rounded-2xl bg-white" style={{ boxShadow: `inset 0 0 0 1px ${DOC.line}`, margin: "8px 0 32px" }}>
+    <section className="overflow-hidden rounded-2xl bg-white" style={{ border: "1px solid #dfe3de", margin: "8px 0 32px" }}>
         <div className="relative" style={art ? { backgroundImage: `url(${art})`, backgroundSize: "cover", backgroundPosition: "right center" } : undefined}>
             {art && (
                 <div
@@ -205,12 +205,12 @@ export const Hero = ({ eyebrow, title, children, pills, actions, art, screens, f
             </div>
         </div>
         {screens && (
-            <div className="grid grid-cols-1 gap-5 border-t px-7 pt-6 pb-5 sm:grid-cols-3" style={{ borderColor: DOC.line, background: "#f6f7f5" }}>
+            <div className="grid grid-cols-1 items-end gap-5 border-t px-7 pt-6 pb-5 sm:grid-cols-3" style={{ borderColor: "#dfe3de", background: "#f6f7f5" }}>
                 {screens}
             </div>
         )}
         {footnote && (
-            <div className="border-t bg-white px-9 py-3 text-sm" style={{ borderColor: DOC.line, color: DOC.muted }}>
+            <div className="border-t bg-white px-9 py-3 text-sm" style={{ borderColor: "#dfe3de", color: DOC.muted }}>
                 {footnote}
             </div>
         )}
@@ -269,20 +269,44 @@ export const NavCard = ({ eyebrow, title, children, cta, ...t }: LinkTarget & { 
 /* ------------------------------------------------------------------ screens */
 
 /** A screenshot in a flat browser or phone frame. */
+/** Bordered browser window, fully rounded, screenshot cropped to 16:10 from the top. */
+const BrowserWindow = ({ src, alt }: { src: string; alt: string }) => (
+    <div className="w-full overflow-hidden rounded-xl bg-white" style={{ border: "1px solid #dfe3de", boxShadow: "0 1px 2px rgba(20,33,26,0.06), 0 8px 20px rgba(20,33,26,0.08)" }}>
+        <div className="flex h-6 items-center gap-1.5 px-2.5" style={{ background: "#f3f4f2", borderBottom: "1px solid #e6e9e5" }}>
+            {[0, 1, 2].map((i) => (
+                <span key={i} className="size-2 rounded-full" style={{ background: "#d5d9d3" }} />
+            ))}
+        </div>
+        <div style={{ aspectRatio: "16 / 10", overflow: "hidden" }}>
+            <img src={src} alt={alt} className="block w-full" style={{ margin: 0 }} />
+        </div>
+    </div>
+);
+
 export const ScreenThumb = ({ src, frame = "browser", alt = "", badge, plain = false }: { src: string; frame?: "browser" | "phone"; alt?: string; badge?: ReactNode; plain?: boolean }) => (
     <div
         className="relative flex items-start justify-center overflow-hidden rounded-xl"
-        style={plain ? { height: 170 } : { background: DOC.creamDeep, padding: frame === "phone" ? "14px 0 0" : "12px 12px 0", height: 190 }}
+        style={
+            plain
+                ? frame === "phone"
+                    ? { height: 196 }
+                    : undefined
+                : { background: DOC.creamDeep, border: `1px solid ${DOC.line}`, padding: frame === "phone" ? "14px 0 0" : "12px 12px 0", height: 190 }
+        }
     >
         {frame === "browser" ? (
-            <div className="w-full overflow-hidden rounded-t-lg bg-white" style={{ boxShadow: "0 6px 18px rgba(20,33,26,0.14)" }}>
-                <div className="flex h-5 items-center gap-1 px-2" style={{ background: "#efefed" }}>
-                    {["#ff5f57", "#febc2e", "#28c840"].map((c) => (
-                        <span key={c} className="size-1.5 rounded-full" style={{ background: c }} />
-                    ))}
+            plain ? (
+                <BrowserWindow src={src} alt={alt} />
+            ) : (
+                <div className="w-full overflow-hidden rounded-t-lg bg-white" style={{ border: "1px solid #dfe3de", borderBottom: "none", boxShadow: "0 6px 18px rgba(20,33,26,0.10)" }}>
+                    <div className="flex h-5 items-center gap-1 px-2" style={{ background: "#f3f4f2", borderBottom: "1px solid #e6e9e5" }}>
+                        {[0, 1, 2].map((i) => (
+                            <span key={i} className="size-1.5 rounded-full" style={{ background: "#d5d9d3" }} />
+                        ))}
+                    </div>
+                    <img src={src} alt={alt} className="block w-full" style={{ margin: 0 }} />
                 </div>
-                <img src={src} alt={alt} className="block w-full" style={{ margin: 0 }} />
-            </div>
+            )
         ) : (
             <div className="overflow-hidden rounded-t-[22px] bg-white" style={{ width: 118, padding: "5px 5px 0", background: "#1b1f1d", boxShadow: "0 6px 18px rgba(20,33,26,0.2)" }}>
                 <img src={src} alt={alt} className="block w-full rounded-t-[18px]" style={{ margin: 0 }} />
