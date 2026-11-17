@@ -232,6 +232,7 @@ const LESSON_RULES: Record<string, RegistrationRules> = {
     "senior-45": { age: { min: 62 }, questions: PRIVATE_QUESTIONS },
     "clinic-adult-l2": { age: { min: 18 }, equipmentProvided: false },
     "clinic-get-golf-ready": { age: { min: 18 }, equipmentProvided: true },
+    "clinic-3wk-nov": { age: { min: 18 }, equipmentProvided: false },
     "clinic-junior-first": {
         age: { min: 7, max: 10 },
         equipmentProvided: true,
@@ -381,6 +382,26 @@ export const LESSON_SERVICES: LessonService[] = [
         desc: "A six-week clinic covering the full swing, short game, and on-course fundamentals. The natural next step after a handful of privates.",
         tags: ["group", "adult"],
         save: "Save 20%",
+    }),
+    group({
+        // Not in Fox: the "three-week November clinic" Weston described on the Nov 17 call — an instructor
+        // attached to a clinic in the back end, so it lists (with Register) on his profile.
+        id: "clinic-3wk-nov",
+        name: "3-Week November Clinic — Cold-Weather Swing",
+        audience: "adult",
+        coachId: "mike-kenny",
+        courseSlug: "falls-road",
+        foxStartIso: "2026-07-14",
+        pattern: "weekly",
+        time: "5:00 PM – 6:15 PM",
+        sessions: 3,
+        durationMin: 75,
+        price: 135,
+        capacity: 10,
+        registered: 4,
+        ageGroup: "Adults, all levels",
+        desc: "Three Tuesday evenings under the Falls Road range lights: a shorter, simpler swing for cold mornings, wind and firm turf, plus a winter practice plan to take home. Sample program.",
+        tags: ["group", "adult"],
     }),
     group({
         id: "clinic-scoring",

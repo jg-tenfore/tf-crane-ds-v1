@@ -76,6 +76,7 @@ const ACADEMY_SKILLS: Record<string, SkillTag[]> = {
     "junior-30": ["kids", "beginner"],
     "senior-45": ["beginner"],
     "clinic-adult-l2": ["on-course"],
+    "clinic-3wk-nov": ["beginner", "advanced"],
     "clinic-scoring": ["short-game"],
     "clinic-launch-lab": ["advanced"],
     "clinic-get-golf-ready": ["beginner", "on-course"],

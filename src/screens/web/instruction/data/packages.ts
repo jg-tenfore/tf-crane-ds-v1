@@ -9,6 +9,7 @@
  *  - **Model C — monthly plan** (`LessonSubscription`): N lessons a month, billed monthly.
  */
 import { coachById, serviceById, servicePrice } from "./catalog";
+import { INSTRUCTION_TODAY, MONTHS_SHORT } from "./dates";
 
 export interface LessonPackage {
     id: string;
@@ -24,7 +25,7 @@ export interface LessonPackage {
     savings: number;
     /** "online" packs are sold in the catalog; "assigned" packs are issued by the Academy only. */
     availability: "online" | "assigned";
-    /** Display string: a date, or "No expiration". */
+    /** The term: CREDIT_TERM ("1 year after purchase"), or "No expiration". The date itself is per purchase. */
     expiration: string;
     transferable: boolean;
     badge?: string;
@@ -97,7 +98,7 @@ const packFor = (coachId: string, credits: number, discount: number, badge?: str
         perLessonPrice: Math.round(price / credits),
         savings: listPrice - price,
         availability: "online",
-        expiration: "December 31, 2027",
+        expiration: CREDIT_TERM,
         transferable: false,
         badge,
         howItWorks: [
@@ -114,12 +115,26 @@ const packFor = (coachId: string, credits: number, discount: number, badge?: str
         ],
         restrictions: [
             "Valid with this instructor only — rates are set per instructor",
-            "Unused credits expire December 31, 2027",
+            "Credits expire 1 year after purchase — your date is on the receipt and in My credits",
             "Non-transferable between golfers",
-            "Cancel or reschedule at least 24 hours ahead or the credit is spent",
+            "Cancel at least 24 hours ahead or the credit is spent; only your instructor can move a lesson",
         ],
     };
 };
+
+/**
+ * Packs expire 12 months after purchase, each with its own date (decided Nov 17, wish list #10). Admins can
+ * extend one golfer's pack in Buck; nothing golfer-facing changes the date.
+ */
+export const CREDIT_TERM = "1 year after purchase";
+/** "Sep 2, 2027": a purchase date (Date or "Sep 2, 2026") plus 12 months. */
+export const expiryAfter = (purchased: Date | string) => {
+    const d = typeof purchased === "string" ? new Date(purchased) : purchased;
+    const e = new Date(d.getFullYear() + 1, d.getMonth(), d.getDate());
+    return `${MONTHS_SHORT[e.getMonth()]} ${e.getDate()}, ${e.getFullYear()}`;
+};
+/** The date a pack bought today would expire. */
+export const expiryIfBoughtToday = () => expiryAfter(INSTRUCTION_TODAY);
 
 export const PACKAGES: LessonPackage[] = [
     packFor("mike-kenny", 5, 0.1),
@@ -215,7 +230,7 @@ export const CREDIT_BALANCES: CreditBalance[] = [
         creditsRemaining: 5,
         valueRemaining: 495,
         purchasedOn: "Sep 2, 2026",
-        expiresOn: "December 31, 2027",
+        expiresOn: expiryAfter("Sep 2, 2026"),
         history: [],
     },
     {
@@ -250,8 +265,8 @@ export const EDGE_BALANCES: CreditBalance[] = [
         creditsTotal: 5,
         creditsRemaining: 0,
         valueRemaining: 0,
-        purchasedOn: "January 8, 2026",
-        expiresOn: "December 31, 2026",
+        purchasedOn: "Jan 8, 2026",
+        expiresOn: expiryAfter("Jan 8, 2026"),
         history: [
             { date: "Jan 24, 2026", label: "45-Minute Private · Needwood", valueRelieved: 82 },
             { date: "Feb 7, 2026", label: "45-Minute Private · Needwood", valueRelieved: 82 },
@@ -267,8 +282,8 @@ export const EDGE_BALANCES: CreditBalance[] = [
         creditsTotal: 5,
         creditsRemaining: 2,
         valueRemaining: 140,
-        purchasedOn: "March 3, 2025",
-        expiresOn: "December 31, 2025",
+        purchasedOn: "Mar 3, 2025",
+        expiresOn: expiryAfter("Mar 3, 2025"),
         history: [
             { date: "Mar 29, 2025", label: "45-Minute Private · Laytonsville", valueRelieved: 70 },
             { date: "Apr 12, 2025", label: "45-Minute Private · Laytonsville", valueRelieved: 70 },

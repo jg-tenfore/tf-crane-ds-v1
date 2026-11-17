@@ -2,7 +2,7 @@ import type { FC, ReactNode } from "react";
 import { CheckCircle } from "@untitledui/icons";
 import { courseBrandFor } from "@/screens/chrome/course-brands";
 import { cx } from "@/utils/cx";
-import { coachById, courseShortName, type Coach } from "../data";
+import { coachById, courseShortName, CREDIT_TERM, expiryAfter, expiryIfBoughtToday, type Coach } from "../data";
 
 /**
  * Small building blocks shared by Packages & credits (and exported for the instructor profile).
@@ -13,7 +13,7 @@ import { coachById, courseShortName, type Coach } from "../data";
 /** Uppercase micro-label ("LESSONS REMAINING"). */
 export const MicroLabel = ({ children, className }: { children: ReactNode; className?: string }) => <span className={cx("caps text-[11px] text-quaternary", className)}>{children}</span>;
 
-/** Icon + text meta line ("Use by December 31, 2027"). */
+/** Icon + text meta line ("Expires Oct 9, 2027 · 1 year after purchase"). */
 export const MetaLine = ({ icon: Icon, children }: { icon: FC<{ className?: string }>; children: ReactNode }) => (
     <span className="flex items-center gap-1.5 text-sm text-tertiary">
         <Icon className="size-4 shrink-0 text-fg-quaternary" aria-hidden="true" />
@@ -121,8 +121,16 @@ export const SummaryLine = ({ label, value, strong, tone }: { label: ReactNode; 
     </div>
 );
 
-/** "Use by December 31, 2027" / "No expiry". */
-export const useByLabel = (expiration?: string) => (!expiration || expiration === "No expiration" ? "No expiry" : `Use by ${expiration}`);
+/**
+ * "Expires 1 year after purchase" (catalog) / "Expires Oct 9, 2027 · 1 year after purchase" (once there's a
+ * purchase date — pass `purchased`, or `true` for today) / "No expiry".
+ */
+export const useByLabel = (expiration?: string, purchased?: Date | string | true) => {
+    if (!expiration || expiration === "No expiration") return "No expiry";
+    if (expiration !== CREDIT_TERM) return `Use by ${expiration}`;
+    if (!purchased) return `Expires ${CREDIT_TERM}`;
+    return `Expires ${purchased === true ? expiryIfBoughtToday() : expiryAfter(purchased)} · ${CREDIT_TERM}`;
+};
 
 /** "5 lessons" / "1 lesson". */
 export const lessonsLabel = (n: number) => `${n} ${n === 1 ? "lesson" : "lessons"}`;

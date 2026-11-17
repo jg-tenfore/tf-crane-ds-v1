@@ -370,7 +370,7 @@ export const EligibilityFields = ({
  * account is settled here, inside the flow, and nothing chosen is lost. Signing in inline fills the
  * contact details; the full Crane sign-in page is a link away and returns here via `?next=`.
  */
-export const SignInGate = ({ what = "booking", nextHref, onSignedIn }: { what?: string; nextHref: string; onSignedIn: () => void }) => {
+export const SignInGate = ({ what = "booking", nextHref, onSignedIn, onLeave }: { what?: string; nextHref: string; onSignedIn: () => void; /** Called before leaving for the full sign-in page (save what the URL can't carry). */ onLeave?: () => void }) => {
     const { userName, setUserName } = useWebSession();
     const [mode, setMode] = useState<"signin" | "create">("signin");
     const [email, setEmail] = useState("");
@@ -462,6 +462,7 @@ export const SignInGate = ({ what = "booking", nextHref, onSignedIn }: { what?: 
                 </Button>
                 <WebLink
                     href={`${mode === "signin" ? "/sign-in" : "/sign-up"}?next=${next}`}
+                    onNavigate={onLeave}
                     className={cx("rounded text-sm font-semibold text-brand-secondary hover:underline", focusRing)}
                 >
                     Use the full {mode === "signin" ? "sign-in" : "sign-up"} page
@@ -487,20 +488,18 @@ export interface CreditOption {
 
 /**
  * Payment methods: a lesson credit (when the golfer holds one for this instructor and lesson), the
- * saved cards from Crane checkout, and — for privates — paying at the pro shop on the day.
+ * saved cards from Crane checkout. Golfers always pay when they book — never by invoice, and there's no
+ * golfer-facing "pay at the lesson" (decided Nov 17, wish list #5). Pay-at-lesson is an admin setting in
+ * Buck that starts off and requires a saved card.
  */
 export const PaymentOptions = ({
     value,
     onChange,
     credit,
-    payAtLesson,
-    courseShort,
 }: {
     value: string;
     onChange: (v: string) => void;
     credit?: CreditOption;
-    payAtLesson?: boolean;
-    courseShort?: string;
 }) => (
     <AriaRadioGroup aria-label="Payment method" value={value} onChange={onChange} className="flex flex-col gap-2">
         {credit && (
@@ -532,18 +531,11 @@ export const PaymentOptions = ({
                 </span>
             </ChoiceRow>
         ))}
-        {payAtLesson && (
-            <ChoiceRow value="lesson" className="ring-1 ring-secondary">
-                <span className="text-md font-semibold text-primary">Pay at the lesson</span>
-                <span className="block text-sm text-tertiary">Pay at the {courseShort ?? "course"} pro shop when you check in. Your card on file holds the slot.</span>
-            </ChoiceRow>
-        )}
     </AriaRadioGroup>
 );
 
 export const paymentName = (pay: string) => {
     if (pay === "credit") return "Lesson credit";
-    if (pay === "lesson") return "Pay at the lesson";
     const p = SAVED_PAYMENTS.find((x) => x.id === pay);
     return p ? `${p.name}${p.last4 ? ` ···· ${p.last4}` : ""}` : "Card on file";
 };

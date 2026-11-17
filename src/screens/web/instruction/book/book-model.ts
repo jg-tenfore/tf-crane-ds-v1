@@ -177,7 +177,6 @@ export interface LessonQuote {
     creditApplied: number;
     total: number;
     /** Charged when the golfer checks in (pay-at-lesson). */
-    dueAtLesson: number;
     dueNow: number;
 }
 
@@ -194,7 +193,6 @@ export const quoteLesson = ({ lesson, extras, promo, pay }: { lesson: number; ex
     const facilityFee = FACILITY_FEE; // Charged even when a credit pays, as in Fox (Nov 17 decision).
     const creditApplied = useCredit ? lesson : 0;
     const total = Math.max(0, lesson - creditApplied - discount) + extrasTotal + facilityFee;
-    const atLesson = pay === "lesson";
     return {
         lesson,
         extras: extrasTotal,
@@ -204,8 +202,7 @@ export const quoteLesson = ({ lesson, extras, promo, pay }: { lesson: number; ex
         promoLabel: rule?.label,
         creditApplied,
         total,
-        dueAtLesson: atLesson ? total : 0,
-        dueNow: atLesson ? 0 : total,
+        dueNow: total, // always charged at booking (Nov 17: no golfer-facing pay-at-lesson)
     };
 };
 
@@ -415,3 +412,40 @@ export const waitlistWindowLabel = ({ from, to, dayparts, days }: { from: string
 export const defaultWaitlistTo = (fromIso: string) => isoOf(addDays(dateOfIso(fromIso), 28));
 
 export const shortCourse = courseShortName;
+
+/* ------------------------------------------------------------------ */
+/* Sign-in round trip                                                  */
+/* ------------------------------------------------------------------ */
+
+const DRAFT_PREFIX = "crane-mcg-booking-draft:";
+
+/**
+ * What a golfer typed that the URL doesn't carry (guest names, birth dates, answers, the note). Saved
+ * only when they leave for the full sign-in page, and read back once when the booking reopens, so the
+ * round trip loses nothing (decided Nov 17). Keyed by service + coach.
+ */
+export const saveBookingDraft = (key: string, draft: unknown) => {
+    try {
+        sessionStorage.setItem(DRAFT_PREFIX + key, JSON.stringify(draft));
+    } catch {
+        /* storage blocked: the URL still carries date, time, players and extras */
+    }
+};
+
+/** The saved draft for `key`, if any. Call from a state initializer; then `clearBookingDraft` in an effect. */
+export const readBookingDraft = <T>(key: string): Partial<T> | undefined => {
+    try {
+        const raw = sessionStorage.getItem(DRAFT_PREFIX + key);
+        return raw ? (JSON.parse(raw) as Partial<T>) : undefined;
+    } catch {
+        return undefined;
+    }
+};
+
+export const clearBookingDraft = (key: string) => {
+    try {
+        sessionStorage.removeItem(DRAFT_PREFIX + key);
+    } catch {
+        /* nothing to clear */
+    }
+};

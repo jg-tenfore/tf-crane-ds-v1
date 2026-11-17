@@ -22,6 +22,7 @@ import {
     subscriptionForCoach,
     type LessonPackage,
     type LessonSubscription,
+    expiryIfBoughtToday,
 } from "../data";
 import { useInstructionQuery } from "../use-instruction-query";
 import { CreditsExplainer } from "./credits-explainer";
@@ -151,7 +152,11 @@ export const PackDetailPage = ({ pack }: { pack: LessonPackage }) => {
                             <p className="mt-1 text-md text-tertiary">Stated before you buy, where it&rsquo;s easy to check.</p>
                         </div>
                         <div className="grid grid-cols-1 gap-3 @tablet:grid-cols-3">
-                            <Fact label="Expires" value={pack.expiration === "No expiration" ? "Never" : "Dec 31"} sub={pack.expiration} />
+                            <Fact
+                                label="Expires"
+                                value={pack.expiration === "No expiration" ? "Never" : "1 year"}
+                                sub={pack.expiration === "No expiration" ? pack.expiration : `After purchase · ${expiryIfBoughtToday()} if bought today`}
+                            />
                             <Fact label="Transferable" value={pack.transferable ? "Yes" : "No"} sub={pack.transferable ? "Shareable with family" : "This golfer only"} />
                             <Fact label="Valid with" value="1 pro" sub={coach.name} />
                         </div>

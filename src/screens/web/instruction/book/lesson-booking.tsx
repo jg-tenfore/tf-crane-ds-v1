@@ -32,7 +32,6 @@ import {
     money,
     money0,
     nextAvailable,
-    packageById,
     parseTime,
     PRIVATE_SERVICES,
     proHref,
@@ -66,6 +65,9 @@ import {
     waitlistWindowLabel,
     withExtra,
     type LessonStep,
+    clearBookingDraft,
+    readBookingDraft,
+    saveBookingDraft,
 } from "./book-model";
 import {
     BookingLayout,
@@ -126,7 +128,7 @@ const seedGolfers = (service: LessonService): Golfer[] => {
  * Booking a private lesson — Fox Prototype 3's Square-style flow, rebuilt on Crane's tee-time
  * checkout: Date & time (date strip + Morning / Afternoon / Evening board, waitlist when nothing
  * fits) → Details (golfers, questions, extras, note) → Sign in (only for guests) → Payment (lesson
- * credit, saved cards, pay at the lesson, promo) → Review & confirm → `/instruction/review`.
+ * credit, saved cards, promo) → Review & confirm → `/instruction/review`.
  */
 export const LessonBooking = ({ service, coachId }: { service: LessonService; coachId: string }) => {
     const { query, setQuery } = useInstructionQuery();
@@ -145,10 +147,15 @@ export const LessonBooking = ({ service, coachId }: { service: LessonService; co
     useEffect(() => setTime(query.time), [query.time]);
     const [players, setPlayers] = useState(Math.min(query.players ?? 1, service.maxPlayers));
     useEffect(() => setPlayers(Math.min(query.players ?? 1, service.maxPlayers)), [query.players, service.maxPlayers]);
-    const [golfers, setGolfers] = useState<Golfer[]>(() => seedGolfers(service));
-    const [bookingAnswers, setBookingAnswers] = useState<Record<string, string>>({});
+    // Guest names, answers and the note survive a trip to the full sign-in page (see saveBookingDraft).
+    const draftKey = `${service.id}|${coachId}`;
+    type Draft = { golfers: Golfer[]; bookingAnswers: Record<string, string>; note: string };
+    const [draft] = useState(() => readBookingDraft<Draft>(draftKey));
+    useEffect(() => clearBookingDraft(draftKey), [draftKey]);
+    const [golfers, setGolfers] = useState<Golfer[]>(() => draft?.golfers ?? seedGolfers(service));
+    const [bookingAnswers, setBookingAnswers] = useState<Record<string, string>>(() => draft?.bookingAnswers ?? {});
     const [extraIds, setExtraIds] = useState<string[]>(() => extrasOf(query).map((e) => e.id));
-    const [note, setNote] = useState("");
+    const [note, setNote] = useState(() => draft?.note ?? "");
     const [pay, setPay] = useState<string>(query.extra.pay ?? DEFAULT_CARD);
     const [promo, setPromo] = useState<string | null>(promoOf(query));
     const [booking, setBooking] = useState(false);
@@ -177,7 +184,8 @@ export const LessonBooking = ({ service, coachId }: { service: LessonService; co
     const lesson = servicePrice(service, coach, players);
     const balance = coach ? creditsFor(coach.id, service.id, store.balances)[0] : undefined;
     const creditOk = !!balance && players === 1;
-    const effectivePay = pay === "credit" && !creditOk ? DEFAULT_CARD : pay;
+    // No golfer-facing pay-at-lesson (Nov 17): an old `?pay=lesson` link falls back to the card on file.
+    const effectivePay = (pay === "credit" && !creditOk) || pay === "lesson" ? DEFAULT_CARD : pay;
     const quote = quoteLesson({ lesson, extras, promo, pay: effectivePay });
     const usesCredit = effectivePay === "credit";
 
@@ -237,7 +245,6 @@ export const LessonBooking = ({ service, coachId }: { service: LessonService; co
                     {
                         confirmation: rec.id,
                         paid: quote.dueNow.toFixed(2),
-                        due: quote.dueAtLesson ? quote.dueAtLesson.toFixed(2) : undefined,
                         credit: usesCredit ? "1" : undefined,
                         pay: effectivePay,
                         extras: extraIds.join(",") || undefined,
@@ -306,12 +313,6 @@ export const LessonBooking = ({ service, coachId }: { service: LessonService; co
                     <div className="mt-1 border-t border-secondary pt-3">
                         <MoneyRow strong label="Total" value={money(quote.total)} />
                     </div>
-                    {effectivePay === "lesson" && (
-                        <>
-                            <MoneyRow label="Due today" value={money(0)} />
-                            <MoneyRow label="Due at the lesson" value={money(quote.dueAtLesson)} />
-                        </>
-                    )}
                     <p className="mt-1 flex items-start gap-1.5 text-sm text-tertiary">
                         <InfoCircle className="mt-0.5 size-4 shrink-0 text-fg-quaternary" aria-hidden="true" />
                         Free cancellation until 24 hours before your lesson.
@@ -379,9 +380,7 @@ export const LessonBooking = ({ service, coachId }: { service: LessonService; co
                     <PrimaryAction onPress={book} isLoading={booking}>
                         {usesCredit && quote.total === 0
                             ? "Confirm — $0.00 with credit"
-                            : effectivePay === "lesson"
-                              ? "Confirm — pay at the lesson"
-                              : `Confirm and pay ${money(quote.total)}`}
+                            : `Confirm and pay ${money(quote.total)}`}
                     </PrimaryAction>
                 );
             case "waitlist":
@@ -455,9 +454,7 @@ export const LessonBooking = ({ service, coachId }: { service: LessonService; co
                         ? `${slot.label} · ${fmtDateShort(dateIso)}`
                         : "Choose a time"
                     : step === "confirm" || step === "payment"
-                      ? effectivePay === "lesson"
-                          ? "Due at the lesson"
-                          : paymentName(effectivePay)
+                      ? paymentName(effectivePay)
                       : step === "waitlist"
                         ? "Nothing charged now"
                         : `${service.name} · ${slot?.label ?? ""}`
@@ -678,6 +675,7 @@ export const LessonBooking = ({ service, coachId }: { service: LessonService; co
                         }),
                     })}
                     onSignedIn={() => go("payment", withExtra(query, { extras: extraIds.join(",") || undefined }))}
+                    onLeave={() => saveBookingDraft(draftKey, { golfers, bookingAnswers, note } satisfies Draft)}
                 />
             )}
 
@@ -688,8 +686,6 @@ export const LessonBooking = ({ service, coachId }: { service: LessonService; co
                         <PaymentOptions
                             value={effectivePay}
                             onChange={setPay}
-                            payAtLesson
-                            courseShort={courseShortName(course)}
                             credit={
                                 balance && coach
                                     ? {
@@ -708,7 +704,7 @@ export const LessonBooking = ({ service, coachId }: { service: LessonService; co
                             <Notice tone="success" className="rounded-lg text-sm">
                                 One credit applied — {money(quote.creditApplied)} covered. That leaves {balance.creditsRemaining - 1}{" "}
                                 {balance.creditsRemaining - 1 === 1 ? "lesson" : "lessons"} with {coach?.name}
-                                {packageById(balance.packageId)?.expiration ? `, good through ${packageById(balance.packageId)!.expiration}.` : "."}
+                                {balance.expiresOn ? `, good through ${balance.expiresOn}.` : "."}
                             </Notice>
                         )}
                     </StepPanel>
@@ -722,9 +718,10 @@ export const LessonBooking = ({ service, coachId }: { service: LessonService; co
                     </StepPanel>
                     <StepPanel title="Cancellation">
                         <p className="text-sm text-tertiary">
-                            Cancel or reschedule at least 24 hours before your lesson and your {usesCredit ? "credit is" : "payment is"} returned in full. Inside 24 hours the
-                            lesson is charged
-                            {usesCredit ? " (the credit is spent)" : ""}, at the instructor&rsquo;s discretion.
+                            Cancel at least 24 hours before your lesson and your {usesCredit ? "credit is" : "payment is"} returned in full. Inside 24 hours the lesson is
+                            charged
+                            {usesCredit ? " (the credit is spent)" : ""}, at the instructor&rsquo;s discretion. Need a new time? Your instructor can move it — reply to your
+                            confirmation or call the Academy.
                         </p>
                     </StepPanel>
                 </>

@@ -41,6 +41,7 @@ import {
 } from "../data";
 import { useInstructionStore } from "../instruction-store";
 import { useInstructionQuery } from "../use-instruction-query";
+import { useFollowCourse } from "../use-follow-course";
 import { AcademyLogoTile, cardBase, FilterToggle, focusRing, InstructorAvatar, LinkButton } from "./hub-ui";
 
 /** The hub search this page was opened from (filters only), for "All instruction" and booking links. */
@@ -65,6 +66,7 @@ export const ServicePage = ({ id }: { id: string }) => {
     const { query } = useInstructionQuery();
     const offering = offeringById(id);
     const service = serviceById(id);
+    useFollowCourse(query.courses.length === 1 ? query.courses[0] : offering?.courseSlugs.length === 1 ? offering.courseSlugs[0] : undefined);
     if (!offering) {
         return (
             <WebShell active="instruction">

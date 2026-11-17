@@ -62,6 +62,8 @@ import {
     type LessonService,
 } from "../data";
 import { useInstructionQuery } from "../use-instruction-query";
+import { useInstructionStore } from "../instruction-store";
+import { useFollowCourse } from "../use-follow-course";
 import { CourseChip, DaypartBoard, focusRing, MetaLine, SectionTitle, StarRating } from "./instructor-ui";
 
 export interface InstructorProfilePageProps {
@@ -89,6 +91,7 @@ export const InstructorProfilePage = ({ id, fullyBooked }: InstructorProfilePage
     const profile = instructorProfile(id);
     const roster = academyInstructor(id);
     const { query } = useInstructionQuery();
+    useFollowCourse(query.courses.length === 1 ? query.courses[0] : roster?.courseSlugs.length === 1 ? roster.courseSlugs[0] : undefined);
     // "All instructors", keeping whatever the hub had filtered (course, format, …).
     const backHref = instructionHref({
         ...query,
@@ -179,7 +182,8 @@ const Profile = ({ profile, backHref, fullyBooked }: { profile: InstructorProfil
     const { coach } = profile;
     const { navigate } = useWebRouter();
     const { scrollToTop } = useWebFrame();
-    const [saved, setSaved] = useState(false);
+    const store = useInstructionStore();
+    const saved = store.savedInstructors.includes(coach.id);
     const [reviewsOpen, setReviewsOpen] = useState(false);
     const first = coach.name.split(" ")[0];
     const home = coach.courseSlugs[0];
@@ -332,7 +336,7 @@ const Profile = ({ profile, backHref, fullyBooked }: { profile: InstructorProfil
                                     size="web-lg"
                                     color="outline"
                                     iconLeading={<Heart className={cx("size-5", saved && "fill-current text-fg-error-primary")} aria-hidden="true" />}
-                                    onPress={() => setSaved((s) => !s)}
+                                    onPress={() => store.toggleSavedInstructor(coach.id)}
                                 >
                                     {saved ? "Saved" : "Save"}
                                 </Button>

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight, FilterLines, SearchLg, SearchMd, Ticket02 } from "@untitledui/icons";
+import { ArrowRight, FilterLines, Heart, SearchLg, SearchMd, Ticket02 } from "@untitledui/icons";
 import { Button as AriaButton } from "react-aria-components";
 import { Button } from "@/components/base/button";
 import { WebDialog } from "@/components/web/web-dialog";
@@ -29,9 +29,10 @@ import {
     type OfferingFormat,
 } from "../data";
 import { useInstructionQuery } from "../use-instruction-query";
+import { useInstructionStore } from "../instruction-store";
 import { useWebSession, WebShell } from "../../web-shell";
 import { ActiveFilterChips, clearedFilters, coursesSummary, FilterFields, isGroupOnly, querySummary } from "./hub-filters";
-import { AcademyLogoTile, cardBase, CourseSelect, focusRing, InstructorCard, LinkButton, PrivateLessonCard, ProgramCard, useIsNarrow } from "./hub-ui";
+import { AcademyLogoTile, cardBase, CourseSelect, FilterToggle, focusRing, InstructorCard, LinkButton, PrivateLessonCard, ProgramCard, useIsNarrow } from "./hub-ui";
 
 /** Art for each format tile (Crane event art; the private tile uses a real MCG lesson photo). */
 const FORMAT_ART: Record<OfferingFormat, string> = {
@@ -190,7 +191,17 @@ export const InstructionHubPage = ({ view: forcedView }: InstructionHubPageProps
     const offerings = useMemo(() => filterOfferings(queryToFilter(query)), [query]);
     const groupOnly = isGroupOnly(query);
     const tileOfferings = useMemo(() => (query.formats.length === 0 || groupOnly ? offerings : []), [offerings, query.formats.length, groupOnly]);
-    const instructors = useMemo(() => instructorsFor(offerings), [offerings]);
+    const { savedInstructors } = useInstructionStore();
+    // `?saved=1` on the Instructors tab: only the pros the golfer saved (the heart on a profile).
+    const savedOnly = query.extra.saved === "1";
+    const instructors = useMemo(() => {
+        const all = instructorsFor(offerings);
+        return savedOnly ? all.filter((e) => !!e.instructor.id && savedInstructors.includes(e.instructor.id)) : all;
+    }, [offerings, savedOnly, savedInstructors]);
+    const setSavedOnly = (on: boolean) => {
+        const { saved: _drop, ...rest } = query.extra;
+        patch({ extra: on ? { ...rest, saved: "1" } : rest });
+    };
     const filtered = isFiltered(query);
     const count = activeFilterCount(query);
     // MCG's "Clinics" link: group formats and nothing else — the title says so, no summary box needed.
@@ -396,7 +407,21 @@ export const InstructionHubPage = ({ view: forcedView }: InstructionHubPageProps
                                     <h2 className="text-display-xs font-semibold tracking-[-0.3px] text-primary">
                                         {resultsLabel} <span className="text-md font-normal text-tertiary">· {coursesLabel(query.courses)}</span>
                                     </h2>
+                                    <FilterToggle
+                                        isSelected={savedOnly}
+                                        onChange={setSavedOnly}
+                                        leading={<Heart className={cx("size-4", savedOnly && "fill-current")} aria-hidden="true" />}
+                                    >
+                                        Saved <span className="tabular-nums">{savedInstructors.length}</span>
+                                    </FilterToggle>
                                 </div>
+                                {savedOnly && instructors.length === 0 && (
+                                    <div className={cx(cardBase, "flex flex-col items-start gap-2 p-6")}>
+                                        <p className="text-md font-semibold text-primary">No saved instructors{query.courses.length ? " here" : ""} yet</p>
+                                        <p className="text-sm text-tertiary">Tap Save on an instructor&rsquo;s profile and they&rsquo;ll show up here, on any device you&rsquo;re signed in on.</p>
+                                        <LinkButton href={instructionHref({ ...query, extra: Object.fromEntries(Object.entries(query.extra).filter(([k]) => k !== "saved")) })}>Show all instructors</LinkButton>
+                                    </div>
+                                )}
                                 <div className="grid gap-4 @tablet:grid-cols-2 @tablet:gap-5 @desktop:grid-cols-3">
                                     {instructors.map((e) => (
                                         <InstructorCard key={e.instructor.id ?? e.instructor.name} entry={e} />

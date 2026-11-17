@@ -5,6 +5,7 @@ import { useWebRouter, WebLink } from "@/components/web/web-router";
 import { WebShell } from "../../web-shell";
 import { clinicsHref, coachById, instructorsHref, packagesHref, PRIVATE_SERVICES, serviceById } from "../data";
 import { focusRing } from "../pro/instructor-ui";
+import { useFollowCourse } from "../use-follow-course";
 import { useInstructionQuery } from "../use-instruction-query";
 import { ANY, programFor } from "./book-model";
 import { LessonBooking } from "./lesson-booking";
@@ -20,6 +21,8 @@ import { ProgramRegistration } from "./program-registration";
 export const BookPage = () => {
     const { query } = useInstructionQuery();
     const program = query.service ? programFor(query.service) : undefined;
+    const coachCourses = query.coach ? coachById(query.coach)?.courseSlugs : undefined;
+    useFollowCourse(query.courses[0] ?? program?.courseSlug ?? (coachCourses?.length === 1 ? coachCourses[0] : undefined));
     if (program) return <ProgramRegistration key={program.id} program={program} />;
 
     const service = query.service ? serviceById(query.service) : undefined;

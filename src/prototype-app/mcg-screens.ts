@@ -30,6 +30,8 @@ export const MCG_SCREEN_GROUPS: ScreenGroup[] = [
             ["Service · Academy program", serviceHref("clinic-adult-l2", "falls-road")],
             ["Service · private, any course", serviceHref("private-45")],
             ["Instructors · Falls Road", "/instruction/instructors?course=falls-road"],
+            ["Instructors · saved only", instructionHref({ view: "instructors", extra: { saved: "1" } })],
+            ["Service · 3-Week November Clinic", serviceHref("clinic-3wk-nov", "falls-road")],
             ["Hub · Sat clinics, Needwood", instructionHref({ formats: ["clinic"], courses: ["needwood"], days: [6] })],
             ["Hub · no results (Mon, Needwood)", instructionHref({ formats: ["clinic"], courses: ["needwood"], days: [1] })],
         ],

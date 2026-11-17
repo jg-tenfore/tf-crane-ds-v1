@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Calendar, Ticket02, Users01 } from "@untitledui/icons";
 import { StatusBadge, type StatusTone } from "@/components/base/badge";
 import { cx } from "@/utils/cx";
-import { INSTRUCTION_TODAY, money, packageById, type CreditBalance } from "../data";
+import { CREDIT_TERM, INSTRUCTION_TODAY, money, packageById, type CreditBalance } from "../data";
 import { CoachAvatar, CreditDots, MetaLine, MicroLabel, coachFor } from "./packages-ui";
 
 export type BalanceStatus = "active" | "assigned" | "used-up" | "expired";
@@ -76,7 +76,7 @@ export const CreditBalanceCard = ({ balance, actions, highlight }: { balance: Cr
                 <MetaLine icon={Ticket02}>
                     {pack?.availability === "assigned" ? "Issued" : "Purchased"} {balance.purchasedOn}
                 </MetaLine>
-                <MetaLine icon={Calendar}>{balance.expiresOn ? `${status === "expired" ? "Expired" : "Expires"} ${balance.expiresOn}` : "No expiry"}</MetaLine>
+                <MetaLine icon={Calendar}>{balance.expiresOn ? `${status === "expired" ? "Expired" : "Expires"} ${balance.expiresOn}${pack?.expiration === CREDIT_TERM ? ` · ${CREDIT_TERM}` : ""}` : "No expiry"}</MetaLine>
                 {pack && <MetaLine icon={Users01}>{pack.transferable ? "Transferable" : "Non-transferable"}</MetaLine>}
             </div>
 

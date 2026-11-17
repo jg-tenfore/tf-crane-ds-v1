@@ -7,7 +7,7 @@ import { McgRoute } from "./mcg-story-kit";
  * Square-style flow rebuilt on Crane's tee-time checkout: the summary rail (instructor, lesson,
  * course, date/time, golfers, price, guardrails) beside each step — Date & time (date strip + Morning
  * / Afternoon / Evening board, waitlist), Details (golfers, questions, extras, note), Sign in (guests
- * only), Payment (lesson credit, saved cards, pay at the lesson, promo) and Review & confirm. Group
+ * only), Payment (lesson credit, saved cards, promo — always paid at booking) and Review & confirm. Group
  * programs register instead (sessions, participants with age rules, spots left, waitlist when full).
  *
  * Every step is in the URL — `step`, `date`, `time`, `players` (+ `extras`, `pay`, `promo`,

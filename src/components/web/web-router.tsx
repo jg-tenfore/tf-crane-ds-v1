@@ -66,10 +66,12 @@ export interface WebLinkProps {
     className?: string;
     "aria-current"?: "page" | undefined;
     "aria-label"?: string;
+    /** Runs just before the link is followed (e.g. save a draft the URL can't carry). */
+    onNavigate?: () => void;
 }
 
 /** A real <a href> (so deep links are honest) that routes in-app when a router is present. */
-export const WebLink = ({ href, children, className, ...props }: WebLinkProps) => {
+export const WebLink = ({ href, children, className, onNavigate, ...props }: WebLinkProps) => {
     const { navigate } = useWebRouter();
     return (
         <a
@@ -77,6 +79,7 @@ export const WebLink = ({ href, children, className, ...props }: WebLinkProps) =
             href={href}
             className={className}
             onClick={(e: MouseEvent) => {
+                onNavigate?.();
                 if (e.metaKey || e.ctrlKey || e.shiftKey) return;
                 e.preventDefault();
                 navigate(href);

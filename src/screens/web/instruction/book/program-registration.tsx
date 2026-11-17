@@ -45,6 +45,9 @@ import {
     withExtra,
     type BookableProgram,
     type ProgramStep,
+    clearBookingDraft,
+    readBookingDraft,
+    saveBookingDraft,
 } from "./book-model";
 import {
     BookingLayout,
@@ -132,9 +135,14 @@ export const ProgramRegistration = ({ program }: { program: BookableProgram }) =
         const fromUrl = sessionsParamOf(query).filter((d) => upcoming.includes(d));
         return fromUrl.length ? fromUrl : upcoming.slice(0, 1);
     });
-    const [participants, setParticipants] = useState<Participant[]>(() => seedParticipants(program, firstIso));
-    const [bookingAnswers, setBookingAnswers] = useState<Record<string, string>>({});
-    const [note, setNote] = useState("");
+    // Participants, answers and the note survive a trip to the full sign-in page (see saveBookingDraft).
+    const draftKey = `program|${program.id}`;
+    type Draft = { participants: Participant[]; bookingAnswers: Record<string, string>; note: string };
+    const [draft] = useState(() => readBookingDraft<Draft>(draftKey));
+    useEffect(() => clearBookingDraft(draftKey), [draftKey]);
+    const [participants, setParticipants] = useState<Participant[]>(() => draft?.participants ?? seedParticipants(program, firstIso));
+    const [bookingAnswers, setBookingAnswers] = useState<Record<string, string>>(() => draft?.bookingAnswers ?? {});
+    const [note, setNote] = useState(() => draft?.note ?? "");
     const [pay, setPay] = useState(query.extra.pay && query.extra.pay !== "credit" && query.extra.pay !== "lesson" ? query.extra.pay : DEFAULT_CARD);
     const [promo, setPromo] = useState<string | null>(promoOf(query));
     const [busy, setBusy] = useState(false);
@@ -609,6 +617,7 @@ export const ProgramRegistration = ({ program }: { program: BookableProgram }) =
                         players: people,
                     })}
                     onSignedIn={() => go("payment")}
+                    onLeave={() => saveBookingDraft(draftKey, { participants, bookingAnswers, note } satisfies Draft)}
                 />
             )}
 

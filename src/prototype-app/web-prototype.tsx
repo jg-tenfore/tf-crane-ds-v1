@@ -12,7 +12,8 @@ import { WebSessionProvider } from "@/screens/web/web-shell";
 
 export const HOME = "/tee-times";
 
-const hashPath = () => (typeof location !== "undefined" ? decodeURIComponent(location.hash.replace(/^#/, "")) : "");
+// decodeURI, not decodeURIComponent: a nested link (`?next=%2Fbook%3Fa%3D1%26b%3D2`) must keep its %26 / %3F.
+const hashPath = () => (typeof location !== "undefined" ? decodeURI(location.hash.replace(/^#/, "")) : "");
 export const pathFromHash = (home: string = HOME) => {
     const h = hashPath();
     return h.startsWith("/") ? h : home;

@@ -316,7 +316,7 @@ export const PackPurchasedPage = ({ purchase }: { purchase: Purchase }) => {
                     <div className="flex flex-col gap-1.5">
                         {isPack ? (
                             <>
-                                <MetaLine icon={Calendar}>{useByLabel(purchase.pack.expiration)}</MetaLine>
+                                <MetaLine icon={Calendar}>{useByLabel(purchase.pack.expiration, true)}</MetaLine>
                                 <MetaLine icon={Ticket02}>Redeem online, or {coach.name} can apply a credit at the lesson tee</MetaLine>
                                 <MetaLine icon={Users01}>{purchase.pack.transferable ? "Transferable between golfers" : "Non-transferable"}</MetaLine>
                             </>

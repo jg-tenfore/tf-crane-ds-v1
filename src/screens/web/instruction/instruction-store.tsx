@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
-import { CREDIT_BALANCES, packageById, type CreditBalance } from "./data/packages";
+import { CREDIT_BALANCES, CREDIT_TERM, expiryIfBoughtToday, packageById, type CreditBalance } from "./data/packages";
 
 /**
  * Session state for Instruction — what a golfer did while clicking through the prototype:
@@ -62,7 +62,20 @@ interface InstructionStore {
     /** Spends one credit from a balance (no-op when empty). */
     spendCredit: (balanceId: string, label: string, value: number) => void;
     lessonById: (id: string) => BookedLesson | undefined;
+    /** Instructor ids the golfer saved (the heart on a profile). Kept across reloads. */
+    savedInstructors: string[];
+    toggleSavedInstructor: (id: string) => void;
 }
+
+const SAVED_KEY = "crane-mcg-saved-instructors";
+const readSaved = (): string[] => {
+    try {
+        const v = JSON.parse(localStorage.getItem(SAVED_KEY) ?? "[]");
+        return Array.isArray(v) ? v.filter((x) => typeof x === "string") : [];
+    } catch {
+        return [];
+    }
+};
 
 const TODAY_LABEL = "Oct 9, 2026";
 const confirmation = (prefix: string) => `${prefix}-${Math.floor(10000 + Math.random() * 89999)}`;
@@ -74,6 +87,18 @@ export const InstructionStoreProvider = ({ children, initialBalances = CREDIT_BA
     const [waitlist, setWaitlist] = useState<WaitlistEntry[]>([]);
     const [programs, setPrograms] = useState<ProgramRegistration[]>([]);
     const [balances, setBalances] = useState<CreditBalance[]>(initialBalances);
+    const [savedInstructors, setSavedInstructors] = useState<string[]>(readSaved);
+    const toggleSavedInstructor = useCallback((id: string) => {
+        setSavedInstructors((xs) => {
+            const next = xs.includes(id) ? xs.filter((x) => x !== id) : [...xs, id];
+            try {
+                localStorage.setItem(SAVED_KEY, JSON.stringify(next));
+            } catch {
+                /* private mode: keep it in memory */
+            }
+            return next;
+        });
+    }, []);
 
     const bookLesson = useCallback((l: Omit<BookedLesson, "id" | "bookedOn">) => {
         const lesson = { ...l, id: confirmation("MCG"), bookedOn: TODAY_LABEL };
@@ -103,7 +128,7 @@ export const InstructionStoreProvider = ({ children, initialBalances = CREDIT_BA
             creditsRemaining: pack.credits,
             valueRemaining: pack.price,
             purchasedOn: TODAY_LABEL,
-            expiresOn: pack.expiration,
+            expiresOn: pack.expiration === CREDIT_TERM ? expiryIfBoughtToday() : undefined,
             history: [],
         };
         setBalances((bs) => [balance, ...bs]);
@@ -120,8 +145,8 @@ export const InstructionStoreProvider = ({ children, initialBalances = CREDIT_BA
     }, []);
 
     const value = useMemo<InstructionStore>(
-        () => ({ lessons, waitlist, programs, balances, bookLesson, cancelLesson, joinWaitlist, leaveWaitlist, registerProgram, buyPack, spendCredit, lessonById: (id) => lessons.find((l) => l.id === id) }),
-        [lessons, waitlist, programs, balances, bookLesson, cancelLesson, joinWaitlist, leaveWaitlist, registerProgram, buyPack, spendCredit],
+        () => ({ lessons, waitlist, programs, balances, bookLesson, cancelLesson, joinWaitlist, leaveWaitlist, registerProgram, buyPack, spendCredit, lessonById: (id) => lessons.find((l) => l.id === id), savedInstructors, toggleSavedInstructor }),
+        [lessons, waitlist, programs, balances, bookLesson, cancelLesson, joinWaitlist, leaveWaitlist, registerProgram, buyPack, spendCredit, savedInstructors, toggleSavedInstructor],
     );
     return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 };
@@ -141,5 +166,7 @@ const fallback: InstructionStore = {
     buyPack: () => undefined,
     spendCredit: noop,
     lessonById: () => undefined,
+    savedInstructors: [],
+    toggleSavedInstructor: noop,
 };
 export const useInstructionStore = () => useContext(Ctx) ?? fallback;

@@ -45,6 +45,7 @@ export const eventArt = (artId: string): { image?: string; banner?: string } => 
 const PROGRAM_ART: Record<string, string> = {
     // Academy programs
     "clinic-adult-l2": "driver-distance-clinic",
+    "clinic-3wk-nov": "driver-distance-clinic",
     "clinic-scoring": "short-game-series",
     "clinic-launch-lab": "club-fitting-demo-day",
     "clinic-get-golf-ready": "golf-101",

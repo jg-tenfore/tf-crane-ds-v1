@@ -41,6 +41,7 @@ import {
 import { useInstructionStore } from "../instruction-store";
 import { CoachAvatar, focusRing } from "../pro/instructor-ui";
 import { useInstructionQuery } from "../use-instruction-query";
+import { useFollowCourse } from "../use-follow-course";
 import { extrasOf, programFor, quoteLesson, sessionsParamOf, timeLabelOf, timeRange, type BookableProgram } from "./book-model";
 import { MoneyRow, paymentName, WebTextArea } from "./booking-ui";
 
@@ -55,7 +56,8 @@ const longDay = (iso: string) =>
  * `/instruction/review` — where a booking lands, and where a finished lesson is rated.
  *
  * - `step=booked` — "You're booked": summary, add to calendar, what to bring, the cancellation
- *   window and the lesson's guardrails, manage links (reschedule, cancel, credits), pack prompt.
+ *   window and the lesson's guardrails, manage links (cancel, credits; golfers can't reschedule — only
+ *   instructors move lessons, decided Nov 17), pack prompt.
  * - `step=waitlisted` — a private-lesson or program waitlist request.
  * - `step=registered` — a group program registration.
  * - no `step` — Fox's post-lesson review form (`reviewHref(…)`), or "link incomplete".
@@ -65,6 +67,8 @@ const longDay = (iso: string) =>
  */
 export const LessonReviewPage = () => {
     const { query } = useInstructionQuery();
+    const program = query.service ? programFor(query.service) : undefined;
+    useFollowCourse(query.courses[0] ?? program?.courseSlug ?? (query.coach ? coachById(query.coach)?.courseSlugs[0] : undefined));
     const kind = query.step;
     if (kind === "booked") return <BookedConfirmation q={query} />;
     if (kind === "waitlisted") return <WaitlistConfirmation q={query} />;
@@ -211,7 +215,7 @@ const BookedConfirmation = ({ q }: { q: InstructionQuery }) => {
                             </div>
                             {q.extra.matched && (
                                 <Notice tone="info" className="rounded-lg text-sm">
-                                    You asked for any available instructor and we matched you with {coach.name}. Want someone else? Reschedule free up to 24 hours before.
+                                    You asked for any available instructor and we matched you with {coach.name}. Want someone else? Cancel free up to 24 hours before and book again, or ask the Academy to switch you.
                                 </Notice>
                             )}
                             <div className="flex flex-col gap-2 border-t border-secondary pt-5">
@@ -230,11 +234,7 @@ const BookedConfirmation = ({ q }: { q: InstructionQuery }) => {
                                 <div className="mt-1 border-t border-secondary pt-3">
                                     <MoneyRow
                                         strong
-                                        label={
-                                            pay === "lesson"
-                                                ? "Due at the lesson"
-                                                : `Charged to ${usedCredit ? (quote.total ? "your card on file" : "your lesson credit") : paymentName(pay)}`
-                                        }
+                                        label={`Charged to ${usedCredit ? (quote.total ? "your card on file" : "your lesson credit") : paymentName(pay)}`}
                                         value={money(quote.total)}
                                     />
                                 </div>
@@ -259,30 +259,19 @@ const BookedConfirmation = ({ q }: { q: InstructionQuery }) => {
                             </Panel>
                             <Panel title="Cancellation" bodyClassName="flex flex-col gap-2 px-5 py-4 text-sm text-tertiary">
                                 <p>
-                                    Free cancellation or rescheduling until <span className="font-semibold text-secondary">{cancelBy(q.date, q.time)}</span>. After that the lesson
+                                    Free cancellation until <span className="font-semibold text-secondary">{cancelBy(q.date, q.time)}</span>. After that the lesson
                                     is charged
                                     {usedCredit ? " (the credit is spent)" : ""}, at the instructor&rsquo;s discretion.
                                 </p>
-                                {guard && <p>This lesson runs {guard.toLowerCase()} — any reschedule stays inside that.</p>}
-                                <p>Rain or lightning? The Academy reschedules at no charge.</p>
+                                <p>Need a new time? Your instructor can move it — reply to your confirmation or call the Academy.</p>
+                                {guard && <p>This lesson runs {guard.toLowerCase()}, so any new time stays inside that.</p>}
+                                <p>Rain or lightning? The Academy moves the lesson at no charge.</p>
                             </Panel>
                         </div>
                     </div>
 
                     <aside className="flex flex-col gap-5">
                         <Panel title="Manage this lesson" bodyClassName="flex flex-col gap-2 px-5 py-4">
-                            {!cancelled && (
-                                <ManageLink
-                                    href={bookHref({
-                                        coach: coach.id,
-                                        service: service.id,
-                                        course,
-                                        date: q.date,
-                                    })}
-                                >
-                                    Reschedule
-                                </ManageLink>
-                            )}
                             {!cancelled && (
                                 <AriaButton
                                     onPress={() => setCancelOpen(true)}
@@ -297,6 +286,7 @@ const BookedConfirmation = ({ q }: { q: InstructionQuery }) => {
                             <ManageLink href="/account/activity">Your activity</ManageLink>
                             <ManageLink href={creditsHref()}>Lesson credits</ManageLink>
                             <ManageLink href={proHref(coach.id)}>More with {coach.name}</ManageLink>
+                            {!cancelled && <p className="px-1 pt-1 text-sm text-tertiary">Need a new time? Your instructor can move it — reply to your confirmation or call the Academy.</p>}
                         </Panel>
                         {!usedCredit && bestPack && (
                             <Panel bodyClassName="flex flex-col gap-3 px-5 py-5">
