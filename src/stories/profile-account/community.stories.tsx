@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ProfileStack } from "./profile-story-helpers";
 
 const meta: Meta = {
-    title: "Profile ∕ Account/Community",
+    title: "Prototypes/iPhone app/Profile ∕ Account/Community",
     parameters: {
         phone: true,
         docs: {

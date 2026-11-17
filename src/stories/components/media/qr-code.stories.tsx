@@ -8,7 +8,7 @@ import { Caption, Panel, Specimen } from "../story-kit";
  * Always render it on white with a quiet zone: it stays black in dark mode on purpose.
  */
 const meta: Meta<typeof QRCode> = {
-    title: "Components/Media/QR Code",
+    title: "Design System/Components/Media/QR Code",
     component: QRCode,
     tags: ["autodocs"],
     args: { value: "https://crane.tenfore.golf/checkin/b-1", size: 220 },

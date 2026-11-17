@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CheckCircle, XClose } from "@untitledui/icons";
+import { CheckCircle, MarkerPin01, XClose } from "@untitledui/icons";
 import { Button as AriaButton, Heading as AriaHeading } from "react-aria-components";
 import { cx } from "@/utils/cx";
 import { SearchField } from "@/components/forms/search-field";
@@ -12,12 +12,18 @@ export interface WebCoursePickerProps {
     onOpenChange: (open: boolean) => void;
     activeId?: string;
     onSelect?: (course: Course) => void;
+    /** Courses to list (an organization passes its own). Defaults to every course. */
+    courses?: Course[];
+    /** Drawer title. */
+    title?: string;
+    /** Organization only: a first "no particular course" row, e.g. "Any MCG course". */
+    anyOption?: { label: string; detail?: string; active: boolean; onSelect: () => void };
 }
 
 /** Course picker — left drawer with search, like live CraneWeb's "Golf Courses" panel. */
-export const WebCoursePicker = ({ isOpen, onOpenChange, activeId, onSelect }: WebCoursePickerProps) => {
+export const WebCoursePicker = ({ isOpen, onOpenChange, activeId, onSelect, courses = COURSES, title = "Golf Courses", anyOption }: WebCoursePickerProps) => {
     const [query, setQuery] = useState("");
-    const list = COURSES.filter((c) => `${c.name} ${c.city} ${c.state}`.toLowerCase().includes(query.trim().toLowerCase()));
+    const list = courses.filter((c) => `${c.name} ${c.city} ${c.state}`.toLowerCase().includes(query.trim().toLowerCase()));
 
     return (
         <Drawer isOpen={isOpen} onOpenChange={onOpenChange} className="w-[380px] max-w-[88%]">
@@ -25,7 +31,7 @@ export const WebCoursePicker = ({ isOpen, onOpenChange, activeId, onSelect }: We
                 <>
                     <div className="flex items-center justify-between border-b border-secondary px-5 py-4">
                         <AriaHeading slot="title" className="text-xl font-semibold text-primary">
-                            Golf Courses
+                            {title}
                         </AriaHeading>
                         <AriaButton aria-label="Close" onPress={close} className="flex size-9 cursor-pointer items-center justify-center rounded-full text-fg-secondary outline-none hover:bg-primary_hover focus-visible:ring-4 focus-visible:ring-brand-300/60">
                             <XClose className="size-5" />
@@ -35,8 +41,31 @@ export const WebCoursePicker = ({ isOpen, onOpenChange, activeId, onSelect }: We
                         <SearchField placeholder="Search golf courses..." value={query} onChange={setQuery} />
                     </div>
                     <ul className="scrollbar-hide flex-1 divide-y divide-border-secondary overflow-y-auto">
+                        {anyOption && !query.trim() && (
+                            <li>
+                                <AriaButton
+                                    onPress={() => {
+                                        anyOption.onSelect();
+                                        close();
+                                    }}
+                                    className={cx(
+                                        "flex w-full cursor-pointer items-center gap-3 px-5 py-3 text-left outline-none transition duration-100 ease-linear hover:bg-primary_hover data-[focus-visible]:bg-primary_hover",
+                                        anyOption.active && "bg-secondary",
+                                    )}
+                                >
+                                    <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-brand-primary_alt ring-1 ring-secondary">
+                                        <MarkerPin01 className="size-5 text-fg-brand-primary" aria-hidden="true" />
+                                    </span>
+                                    <span className="min-w-0 flex-1">
+                                        <span className={cx("block text-md font-semibold", anyOption.active ? "text-brand-secondary" : "text-primary")}>{anyOption.label}</span>
+                                        {anyOption.detail && <span className="block text-sm text-tertiary">{anyOption.detail}</span>}
+                                    </span>
+                                    {anyOption.active && <CheckCircle className="size-5 shrink-0 text-fg-brand-primary" aria-hidden="true" />}
+                                </AriaButton>
+                            </li>
+                        )}
                         {list.map((c) => {
-                            const active = c.id === activeId;
+                            const active = c.id === activeId && !anyOption?.active;
                             return (
                                 <li key={c.id}>
                                     <AriaButton

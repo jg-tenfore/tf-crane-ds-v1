@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
  * `rounded-full` used for avatars, dots, and pill buttons.
  */
 const meta = {
-    title: "Foundations/Radius",
+    title: "Design System/Styles/Radius",
     parameters: { layout: "fullscreen" },
 } satisfies Meta<typeof RadiusTile>;
 

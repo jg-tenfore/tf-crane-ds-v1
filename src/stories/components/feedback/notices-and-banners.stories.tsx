@@ -12,7 +12,7 @@ const TONES = ["error", "warning", "success", "info"] as const;
  * (gray card with a tinted icon badge, for long notices).
  */
 const meta: Meta<typeof Notice> = {
-    title: "Components/Feedback/Notices & Banners",
+    title: "Design System/Components/Feedback/Notices & Banners",
     component: Notice,
     tags: ["autodocs"],
     args: {

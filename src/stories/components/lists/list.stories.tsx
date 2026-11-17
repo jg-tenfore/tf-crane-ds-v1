@@ -28,7 +28,7 @@ import { APP_VERSION, USER } from "@/data/crane";
  * is a label/value pair for details tables and order summaries.
  */
 const meta: Meta<typeof ListRow> = {
-    title: "Components/Lists & Cards/List",
+    title: "Design System/Components/Lists & Cards/List",
     component: ListRow,
     parameters: { phone: true },
 };

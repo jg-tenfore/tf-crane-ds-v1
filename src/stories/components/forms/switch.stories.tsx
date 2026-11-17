@@ -8,7 +8,7 @@ import { Caption, Panel, Specimen } from "../story-kit";
  * usually supply the text and pass an `aria-label` instead. Built on React Aria Switch.
  */
 const meta: Meta<typeof Switch> = {
-    title: "Components/Forms/Switch",
+    title: "Design System/Components/Forms/Switch",
     component: Switch,
     tags: ["autodocs"],
     args: { children: "Push notifications", isDisabled: false, defaultSelected: true },

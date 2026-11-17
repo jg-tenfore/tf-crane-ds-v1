@@ -6,7 +6,7 @@ import { StackNavigator } from "@/components/prototype/stack-navigator";
 import { ProfileScreen, profileScreens } from "@/screens/profile";
 
 const meta: Meta = {
-    title: "Profile ∕ Account/Profile",
+    title: "Prototypes/iPhone app/Profile ∕ Account/Profile",
     parameters: {
         phone: true,
         docs: {

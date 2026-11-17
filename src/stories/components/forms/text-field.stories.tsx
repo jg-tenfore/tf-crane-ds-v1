@@ -9,7 +9,7 @@ import { Panel } from "../story-kit";
  * fields. Built on React Aria TextField.
  */
 const meta: Meta<typeof TextField> = {
-    title: "Components/Forms/Text Field",
+    title: "Design System/Components/Forms/Text Field",
     component: TextField,
     tags: ["autodocs"],
     args: { label: "Email", placeholder: "you@example.com", isDisabled: false, isInvalid: false, isRequired: false },

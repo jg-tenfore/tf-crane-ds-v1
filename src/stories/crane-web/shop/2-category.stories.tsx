@@ -3,7 +3,7 @@ import { CategoryPage } from "@/screens/web/browse";
 import { ShopStory } from "./shop-story";
 
 const meta: Meta = {
-    title: "Crane Web/Shop/2. Category",
+    title: "Prototypes/Crane Web/Shop/2. Category",
     parameters: {
         layout: "fullscreen",
         docs: {

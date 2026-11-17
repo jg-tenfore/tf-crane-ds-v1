@@ -8,7 +8,7 @@ import { WebScreen } from "../web-story-kit";
  * A small route switch over `teeTimeRoutes`; rounds you reserve show up in My Rounds.
  */
 const meta: Meta = {
-    title: "Crane Web/Tee Times/Flow",
+    title: "Prototypes/Crane Web/Tee Times/Flow",
     parameters: { layout: "fullscreen" },
 };
 export default meta;

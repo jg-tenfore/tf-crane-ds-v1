@@ -10,7 +10,7 @@ import { WebScreen } from "../web-story-kit";
  * highlighting the whole window. Other activities (range, lessons, juniors, outings) follow as cards.
  */
 const meta: Meta = {
-    title: "Crane Web/Activities/Simulator Bays",
+    title: "Prototypes/Crane Web/Activities/Simulator Bays",
     parameters: { layout: "fullscreen" },
 };
 export default meta;
@@ -34,3 +34,6 @@ export const MobileTimeSelected: Story = {
     name: "Mobile web · Time selected",
     render: () => <WebScreen path="/activities" width="mobile"><ActivitiesPage initialStart={15 * 60} /></WebScreen>,
 };
+
+/** Indoor-only venue: FloGolf Lounge's own photo on the bays card, and no outdoor driving range in "More to do". */
+export const FloGolfIndoor: Story = { name: "FloGolf (indoor venue)", render: () => <WebScreen path="/activities" courseId="flogolf"><ActivitiesPage /></WebScreen> };

@@ -1,0 +1,148 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Banner, DocButton, DocLink, DocPage, Grid, ScreenCard, Section, screen, webPrototype } from "../docs-kit/docs-kit";
+import { AreaPills, ScreenIndexTable, areaEyebrow, firstIdIn } from "./screen-index";
+import { CRANE_WEB_SCREENS as W } from "./screen-index-data";
+
+<Meta title="Prototypes/Crane Web/Screen index" />
+
+<DocPage>
+
+<Banner
+    eyebrow="Prototypes · Crane Web"
+    title="Screen index"
+    pills={<AreaPills rows={W} />}
+    actions={<><DocButton href={webPrototype("/tee-times")}>Open the prototype</DocButton><DocLink to="prototypes-crane-web-flow--desktop">The whole app in Storybook (Flow)</DocLink></>}
+>
+    Every screen and state in Crane Web, in sidebar order. Click a row to open its story, or jump into the prototype at that page.
+</Banner>
+
+<Section title="Area by area" intro="Each area in one line, with what to look at first. Every area has desktop (1440) and mobile web (390) stories; some add laptop (1024).">
+<Grid cols={3}>
+    <ScreenCard
+        src={screen("web-tee-times")}
+        eyebrow={areaEyebrow(W, 1, "Tee Times")}
+        title="Tee Times"
+        lookAt="the Course · Date · Players · Holes bar, and the Full and few-spots times."
+        links={[
+            { label: "Stories", to: firstIdIn(W, "Tee Times") },
+            { label: "Open the prototype", href: webPrototype("/tee-times") },
+        ]}
+    >
+        The tee sheet with a 7-day strip and More dates, then checkout with a 5:00 hold, confirmation and My Rounds.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-shop")}
+        eyebrow={areaEyebrow(W, 2, "Shop", "Shop (incl. checkout)")}
+        title="Shop, cart and checkout"
+        lookAt="the tax row at checkout: does it say where it's charged?"
+        links={[
+            { label: "Stories", to: firstIdIn(W, "Shop") },
+            { label: "Open the prototype", href: webPrototype("/shop") },
+        ]}
+    >
+        Shop home, category and product pages, then cart, Add More, checkout with destination tax and the receipt. Plus gift and punch cards.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-restaurant")}
+        eyebrow={areaEyebrow(W, 3, "Restaurant")}
+        title="Restaurant"
+        lookAt="food and pro shop items checking out separately."
+        links={[
+            { label: "Stories", to: firstIdIn(W, "Restaurant") },
+            { label: "Open the prototype", href: webPrototype("/restaurant") },
+        ]}
+    >
+        The snack-bar menu with an order rail, item modifiers, pickup times, closed hours and the breakfast cut-off.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-events")}
+        eyebrow={areaEyebrow(W, 4, "Events")}
+        title="Events"
+        lookAt="registering with buddies and a guest, and what a full event offers."
+        links={[
+            { label: "Stories", to: firstIdIn(W, "Events") },
+            { label: "Open the prototype", href: webPrototype("/events") },
+        ]}
+    >
+        Photo-led event cards with filters, then event details: buddies and guests, charity, members-only, waitlist.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-clinics")}
+        eyebrow={areaEyebrow(W, 5, "Clinics")}
+        title="Clinics"
+        lookAt="the spots meter and the session schedule for a multi-week series."
+        links={[
+            { label: "Stories", to: firstIdIn(W, "Clinics") },
+            { label: "Open the prototype", href: webPrototype("/clinics") },
+        ]}
+    >
+        Clinic cards by level and focus, then details with the instructor, sessions, a reserve dialog and the waitlist.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-leagues")}
+        eyebrow={areaEyebrow(W, 6, "Leagues")}
+        title="Leagues"
+        lookAt="team signup: pick a partner, or join solo and get paired."
+        links={[
+            { label: "Stories", to: firstIdIn(W, "Leagues") },
+            { label: "Open the prototype", href: webPrototype("/leagues") },
+        ]}
+    >
+        New for Crane Web: weekly league cards, then details with standings, schedule, team signup and prorated mid-season joins.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-activities")}
+        eyebrow={areaEyebrow(W, 7, "Activities")}
+        title="Activities"
+        lookAt="picking a start time: is the booked window clear?"
+        links={[
+            { label: "Stories", to: firstIdIn(W, "Activities") },
+            { label: "Open the prototype", href: webPrototype("/activities") },
+        ]}
+    >
+        Simulator bays: date, players, duration, bay and start time. Bays too small for the group are disabled.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-calendar")}
+        eyebrow={areaEyebrow(W, 8, "Calendar")}
+        title="Calendar"
+        lookAt="the type colors and filter chips, and the mobile month with dots."
+        links={[
+            { label: "Stories", to: firstIdIn(W, "Calendar") },
+            { label: "Open the prototype", href: webPrototype("/calendar") },
+        ]}
+    >
+        Events, clinic sessions and league nights in one color-coded feed, as a month grid or a list.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-account")}
+        eyebrow={areaEyebrow(W, 9, "Profile ∕ Account")}
+        title="Profile ∕ Account"
+        lookAt="the side nav buckets, and the wallet with a balance due."
+        links={[
+            { label: "Stories", to: firstIdIn(W, "Profile ∕ Account") },
+            { label: "Open the prototype", href: webPrototype("/account") },
+        ]}
+    >
+        Overview, activity and receipts, my events, buddies, memberships, wallet and account settings.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-sign-in")}
+        eyebrow={areaEyebrow(W, 10, "Sign in ∕ Sign up")}
+        title="Sign in ∕ Sign up"
+        lookAt="arriving from checkout: does sign-in send you back there?"
+        links={[
+            { label: "Stories", to: firstIdIn(W, "Sign in ∕ Sign up") },
+            { label: "Open the prototype", href: webPrototype("/sign-in") },
+        ]}
+    >
+        Sign in, sign up, verify email, home course and welcome, beside a brand panel with three background options.
+    </ScreenCard>
+</Grid>
+</Section>
+
+<Section title="Every screen" intro={`All ${W.length} stories, in the same order as the sidebar. Story opens it here; Prototype opens Crane Web at that page's address.`}>
+<ScreenIndexTable rows={W} prototype="web" />
+</Section>
+
+</DocPage>

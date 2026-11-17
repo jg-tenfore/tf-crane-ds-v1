@@ -3,7 +3,7 @@ import { AccountOverviewScreen } from "@/screens/web/account";
 import { WebScreen } from "../web-story-kit";
 
 const meta: Meta = {
-    title: "Crane Web/Profile ∕ Account/Overview",
+    title: "Prototypes/Crane Web/Profile ∕ Account/Overview",
     parameters: {
         layout: "fullscreen",
         docs: {

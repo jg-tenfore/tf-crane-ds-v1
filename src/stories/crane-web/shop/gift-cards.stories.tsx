@@ -3,7 +3,7 @@ import { GiftCardPage, PunchCardPage } from "@/screens/web/browse";
 import { ShopStory } from "./shop-story";
 
 const meta: Meta = {
-    title: "Crane Web/Shop/Gift Cards",
+    title: "Prototypes/Crane Web/Shop/Gift Cards",
     parameters: {
         layout: "fullscreen",
         docs: {

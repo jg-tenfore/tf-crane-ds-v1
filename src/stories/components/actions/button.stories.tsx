@@ -16,7 +16,7 @@ const SIZES = Object.keys(buttonStyles.sizes) as ButtonSize[];
  * only for irreversible confirmations. Built on React Aria Button (press, not click).
  */
 const meta: Meta<typeof Button> = {
-    title: "Components/Actions/Button",
+    title: "Design System/Components/Actions/Button",
     component: Button,
     tags: ["autodocs"],
     args: { children: "Book Tee Time", color: "filled", size: "lg", fullWidth: false, isLoading: false, isDisabled: false },

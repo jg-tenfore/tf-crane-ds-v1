@@ -3,7 +3,7 @@ import { ChooseHomeCoursePage } from "@/screens/web/auth";
 import { WebScreen } from "../web-story-kit";
 
 const meta: Meta = {
-    title: "Crane Web/Sign in ∕ Sign up/Choose Home Course",
+    title: "Prototypes/Crane Web/Sign in ∕ Sign up/Choose Home Course",
     parameters: {
         layout: "fullscreen",
         docs: {

@@ -45,7 +45,7 @@ const AuthFlow = () => {
 };
 
 const meta: Meta = {
-    title: "Crane Web/Sign in ∕ Sign up/Flow",
+    title: "Prototypes/Crane Web/Sign in ∕ Sign up/Flow",
     parameters: {
         layout: "fullscreen",
         docs: {

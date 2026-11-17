@@ -4,7 +4,7 @@ import { ProgressBar } from "@/components/base/progress-bar";
 
 /** Usage bars and sentence-case status badges used by Punch Cards, Rain Checks, Gift Cards and Memberships. */
 const meta: Meta = {
-    title: "Components/Feedback/Progress & Status",
+    title: "Design System/Components/Feedback/Progress & Status",
     parameters: { layout: "centered" },
 };
 export default meta;

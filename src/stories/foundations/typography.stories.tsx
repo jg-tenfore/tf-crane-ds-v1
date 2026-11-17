@@ -7,7 +7,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
  * line height, tracking and (where Apple specifies one) weight.
  */
 const meta = {
-    title: "Foundations/Typography",
+    title: "Design System/Styles/Typography",
     parameters: { layout: "fullscreen" },
 } satisfies Meta;
 export default meta;

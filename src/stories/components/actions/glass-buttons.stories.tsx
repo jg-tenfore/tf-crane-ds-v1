@@ -10,7 +10,7 @@ import { Caption, CoursePhoto, Panel } from "../story-kit";
  * (chevron + previous screen title, or chevron only in modal stacks).
  */
 const meta: Meta<typeof GlassIconButton> = {
-    title: "Components/Actions/Glass Buttons",
+    title: "Design System/Components/Actions/Glass Buttons",
     component: GlassIconButton,
 };
 export default meta;

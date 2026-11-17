@@ -7,7 +7,7 @@ import { BookingsScreen, PurchaseDetailsScreen, TeeTimeDetailsScreen, bookingsSc
 
 /** Bookings tab and its detail screens (refs IMG_2164–2169). */
 const meta: Meta = {
-    title: "App Chrome/Bookings",
+    title: "Prototypes/iPhone app/App Chrome/Bookings",
     parameters: { phone: true },
 };
 export default meta;

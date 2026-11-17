@@ -6,7 +6,7 @@ import { WebSessionProvider, WebShell } from "@/screens/web/web-shell";
 
 /** Crane Web chrome: header (utility row + course switcher + section nav), course picker and footer. */
 const meta: Meta = {
-    title: "Crane Web/Components/Header & Footer",
+    title: "Design System/Crane Web/Components/Header & Footer",
     parameters: { layout: "fullscreen" },
 };
 export default meta;

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { VerifyEmailScreen } from "@/screens/auth";
 
 const meta: Meta<typeof VerifyEmailScreen> = {
-    title: "Sign in ∕ Sign up/Verify Email",
+    title: "Prototypes/iPhone app/Sign in ∕ Sign up/Verify Email",
     component: VerifyEmailScreen,
     parameters: { phone: true },
 };

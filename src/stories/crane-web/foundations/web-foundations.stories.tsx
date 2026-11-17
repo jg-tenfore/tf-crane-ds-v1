@@ -8,7 +8,7 @@ import { CapsTabs, PageHeader, SectionHeading, WebPage } from "@/components/web/
  * as Crane mobile (see Foundations).
  */
 const meta: Meta = {
-    title: "Crane Web/Foundations",
+    title: "Design System/Crane Web/Foundations",
     parameters: { layout: "fullscreen" },
 };
 export default meta;

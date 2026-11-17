@@ -1,0 +1,122 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Banner, Callout, Choice, DocButton, DocLink, DocPage, DocTable, Grid, Pill, Quote, ScreenCard, Section, Status, screen, webPrototype } from "../../docs-kit/docs-kit";
+
+<Meta title="Reviews/Nov 12 – Shop & checkout/Summary" />
+
+<DocPage>
+
+<Banner
+    eyebrow="REVIEW · NOV 12, 2026"
+    title="Shop & checkout"
+    pills={<><Pill>Crane Web · shop filters, checkout</Pill><Pill>Nov 12, 2026</Pill><Pill tone="amber">Filter layout: wider feedback</Pill></>}
+    actions={<><DocButton href={webPrototype("/shop")}>Open the shop in the prototype</DocButton><DocLink to="prototypes-crane-web-shop-1-shop--desktop-tabs">Tabs story</DocLink><DocLink to="prototypes-crane-web-shop-1-shop--desktop-sidebar">Sidebar story</DocLink></>}
+>
+    Fox's shop design is now in Crane Web, and Weston thought the first pass looked strong. The call compared two ways to filter the shop: top chips that expose the second and third category levels, and a left-hand category list like big retail sites use. Both Weston and Justin lean towards the chips. Checkout and shipping were reviewed too, and Weston was positive on the direction.
+</Banner>
+
+<Section title="Decisions">
+<DocTable
+    columns={["Topic", "Decision", "In the prototype"]}
+    widths={["18%", "47%", "35%"]}
+    rows={[
+        [
+            <strong>Shop design</strong>,
+            "Fox's shop design carries over into Crane Web. The first pass looks strong; no changes asked for.",
+            <>Shop, Category, Product, Cart and Checkout are the Fox layouts, restyled in Crane. <Status tone="done">Built</Status></>,
+        ],
+        [
+            <strong>Filter layout</strong>,
+            "Tabs (top chips) stays the default. The second and third category levels are visible with no guessing, and the products get more of the screen's width.",
+            <>Tabs is the default in every story and in the prototype. <Status tone="done">Decided Nov 12</Status></>,
+        ],
+        [
+            <strong>Sidebar variant</strong>,
+            "The left-hand category list stays available as a variant, so it can be shown to other people alongside the chips.",
+            <>Sidebar stories sit next to the Tabs stories, and the prototype's review panel has a <strong>Shop nav</strong> switch. <Status tone="done">Built</Status></>,
+        ],
+        [
+            <strong>Quick filters</strong>,
+            "Justin wants conditional quick-filter chips: On sale, In stock and Saved, shown when they apply.",
+            <>Today On sale, Price, In stock and Saved are always shown next to Sort by. <Status tone="next">Next</Status></>,
+        ],
+        [
+            <strong>Checkout & shipping</strong>,
+            "The flow was reviewed; Weston is positive on the direction.",
+            <>Ship or pick up at the course, with tax where the order ships (from the Nov 11 call). <Status tone="done">Built</Status></>,
+        ],
+    ]}
+/>
+<Quote cite="Weston, Nov 12 call (paraphrased)">There's no right or wrong here. Put both layouts in front of other people before we settle it.</Quote>
+</Section>
+
+<Section title="The two filter layouts" intro="The same page, Golf Balls › Dozens, in each layout. Both are built and both stay in Storybook until the wider feedback is in.">
+<Grid cols={2}>
+    <ScreenCard
+        src={screen("web-shop-dozens")}
+        badge="Default"
+        eyebrow="Tabs · top chips"
+        title="Category levels as rows of chips"
+        lookAt="whether a shopper can see every level at once without opening anything, and how much width the products get."
+        links={[
+            { label: "Category · Dozens", to: "prototypes-crane-web-shop-2-category--subgroup-selected" },
+            { label: "Shop", to: "prototypes-crane-web-shop-1-shop--desktop-tabs" },
+            { label: "Flow", to: "prototypes-crane-web-flow--desktop" },
+        ]}
+    >
+        Groups on the first row, the group's subgroups on the second. The product grid runs the full width of the page, four across on desktop.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("web-shop-sidebar")}
+        eyebrow="Sidebar · left nav"
+        title="A left-hand category list"
+        lookAt="whether the list is easier to scan for a large catalogue, and what the products give up in width."
+        links={[
+            { label: "Category · Dozens", to: "prototypes-crane-web-shop-2-category--subgroup-selected-sidebar" },
+            { label: "Shop", to: "prototypes-crane-web-shop-1-shop--desktop-sidebar" },
+            { label: "Flow", to: "prototypes-crane-web-flow--desktop-sidebar-nav" },
+            { label: "Nov 11 · Shop all (Fox sidebar nav)", to: "reviews-nov-11-craneweb-call-changes-1-fox-layouts-reused--shop-all" },
+        ]}
+    >
+        Fox's original nav, like big retail sites: groups expand in place to show their subgroups, with item counts. The product grid drops to three across.
+    </ScreenCard>
+</Grid>
+</Section>
+
+<Section title="Still to decide" intro="What's built today, and the alternative still on the table.">
+<Grid cols={2}>
+    <Choice
+        title="How the shop is filtered"
+        built={<>Top chips (Tabs), with the second and third category levels exposed. The default since Nov 12.</>}
+        alternative={<>A left-hand category list (Sidebar), kept as a variant until other people have seen both.</>}
+        to="prototypes-crane-web-flow--desktop-sidebar-nav"
+    />
+    <Choice
+        title="Which quick filters show"
+        built={<>On sale, Price, In stock and Saved, always shown next to Sort by.</>}
+        alternative={<>Conditional chips: On sale, In stock and Saved appear only when they apply to the products on the page.</>}
+        to="prototypes-crane-web-shop-2-category--subgroup-selected"
+    />
+</Grid>
+</Section>
+
+<Section title="Left open">
+<DocTable
+    columns={["Step", "Owner", "Status"]}
+    widths={["58%", "18%", "24%"]}
+    rows={[
+        ["Get wider feedback on top chips vs the left-hand list before deciding for good", "Product, Design", <Status tone="open">Open</Status>],
+        ["Add a third chip row for the third category level, and make the quick-filter chips conditional", "Design", <Status tone="next">Next</Status>],
+        ["Build a side-by-side comparison page of the two layouts to show people", "Design", <Status tone="next">Next</Status>],
+    ]}
+/>
+</Section>
+
+<Callout title="Elsewhere on the call.">
+The Bay Sheet and rain checks also came up. They're tracked in the Buck and Birdie design systems, not here.
+</Callout>
+
+<Callout tone="brand" title="Until the feedback is in, Tabs stays the default.">
+To show someone the alternative, open the prototype and switch <strong>Shop nav</strong> to Sidebar in the review panel, or open the Sidebar stories above.
+</Callout>
+
+</DocPage>

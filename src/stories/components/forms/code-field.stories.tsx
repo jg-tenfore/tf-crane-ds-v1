@@ -8,7 +8,7 @@ import { Caption, Panel } from "../story-kit";
  * under the boxes, so paste, `one-time-code` autofill and backspace work natively.
  */
 const meta: Meta<typeof CodeField> = {
-    title: "Components/Forms/Code Field",
+    title: "Design System/Components/Forms/Code Field",
     component: CodeField,
     tags: ["autodocs"],
     args: { length: 6, isInvalid: false },

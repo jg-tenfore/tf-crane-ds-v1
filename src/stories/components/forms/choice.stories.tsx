@@ -9,7 +9,7 @@ import { Caption, Panel } from "../story-kit";
  * Players: 1 2 3 4"). Both built on React Aria (RadioGroup / ToggleButtonGroup).
  */
 const meta: Meta<typeof RadioCardGroup> = {
-    title: "Components/Forms/Choice",
+    title: "Design System/Components/Forms/Choice",
     component: RadioCardGroup,
 };
 export default meta;

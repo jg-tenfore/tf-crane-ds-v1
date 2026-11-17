@@ -12,7 +12,7 @@ import { CoursePhoto, ScreenFiller } from "../story-kit";
  * the title; pushed screens put it inline after the back capsule.
  */
 const meta: Meta<typeof NavigationBar> = {
-    title: "Components/Navigation/Navigation Bar",
+    title: "Design System/Components/Navigation/Navigation Bar",
     component: NavigationBar,
     parameters: { phone: true },
     args: { title: "Profile" },

@@ -12,7 +12,7 @@ import { Caption, Panel } from "../story-kit";
  * (course sections). Built on React Aria Tabs (arrow keys, focus ring).
  */
 const meta: Meta<typeof UnderlineTabs> = {
-    title: "Components/Navigation/Underline Tabs",
+    title: "Design System/Components/Navigation/Underline Tabs",
     component: UnderlineTabs,
 };
 export default meta;

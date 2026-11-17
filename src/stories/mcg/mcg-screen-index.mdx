@@ -1,0 +1,58 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Banner, Callout, DocButton, DocLink, DocPage, Grid, Pill, ScreenCard, Section, mcgPrototype, screen } from "../docs-kit/docs-kit";
+import { McgGroupPills, McgPageCount, McgPageTable } from "./mcg-index";
+
+<Meta title="Prototypes/MCG Instruction/Screen index" />
+
+<DocPage>
+
+<Banner
+    eyebrow="Prototypes · MCG Instruction"
+    title="MCG Instruction"
+    pills={<><McgPageCount /><Pill>9 county courses</Pill><Pill>23 Academy instructors</Pill><Pill tone="mint">Fox Prototype 3, in Crane</Pill></>}
+    actions={<><DocButton href={mcgPrototype("/")}>Open the MCG prototype</DocButton><DocLink to="reviews-nov-17-clinics-lessons-mcg-summary--docs">The Nov 17 review</DocLink><DocLink href={mcgPrototype("/instruction")}>Straight to Instruction</DocLink></>}
+>
+    Montgomery County Golf's site on Crane Web: nine county courses under one organization, and the MCG Academy's lessons, clinics, camps, instructors, packages and credits. It's Fox's Prototype 3 rebuilt with the Crane design system, with the Nov 17 changes: a lighter Instruction landing with filters behind a button, and links that open any filtered view, instructor or booking directly.
+</Banner>
+
+<Section title="Run it" intro="A standalone Vite app built from the same source as these stories, with the Crane Web review panel around it.">
+<Callout tone="mint" title="Locally:">
+    run <code>npm run prototype:mcg</code>, then open <strong>localhost:6026/mcg/</strong>. On GitHub Pages it's at <strong>/prototype/mcg/</strong>. The review panel jumps to any page, switches width (1440, 1024, 768, 390) and light or dark, and links back here, to the Crane Web prototype and to the iPhone prototype.
+</Callout>
+</Section>
+
+<Section title="Area by area" intro="Click a card to open that page in the prototype, or its stories here.">
+<Grid cols={4}>
+    <ScreenCard src={screen("mcg-home")} eyebrow="1 · Home" title="Nine courses, one site" lookAt="the course switcher with Any MCG course, and the Academy card." links={[{ label: "Open the prototype", href: mcgPrototype("/") }, { label: "Stories", to: "prototypes-mcg-instruction-home--desktop" }]}>
+        Quick-book across all nine courses, entry tiles, the courses, programs starting soon and the residents banner.
+    </ScreenCard>
+    <ScreenCard src={screen("mcg-hub")} badge="Nov 17" eyebrow="2 · Instruction" title="The lighter landing" lookAt="tiles first, filters behind the Filters button, no credit banner." links={[{ label: "Open the prototype", href: mcgPrototype("/instruction") }, { label: "Stories", to: "prototypes-mcg-instruction-instruction-hub--desktop" }]}>
+        Private lessons, group clinics, junior camps, junior league and Op 36, with search and a course select.
+    </ScreenCard>
+    <ScreenCard src={screen("mcg-hub-filtered")} eyebrow="3 · Deep links" title="Land already filtered" lookAt="the one-line summary and Edit filters, instead of the full panel." links={[{ label: "Open the prototype", href: mcgPrototype("/instruction?formats=clinic&course=needwood&days=sat") }, { label: "Stories", to: "prototypes-mcg-instruction-instruction-hub--deep-linked" }]}>
+        A webmaster's link, here Saturday clinics at Needwood, opens with the filters set and collapsed.
+    </ScreenCard>
+    <ScreenCard src={screen("mcg-instructors")} eyebrow="4 · Instructors" title="Pick a pro" lookAt="home courses, lessons from, and the next opening on each card." links={[{ label: "Open the prototype", href: mcgPrototype("/instruction?view=instructors") }, { label: "Stories", to: "prototypes-mcg-instruction-instructors-all-instructors--desktop" }]}>
+        Every Academy instructor, filterable by course, each linking to a profile a course site can link to directly.
+    </ScreenCard>
+    <ScreenCard src={screen("mcg-service")} eyebrow="5 · Lessons & programs" title="One lesson, every instructor" lookAt="price by group size and the per-instructor Book links." links={[{ label: "Open the prototype", href: mcgPrototype("/instruction/service/private-45?course=falls-road") }, { label: "Stories", to: "prototypes-mcg-instruction-instruction-service--private-lesson" }]}>
+        A private lesson with who teaches it at a course, or a clinic with its sessions, capacity and Register or Join waitlist.
+    </ScreenCard>
+    <ScreenCard src={screen("mcg-pro")} eyebrow="6 · Instructor profile" title="One pro, one page" lookAt="course chips, today's next opening, and the lessons and programs they teach." links={[{ label: "Open the prototype", href: mcgPrototype("/instruction/pro/mike-kenny") }, { label: "Stories", to: "prototypes-mcg-instruction-instructors-profile--desktop" }]}>
+        The link an instructor's own page on a course site points to: photos, rating (sample), Book a lesson, programs with Register.
+    </ScreenCard>
+    <ScreenCard src={screen("mcg-book")} eyebrow="7 · Booking" title="Book, register or join the waitlist" lookAt="the step rail, the summary rail, and a credit covering the lesson but not the $4 fee." links={[{ label: "Open the prototype", href: mcgPrototype("/instruction/book?coach=mike-kenny&service=private-45&course=falls-road") }, { label: "Stories", to: "prototypes-mcg-instruction-booking--time-board" }, { label: "Flow", to: "prototypes-mcg-instruction-booking--flow" }]}>
+        Time, details, sign in, payment at booking (credit, card, promo) and a cancel-only confirmation, for privates and group programs.
+    </ScreenCard>
+    <ScreenCard src={screen("mcg-packages")} eyebrow="8 · Packages & credits" title="Pay less per lesson" lookAt="per-instructor packs, savings, and credits landing in the wallet." links={[{ label: "Open the prototype", href: mcgPrototype("/instruction/packages") }, { label: "Stories", to: "prototypes-mcg-instruction-packages-credits--packages" }, { label: "My credits", href: mcgPrototype("/instruction/credits") }]}>
+        5 and 10 lesson packs, monthly plans, checkout, and the My credits wallet with spent and expired balances.
+    </ScreenCard>
+</Grid>
+</Section>
+
+<Section title="Every page in the prototype" intro="Straight from the prototype's own jump list, so the two never drift. Each link is the deep link a course website would use.">
+<div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 }}><McgGroupPills /></div>
+<McgPageTable />
+</Section>
+
+</DocPage>

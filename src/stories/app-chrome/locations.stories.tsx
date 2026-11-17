@@ -11,7 +11,7 @@ import { TeeSheetScreen } from "@/screens/home";
  * the course name opens **Course info** (IMG_2194). Switching courses re-scopes the whole app.
  */
 const meta: Meta = {
-    title: "App Chrome/Locations",
+    title: "Prototypes/iPhone app/App Chrome/Locations",
     parameters: { phone: true },
 };
 export default meta;
@@ -25,8 +25,8 @@ const Open = ({ what }: { what: "drawer" | "info" }) => {
     return null;
 };
 
-const Scene = ({ open, panel }: { open: "drawer" | "info"; panel?: "mine" | "add" }) => (
-    <CourseProvider>
+const Scene = ({ open, panel, courseId }: { open: "drawer" | "info"; panel?: "mine" | "add"; courseId?: string }) => (
+    <CourseProvider initialCourseId={courseId}>
         <ScreenChromeContext.Provider value={{ hasTabBar: true }}>
             <TeeSheetScreen />
             <TabBar items={CRANE_TABS} activeId="home" onChange={() => {}} />
@@ -40,3 +40,6 @@ const Scene = ({ open, panel }: { open: "drawer" | "info"; panel?: "mine" | "add
 export const MyLocations: StoryObj = { name: "My Locations drawer", render: () => <Scene open="drawer" /> };
 export const AddLocation: StoryObj = { name: "Add a Location", render: () => <Scene open="drawer" panel="add" /> };
 export const CourseInfo: StoryObj = { name: "Course info", render: () => <Scene open="info" /> };
+
+/** Courses with a `photo` (Laytonsville, Northwest, Falls Road, FloGolf, Kettle Hills, Memorial Park) get it as the hero, logo on top. */
+export const CourseInfoWithPhoto: StoryObj = { name: "Course info · with photo", render: () => <Scene open="info" courseId="laytonsville" /> };

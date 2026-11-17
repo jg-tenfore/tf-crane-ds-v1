@@ -3,7 +3,7 @@ import { ForgotPasswordScreen } from "@/screens/auth";
 import { USER } from "@/data/crane";
 
 const meta: Meta<typeof ForgotPasswordScreen> = {
-    title: "Sign in ∕ Sign up/Forgot Password",
+    title: "Prototypes/iPhone app/Sign in ∕ Sign up/Forgot Password",
     component: ForgotPasswordScreen,
     parameters: { phone: true },
 };

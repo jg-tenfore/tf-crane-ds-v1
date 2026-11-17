@@ -4,7 +4,7 @@ import { ForgotPasswordPage } from "@/screens/web/auth";
 import { WebScreen } from "../web-story-kit";
 
 const meta: Meta = {
-    title: "Crane Web/Sign in ∕ Sign up/Forgot Password",
+    title: "Prototypes/Crane Web/Sign in ∕ Sign up/Forgot Password",
     parameters: {
         layout: "fullscreen",
         docs: {

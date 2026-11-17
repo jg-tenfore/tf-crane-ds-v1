@@ -4,7 +4,7 @@ import { AccountMembershipsScreen } from "@/screens/web/account";
 import { WebScreen } from "../web-story-kit";
 
 const meta: Meta = {
-    title: "Crane Web/Profile ∕ Account/Memberships",
+    title: "Prototypes/Crane Web/Profile ∕ Account/Memberships",
     parameters: {
         layout: "fullscreen",
         docs: {

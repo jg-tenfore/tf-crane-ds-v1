@@ -3,7 +3,7 @@ import { ConfirmationPage } from "@/screens/web/checkout";
 import { WebScreen } from "../web-story-kit";
 
 const meta: Meta = {
-    title: "Crane Web/Shop/7. Confirmation",
+    title: "Prototypes/Crane Web/Shop/7. Confirmation",
     parameters: {
         layout: "fullscreen",
         docs: {

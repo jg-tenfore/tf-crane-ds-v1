@@ -8,7 +8,7 @@ import { Caption, Panel } from "../story-kit";
  * day is solid brand green. `buildDays(start, count)` builds consecutive local days.
  */
 const meta: Meta<typeof DateStrip> = {
-    title: "Components/Navigation/Date Strip",
+    title: "Design System/Components/Navigation/Date Strip",
     component: DateStrip,
 };
 export default meta;

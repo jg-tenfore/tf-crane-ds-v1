@@ -8,10 +8,12 @@ import { createContext, useCallback, useContext, useMemo, useState, type MouseEv
 interface WebRouterApi {
     path: string;
     navigate: (path: string) => void;
+    /** Swap the current entry instead of pushing one (redirects), so back() skips it. */
+    replace: (path: string) => void;
     back: () => void;
 }
 
-const WebRouterContext = createContext<WebRouterApi>({ path: "/", navigate: () => {}, back: () => {} });
+const WebRouterContext = createContext<WebRouterApi>({ path: "/", navigate: () => {}, replace: () => {}, back: () => {} });
 export const useWebRouter = () => useContext(WebRouterContext);
 
 export const WebRouterProvider = ({ initialPath = "/", onNavigate, children }: { initialPath?: string; onNavigate?: (path: string) => void; children: ReactNode }) => {
@@ -23,8 +25,15 @@ export const WebRouterProvider = ({ initialPath = "/", onNavigate, children }: {
         },
         [onNavigate],
     );
+    const replace = useCallback(
+        (p: string) => {
+            setHistory((h) => [...h.slice(0, -1), p]);
+            onNavigate?.(p);
+        },
+        [onNavigate],
+    );
     const back = useCallback(() => setHistory((h) => (h.length > 1 ? h.slice(0, -1) : h)), []);
-    const api = useMemo(() => ({ path: history[history.length - 1], navigate, back }), [history, navigate, back]);
+    const api = useMemo(() => ({ path: history[history.length - 1], navigate, replace, back }), [history, navigate, replace, back]);
     return <WebRouterContext.Provider value={api}>{children}</WebRouterContext.Provider>;
 };
 
@@ -57,10 +66,12 @@ export interface WebLinkProps {
     className?: string;
     "aria-current"?: "page" | undefined;
     "aria-label"?: string;
+    /** Runs just before the link is followed (e.g. save a draft the URL can't carry). */
+    onNavigate?: () => void;
 }
 
 /** A real <a href> (so deep links are honest) that routes in-app when a router is present. */
-export const WebLink = ({ href, children, className, ...props }: WebLinkProps) => {
+export const WebLink = ({ href, children, className, onNavigate, ...props }: WebLinkProps) => {
     const { navigate } = useWebRouter();
     return (
         <a
@@ -68,6 +79,7 @@ export const WebLink = ({ href, children, className, ...props }: WebLinkProps) =
             href={href}
             className={className}
             onClick={(e: MouseEvent) => {
+                onNavigate?.();
                 if (e.metaKey || e.ctrlKey || e.shiftKey) return;
                 e.preventDefault();
                 navigate(href);

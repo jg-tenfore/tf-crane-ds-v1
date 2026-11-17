@@ -38,7 +38,7 @@ const RestaurantFlow = () => {
 };
 
 const meta: Meta = {
-    title: "Crane Web/Restaurant/Flow",
+    title: "Prototypes/Crane Web/Restaurant/Flow",
     parameters: {
         layout: "fullscreen",
         docs: {

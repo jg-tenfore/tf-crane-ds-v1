@@ -10,6 +10,7 @@ import { cx } from "@/utils/cx";
 import type { Course } from "@/data/crane";
 import { CourseLogo } from "@/screens/chrome/course-logo";
 import { hasCourseBrand } from "@/screens/chrome/course-brands";
+import type { WebOrg } from "./web-org";
 import { WebLink } from "./web-router";
 import { RevealRow } from "./reveal-row";
 
@@ -21,15 +22,21 @@ export type WebSection =
   | "leagues"
   | "restaurant"
   | "events"
-  | "calendar";
+  | "calendar"
+  /** Organization sites only (e.g. MCG): the Instruction hub (/instruction). */
+  | "instruction";
 
-/** CraneWeb's section nav, in production order. `short` is the mobile-web tab label. */
-export const WEB_SECTIONS: {
+/** One link in the section nav. Organizations (WebOrg.sections) supply their own list. */
+export interface WebSectionLink {
   id: WebSection;
   label: string;
+  /** Mobile-web tab label. */
   short: string;
   href: string;
-}[] = [
+}
+
+/** CraneWeb's section nav, in production order. `short` is the mobile-web tab label. */
+export const WEB_SECTIONS: WebSectionLink[] = [
   { id: "tee-times", label: "Tee Times", short: "Tee", href: "/tee-times" },
   { id: "shop", label: "Shop", short: "Store", href: "/shop" },
   {
@@ -63,7 +70,29 @@ export interface WebHeaderProps {
   onCourse?: () => void;
   onSignIn?: () => void;
   onAccount?: () => void;
+  /**
+   * Organization chrome (e.g. MCG): org logo + name link home, a course switcher scoped to the
+   * org, the org location in the utility row. Omit for the single-course header.
+   */
+  org?: WebOrg | null;
+  /** Section nav override (an org passes its own list). Defaults to `WEB_SECTIONS`. */
+  sections?: WebSectionLink[];
+  /** Org only: no particular course chosen — the switcher shows `org.anyCourseLabel`. */
+  anyCourse?: boolean;
 }
+
+/** The org mark on a white tile, so full-colour logos read in dark mode too. */
+export const WebOrgLogo = ({ org, className }: { org: WebOrg; className?: string }) => (
+  <span
+    aria-hidden="true"
+    className={cx(
+      "inline-flex h-9 w-12 shrink-0 items-center justify-center rounded-lg bg-white p-1 ring-1 ring-secondary",
+      className,
+    )}
+  >
+    <img src={org.logo} alt="" draggable={false} className="size-full object-contain" />
+  </span>
+);
 
 const focus =
   "outline-none focus-visible:ring-4 focus-visible:ring-brand-300/60";
@@ -104,7 +133,12 @@ export const WebHeader = ({
   onCourse,
   onSignIn,
   onAccount,
-}: WebHeaderProps) => (
+  org,
+  sections = WEB_SECTIONS,
+  anyCourse = false,
+}: WebHeaderProps) => {
+  const courseLabel = org && anyCourse ? org.anyCourseLabel : course.shortName;
+  return (
   <header className="sticky top-0 z-30 bg-primary">
     {/* Utility row — tablet and up */}
     <div className="hidden border-b border-secondary @tablet:block">
@@ -114,7 +148,13 @@ export const WebHeader = ({
             className="size-4 text-fg-quaternary"
             aria-hidden="true"
           />
-          {course.city}, {course.state}
+          {org ? (
+            org.location
+          ) : (
+            <>
+              {course.city}, {course.state}
+            </>
+          )}
         </span>
         <div className="flex items-center gap-4">
           <Cart count={cartCount} total={cartTotal} />
@@ -146,7 +186,7 @@ export const WebHeader = ({
 
     {/* Main row */}
     <div className="border-b border-secondary">
-      <div className="mx-auto flex h-16 max-w-web items-center gap-3 px-4 @tablet:h-[72px] @tablet:px-8">
+      <div className="mx-auto flex h-16 max-w-web items-center gap-1.5 px-3 @tablet:h-[72px] @tablet:gap-3 @tablet:px-8">
         {/* Mobile: menu button */}
         <AriaButton
           aria-label="Golf courses"
@@ -159,12 +199,58 @@ export const WebHeader = ({
           <Menu01 className="size-6" aria-hidden="true" />
         </AriaButton>
 
-        {/* Course switcher */}
+        {org ? (
+          <>
+            {/* Organization brand → home */}
+            <WebLink
+              href="/"
+              aria-label={`${org.name} home`}
+              className={cx(
+                "flex min-w-0 flex-1 items-center gap-2.5 rounded-lg py-1 @tablet:flex-initial",
+                focus,
+              )}
+            >
+              <WebOrgLogo org={org} />
+              <span className="flex min-w-0 flex-col items-start">
+                {/* Name hides on laptop widths so six org sections fit beside the switcher. */}
+                <span className="max-w-full truncate text-md font-semibold tracking-[-0.2px] text-primary @tablet:text-xl @tablet:tracking-[-0.3px] @desktop:hidden @wide:block">
+                  {org.name}
+                </span>
+                <span className="max-w-full truncate text-xs text-tertiary @tablet:hidden">
+                  {courseLabel}
+                </span>
+              </span>
+            </WebLink>
+
+            {/* Course switcher, scoped to the org — tablet and up (mobile uses the menu button) */}
+            <AriaButton
+              onPress={onCourse}
+              aria-label={`${courseLabel}, change course`}
+              className={cx(
+                "hidden h-10 min-w-0 shrink cursor-pointer items-center gap-2 rounded-lg pr-2.5 pl-1.5 ring-1 ring-secondary transition duration-100 ease-linear ring-inset hover:bg-primary_hover @tablet:flex",
+                focus,
+              )}
+            >
+              {anyCourse ? (
+                <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-brand-primary_alt">
+                  <MarkerPin01 className="size-4 text-fg-brand-primary" aria-hidden="true" />
+                </span>
+              ) : (
+                <CourseLogo course={course} size={28} className="rounded-md" />
+              )}
+              <span className="max-w-[180px] truncate text-sm font-semibold text-primary">
+                {courseLabel}
+              </span>
+              <ChevronDown className="size-4 shrink-0 text-fg-tertiary" aria-hidden="true" />
+            </AriaButton>
+          </>
+        ) : (
+        /* Course switcher */
         <AriaButton
           onPress={onCourse}
           aria-label={`${course.name}, change course`}
           className={cx(
-            "flex min-w-0 flex-1 cursor-pointer items-center justify-center gap-2.5 rounded-lg py-1 @tablet:flex-initial @tablet:justify-start",
+            "flex min-w-0 flex-1 cursor-pointer items-center justify-start gap-2.5 rounded-lg py-1 @tablet:flex-initial",
             focus,
           )}
         >
@@ -178,7 +264,7 @@ export const WebHeader = ({
                 : "hidden rounded-full @tablet:inline-flex",
             )}
           />
-          <span className="flex min-w-0 flex-col items-center @tablet:items-start">
+          <span className="flex min-w-0 flex-col items-start">
             <span className="flex max-w-full items-center gap-1.5">
               <span className="truncate text-md font-semibold tracking-[-0.2px] text-primary @tablet:text-xl @tablet:tracking-[-0.3px]">
                 {course.name}
@@ -193,13 +279,14 @@ export const WebHeader = ({
             </span>
           </span>
         </AriaButton>
+        )}
 
         {/* Desktop nav */}
         <nav
           aria-label="Sections"
           className="ml-auto hidden shrink-0 items-center gap-4 @desktop:flex @wide:gap-7"
         >
-          {WEB_SECTIONS.map((s) => {
+          {sections.map((s) => {
             const on = s.id === active;
             return (
               <WebLink
@@ -247,7 +334,7 @@ export const WebHeader = ({
       current={active}
       className="scrollbar-hide flex gap-1 overflow-x-auto border-b border-secondary px-2 @tablet:px-6 @desktop:hidden"
     >
-      {WEB_SECTIONS.map((s) => {
+      {sections.map((s) => {
         const on = s.id === active;
         return (
           <WebLink
@@ -270,4 +357,5 @@ export const WebHeader = ({
       })}
     </RevealRow>
   </header>
-);
+  );
+};

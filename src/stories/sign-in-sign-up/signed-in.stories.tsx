@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SignedInScreen } from "@/screens/auth";
 
 const meta: Meta<typeof SignedInScreen> = {
-    title: "Sign in ∕ Sign up/Signed In",
+    title: "Prototypes/iPhone app/Sign in ∕ Sign up/Signed In",
     component: SignedInScreen,
     parameters: { phone: true },
 };

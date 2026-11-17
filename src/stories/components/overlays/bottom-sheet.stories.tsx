@@ -17,7 +17,7 @@ import { ScreenFiller } from "../story-kit";
  * screen's button to reopen.
  */
 const meta: Meta<typeof BottomSheet> = {
-    title: "Components/Overlays/Bottom Sheet",
+    title: "Design System/Components/Overlays/Bottom Sheet",
     component: BottomSheet,
     parameters: { phone: true },
 };

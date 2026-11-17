@@ -7,7 +7,7 @@ import { TeeSheetScreen } from "@/screens/home";
 
 /** Home tab: course header, section tabs, date strip and tee sheet (refs IMG_2163, IMG_2195–2199). */
 const meta: Meta = {
-    title: "App Chrome/Home",
+    title: "Prototypes/iPhone app/App Chrome/Home",
     parameters: { phone: true },
 };
 export default meta;

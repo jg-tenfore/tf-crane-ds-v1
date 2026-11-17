@@ -64,7 +64,7 @@ const AccountFlow = () => {
 };
 
 const meta: Meta = {
-    title: "Crane Web/Profile ∕ Account/Flow",
+    title: "Prototypes/Crane Web/Profile ∕ Account/Flow",
     parameters: {
         layout: "fullscreen",
         docs: {

@@ -5,7 +5,7 @@ import { AuthBackgroundContext, type AuthBackground } from "@/screens/web/auth/a
 import { WebScreen } from "../web-story-kit";
 
 const meta: Meta = {
-    title: "Crane Web/Sign in ∕ Sign up/Sign Up",
+    title: "Prototypes/Crane Web/Sign in ∕ Sign up/Sign Up",
     parameters: {
         layout: "fullscreen",
         docs: {

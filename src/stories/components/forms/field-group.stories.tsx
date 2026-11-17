@@ -8,7 +8,7 @@ import { Caption, Panel } from "../story-kit";
  * label inside. Used for payment-card entry. Wrap cells that share a line in FieldRow.
  */
 const meta: Meta<typeof FieldGroup> = {
-    title: "Components/Forms/Field Group",
+    title: "Design System/Components/Forms/Field Group",
     component: FieldGroup,
 };
 export default meta;

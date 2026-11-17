@@ -6,7 +6,7 @@ import { WebScreen } from "../web-story-kit";
 const FOX = "Ports Fox's **Global Nav / Restaurant** story (`tenfore-restaurant.stories.tsx`, Today / Tomorrow variants): the wide dining-room hero with the venue name and rating, the party/seating bar (here: Order for · Pickup time · Hours) and the \"no availability today\" notice — re-cut from dinner reservations to order-ahead food & drinks, with Fox MCG Grill's ordering edge cases (pickup at the turn timed off a hole, breakfast cut-off, 21+ notice, sold-out items).";
 
 const meta: Meta = {
-    title: "Crane Web/Restaurant/Restaurant",
+    title: "Prototypes/Crane Web/Restaurant/Restaurant",
     parameters: {
         layout: "fullscreen",
         docs: {

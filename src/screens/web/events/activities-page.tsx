@@ -118,12 +118,12 @@ export const ActivitiesPage = ({ initialDate = DAYS[1], initialBay = 0, initialS
     return (
         <WebShell active="activities">
             <WebPage className="pb-10 @desktop:pb-20">
-                <PageHeader eyebrow={course.name} title="Activities" subtitle="Simulator bays, the range, lessons and more — book online." />
+                <PageHeader eyebrow={course.name} title="Activities" subtitle={course.indoor ? "Indoor simulator bays, lessons and private parties — book online." : "Simulator bays, the range, lessons and more — book online."} />
 
                 {/* Simulator intro */}
                 <div className="mt-7 grid grid-cols-1 overflow-hidden rounded-2xl bg-primary ring-1 ring-secondary ring-inset @tablet:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
                     <div className="relative aspect-[16/9] bg-tertiary @tablet:aspect-auto">
-                        <img src={IMAGES.simLounge} alt="Simulator lounge with four bays" className="absolute inset-0 size-full object-cover" />
+                        <img src={course.indoor && course.photo ? course.photo : IMAGES.simLounge} alt="Simulator lounge with four bays" className="absolute inset-0 size-full object-cover" />
                     </div>
                     <div className="flex flex-col justify-center gap-4 p-6 @desktop:p-8">
                         <div>
@@ -325,7 +325,7 @@ export const ActivitiesPage = ({ initialDate = DAYS[1], initialBay = 0, initialS
                 <section className="mt-14">
                     <SectionHeading title="More to do" />
                     <div className="grid grid-cols-1 gap-5 @min-[600px]:grid-cols-2 @desktop:grid-cols-4">
-                        {OTHER_ACTIVITIES.map((a) => (
+                        {OTHER_ACTIVITIES.filter((a) => !course.indoor || a.id !== "range").map((a) => (
                             <WebLink key={a.id} href={a.href} className={cx("group flex flex-col overflow-hidden rounded-2xl bg-primary ring-1 ring-secondary ring-inset hover:ring-primary", focusRing)}>
                                 <div className="aspect-[3/2] overflow-hidden bg-tertiary">
                                     <img src={a.image} alt="" loading="lazy" className="size-full object-cover transition duration-200 ease-out group-hover:scale-[1.03]" />

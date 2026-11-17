@@ -4,7 +4,7 @@ import { VerifyEmailPage } from "@/screens/web/auth";
 import { WebScreen } from "../web-story-kit";
 
 const meta: Meta = {
-    title: "Crane Web/Sign in ∕ Sign up/Verify Email",
+    title: "Prototypes/Crane Web/Sign in ∕ Sign up/Verify Email",
     parameters: {
         layout: "fullscreen",
         docs: {

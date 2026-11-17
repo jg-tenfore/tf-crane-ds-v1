@@ -1,0 +1,80 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Banner, DocButton, DocLink, DocPage, Grid, ScreenCard, Section, iphonePrototype, screen } from "../docs-kit/docs-kit";
+import { AreaPills, ScreenIndexTable, areaEyebrow, firstIdIn } from "./screen-index";
+import { IPHONE_SCREENS as S } from "./screen-index-data";
+
+<Meta title="Prototypes/iPhone app/Screen index" />
+
+<DocPage>
+
+<Banner
+    eyebrow="Prototypes · iPhone app"
+    title="Screen index"
+    pills={<AreaPills rows={S} />}
+    actions={<><DocButton href={iphonePrototype()}>Open the prototype</DocButton><DocLink to="prototypes-iphone-app-global-nav--prototype">The whole app in Storybook (Global Nav)</DocLink></>}
+>
+    Every screen and state in the iPhone app, in sidebar order. Click a row to open its story, or jump into the prototype at that screen.
+</Banner>
+
+<Section title="Area by area" intro="Each area in one line, with what to look at first.">
+<Grid cols={2}>
+    <ScreenCard
+        src={screen("iphone-home")}
+        frame="phone"
+        eyebrow={areaEyebrow(S, 1, "Global Nav")}
+        title="The whole app"
+        lookAt="moving between tabs: does each tab keep its place, and is the back capsule clear?"
+        links={[
+            { label: "Stories", to: firstIdIn(S, "Global Nav") },
+            { label: "Open the prototype", href: iphonePrototype("/home") },
+        ]}
+    >
+        The floating Home · Bookings · Profile tab bar, the course switcher in the Home header, and push navigation inside each tab.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("iphone-welcome")}
+        frame="phone"
+        eyebrow={areaEyebrow(S, 2, "Sign in ∕ Sign up")}
+        title="Sign in ∕ Sign up"
+        lookAt="how many steps it takes to get from Welcome to the tee sheet."
+        links={[
+            { label: "Stories", to: firstIdIn(S, "Sign in ∕ Sign up") },
+            { label: "Open the prototype", href: iphonePrototype("/auth/welcome") },
+        ]}
+    >
+        Welcome, sign up with email, verify a six-digit code, pick home courses, and You're all set. Or sign in, with forgot password.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("iphone-profile")}
+        frame="phone"
+        eyebrow={areaEyebrow(S, 3, "Profile ∕ Account")}
+        title="Profile ∕ Account"
+        lookAt="the wallet screens (balance, gift cards, punch cards, rain checks) and their empty states."
+        links={[
+            { label: "Stories", to: firstIdIn(S, "Profile ∕ Account") },
+            { label: "Open the prototype", href: iphonePrototype("/profile") },
+        ]}
+    >
+        The Profile root and every row's screen: edit profile, balance, payment methods, buddies, memberships, kiosk sign-in, appearance.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("iphone-bookings")}
+        frame="phone"
+        eyebrow={areaEyebrow(S, 4, "App Chrome")}
+        title="App Chrome: Home, Bookings, Locations"
+        lookAt="booking a time from the tee sheet, then finding it again in Bookings."
+        links={[
+            { label: "Stories", to: firstIdIn(S, "App Chrome") },
+            { label: "Open the prototype", href: iphonePrototype("/bookings") },
+        ]}
+    >
+        The Home tee sheet with its booking sheets, Reservations and Purchases with their detail screens, and the My Locations drawer.
+    </ScreenCard>
+</Grid>
+</Section>
+
+<Section title="Every screen" intro={`All ${S.length} stories, in the same order as the sidebar. Story opens it here; Prototype opens the iPhone prototype at that screen.`}>
+<ScreenIndexTable rows={S} prototype="iphone" />
+</Section>
+
+</DocPage>
