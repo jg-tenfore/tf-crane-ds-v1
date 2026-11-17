@@ -1,0 +1,63 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Banner, Callout, DocButton, DocLink, DocPage, DocTable, Pill, Quote, Section, Status, mcgPrototype } from "../../docs-kit/docs-kit";
+
+<Meta title="Reviews/Nov 17 – Clinics & lessons (MCG)/Summary" />
+
+export const MCG_PROTOTYPE = mcgPrototype();
+
+<DocPage>
+
+<Banner
+    eyebrow="Review · Nov 17, 2026"
+    title="Clinics & lessons (MCG)"
+    pills={<><Pill>MCG Instruction · Prototype 3</Pill><Pill>Nov 17, 2026</Pill><Pill tone="mint">Ported into Crane</Pill></>}
+    actions={<><DocButton href={MCG_PROTOTYPE}>Open the MCG prototype</DocButton><DocLink to="prototypes-mcg-instruction-screen-index--docs">Screen index</DocLink><DocLink to="start-here-process-roadmap--docs">Process & roadmap</DocLink></>}
+>
+    Prototype 3, the hybrid of Prototype 2's one-step search and result tiles with Prototype 1's time board, waitlist, upfront filters and account-required checkout, is the direction for MCG's lessons and clinics. It moves from Fox into Crane, with a lighter landing and links that open the experience already filtered.
+</Banner>
+
+<Section title="Decisions">
+<DocTable
+    columns={["Topic", "Decision", "In the prototype"]}
+    widths={["18%", "47%", "35%"]}
+    rows={[
+        [<strong>Direction</strong>, "Prototype 3 is the chosen direction for MCG instruction: one place to find lessons, clinics, camps and instructors across all nine courses.", <>Ported into Crane Web as the Instruction area of the MCG prototype. <Status tone="done">Built</Status></>],
+        [<strong>Landing</strong>, "The full filter panel is too much as the first thing you see. Land on clean academy and lesson tiles, drop the lesson-credit banner, and put the filters behind a Filters button.", <>Instruction opens on tiles with filters collapsed; a Filters button expands them. <Status tone="done">Built</Status></>],
+        [<strong>Deep links</strong>, "Links from MCG's own site should land golfers on the right place: an instructor's profile or booking, or a query the webmaster builds (Monday clinics that need filling, a promotion). Filters stay hidden but can be expanded.", <>Every filter, instructor, lesson and booking state has a URL. <Status tone="done">Built</Status></>],
+        [<strong>Dark mode</strong>, "Small issues were spotted in dark mode; audit it.", <>Every Instruction screen is checked in Crane's dark mode. <Status tone="done">Built</Status></>],
+        [<strong>Instructor pages</strong>, "Fox now lets an instructor be attached to a clinic on the back end. Clinics an instructor runs (for example a three-week clinic) list on their profile and are registered for there.", <>Profiles list the programs each instructor runs, with a Register button. <Status tone="done">Built</Status></>],
+    ]}
+/>
+<Quote cite="Weston, Nov 17 call (paraphrased)">By default you come in and see the academies or the lessons, and you know what's going on. Then there's a filter button if you want to see more.</Quote>
+</Section>
+
+<Section title="Decided while porting" intro="Calls made in design after the call, on behalf of the Nov 17 direction.">
+<DocTable
+    columns={["Topic", "Decision", "In the prototype"]}
+    widths={["18%", "47%", "35%"]}
+    rows={[
+        [<strong>Program cards</strong>, "Every hub result opens its detail page first. Fox sent Academy group programs straight to booking; now they match private lessons and county clinics.", <>Cards open the service page, which has Register. <Status tone="done">Built</Status></>],
+        [<strong>Course switcher</strong>, "The Instruction course filter and the header's course switcher stay in step. A course in a link wins; a link with no course takes the header's course.", <>Synced both ways. <Status tone="done">Built</Status></>],
+        [<strong>This season</strong>, "The \"This season\" date preset runs to the end of the current season (fall ends Nov 30), not a rolling 90 days.", <>Today through Nov 30. <Status tone="done">Built</Status></>],
+        [<strong>Lesson credits</strong>, "As in Fox, a lesson credit covers the lesson but not the $4 facility fee, which goes on the card on file.", <>A credit booking totals $4.00 plus any extras. <Status tone="done">Built</Status></>],
+        [<strong>MCG courses</strong>, "The nine county courses only appear on the MCG site, not in other courses' pickers.", <>Hidden outside the MCG organization. <Status tone="done">Built</Status></>],
+    ]}
+/>
+</Section>
+
+<Section title="Left open">
+<DocTable
+    columns={["Step", "Owner", "Status"]}
+    widths={["62%", "18%", "20%"]}
+    rows={[
+        ["Sync with Jared on the lesson and instructor back-end structure; record and send a recap if Justin can't join", "Weston", <Status tone="open">Open</Status>],
+        ["Send the private-lesson wish list from MCG's academy so each item can become its own Storybook prototype", "Weston", <Status tone="open">Open</Status>],
+        ["Itemize the wish list and prototype each line in Storybook (later-stage items, not immediate priorities)", "Design", <Status tone="next">Next</Status>],
+        ["Bay Sheet changes from Nov 11 (dynamic bay sizing, drag and drop, extend from the sheet, fold New Booking into the sheet)", "Design", <Status tone="next">In Buck</Status>],
+    ]}
+/>
+</Section>
+
+<Callout title="Elsewhere on the call.">The Bay Sheet and the Rounds by Customer report are tracked in the Buck design system, not here.</Callout>
+
+</DocPage>

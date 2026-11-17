@@ -81,6 +81,10 @@ export const webPrototype = (path = "/tee-times") =>
 export const iphonePrototype = (path = "") =>
     isLocal() ? `${location.protocol}//${location.hostname}:6022/${path ? `#${path}` : ""}` : `${managerBase().replace(/[^/]*$/, "")}prototype/${path ? `#${path}` : ""}`;
 
+/** Deep link into the MCG Instruction prototype (hash route, e.g. "/instruction"). Local :6026/mcg/, Pages /prototype/mcg/. */
+export const mcgPrototype = (path = "/") =>
+    isLocal() ? `${location.protocol}//${location.hostname}:6026/mcg/#${path}` : `${managerBase().replace(/[^/]*$/, "")}prototype/mcg/#${path}`;
+
 /** Screenshot captured for the docs (public/docs/screens/<name>.webp). */
 export const screen = (name: string) => `docs/screens/${name}.webp`;
 

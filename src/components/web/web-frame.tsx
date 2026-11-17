@@ -53,7 +53,14 @@ export const WebFrame = ({ children, width = "desktop", height, url = "crane.ten
     useLayoutEffect(() => {
         if (!fit || !outerRef.current) return;
         const el = outerRef.current;
-        const ro = new ResizeObserver(([e]) => setScale(Math.min(1, (e.contentRect.width - 8) / w)));
+        // A shrink-to-fit parent (e.g. Storybook's "centered" layout) measures ~0 wide before the
+        // frame has a size, which would scale the frame to nothing and feed back on itself — fall
+        // back to the window width, and never scale below 10%.
+        const fitTo = (width: number) => {
+            const avail = width < 200 ? window.innerWidth - 48 : width;
+            setScale(Math.max(0.1, Math.min(1, (avail - 8) / w)));
+        };
+        const ro = new ResizeObserver(([e]) => fitTo(e.contentRect.width));
         ro.observe(el);
         return () => ro.disconnect();
     }, [fit, w]);

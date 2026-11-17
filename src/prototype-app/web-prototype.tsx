@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
 import { ArrowUpRight, Phone01, RefreshCcw01 } from "@untitledui/icons";
 import { WebFrame } from "@/components/web/web-frame";
+import type { WebOrg } from "@/components/web/web-org";
 import { WebRouterProvider, useWebRouter } from "@/components/web/web-router";
 import type { CategoryNavVariant } from "@/screens/web/browse";
 import { CartProvider } from "@/screens/web/cart-store";
@@ -12,9 +13,9 @@ import { WebSessionProvider } from "@/screens/web/web-shell";
 export const HOME = "/tee-times";
 
 const hashPath = () => (typeof location !== "undefined" ? decodeURIComponent(location.hash.replace(/^#/, "")) : "");
-export const pathFromHash = () => {
+export const pathFromHash = (home: string = HOME) => {
     const h = hashPath();
-    return h.startsWith("/") ? h : HOME;
+    return h.startsWith("/") ? h : home;
 };
 
 const isLocal = () => typeof location !== "undefined" && /^(localhost|127\.|192\.168\.)/.test(location.hostname);
@@ -31,21 +32,21 @@ export const IPHONE_URL = "../";
  *     booked rounds survive).
  *   - `restart()` remounts the whole app (fresh cart + session) at a path.
  */
-export const useHashRouting = () => {
-    const [start, setStart] = useState(pathFromHash);
+export const useHashRouting = (home: string = HOME) => {
+    const [start, setStart] = useState(() => pathFromHash(home));
     const [session, setSession] = useState(0);
     const [path, setPath] = useState(start);
     const last = useRef(start);
     const navRef = useRef<((p: string) => void) | null>(null);
 
-    const restart = useCallback((p: string = HOME) => {
+    const restart = useCallback((p: string = home) => {
         last.current = p;
         navRef.current = null;
         history.replaceState(null, "", `#${p}`);
         setStart(p);
         setPath(p);
         setSession((n) => n + 1);
-    }, []);
+    }, [home]);
 
     const jump = useCallback(
         (p: string) => {
@@ -64,7 +65,7 @@ export const useHashRouting = () => {
 
     useEffect(() => {
         const onHash = () => {
-            const p = pathFromHash();
+            const p = pathFromHash(home);
             if (p === last.current) return;
             last.current = p;
             if (navRef.current) navRef.current(p);
@@ -72,7 +73,7 @@ export const useHashRouting = () => {
         };
         window.addEventListener("hashchange", onHash);
         return () => window.removeEventListener("hashchange", onHash);
-    }, [restart]);
+    }, [restart, home]);
 
     useEffect(() => {
         if (!location.hash) history.replaceState(null, "", `#${last.current}`);
@@ -99,8 +100,8 @@ const HashSync = ({ navRef, onPath }: { navRef: RefObject<((p: string) => void) 
  * Session, cart and router for the Crane Web prototype — rendered ABOVE the WebFrame, so
  * changing the frame's width/appearance (or switching to full window) keeps the page and cart.
  */
-export const WebAppProviders = ({ routing, children }: { routing: HashRouting; children: ReactNode }) => (
-    <WebSessionProvider key={`s${routing.session}`}>
+export const WebAppProviders = ({ routing, org, children }: { routing: HashRouting; org?: WebOrg | null; children: ReactNode }) => (
+    <WebSessionProvider key={`s${routing.session}`} org={org}>
         <CartProvider>
             <WebRouterProvider key={`r${routing.session}`} initialPath={routing.start}>
                 <HashSync {...routing.sync} />
@@ -124,13 +125,25 @@ export const FullWindowApp = ({ shopNav = "tabs", dark = false }: { shopNav?: Ca
 };
 
 /** Small floating prototype menu for full-window mode — out of the way, not part of the design. */
-export const PrototypePill = ({ onStartOver, extra }: { onStartOver: () => void; extra?: ReactNode }) => (
+export const PrototypePill = ({
+    onStartOver,
+    extra,
+    label = "Crane Web prototype",
+    storybookUrl = STORYBOOK_URL,
+    home = HOME,
+}: {
+    onStartOver: () => void;
+    extra?: ReactNode;
+    label?: string;
+    storybookUrl?: string;
+    home?: string;
+}) => (
     <div className="crane-web pointer-events-none fixed right-3 bottom-3 z-[100] flex justify-end">
         <details className="group pointer-events-auto rounded-xl bg-gray-950/85 text-white shadow-lg backdrop-blur [&_summary::-webkit-details-marker]:hidden">
-            <summary className="caps cursor-pointer list-none px-3 py-2 text-[11px] text-white/80 select-none">Crane Web prototype</summary>
+            <summary className="caps cursor-pointer list-none px-3 py-2 text-[11px] text-white/80 select-none">{label}</summary>
             <div className="flex flex-col gap-1 px-2 pb-2 text-sm">
                 {extra}
-                <a className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-white/10" href={STORYBOOK_URL} target="_blank" rel="noreferrer">
+                <a className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-white/10" href={storybookUrl} target="_blank" rel="noreferrer">
                     <ArrowUpRight className="size-4" aria-hidden="true" /> Storybook
                 </a>
                 <a className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-white/10" href={IPHONE_URL}>
@@ -138,7 +151,7 @@ export const PrototypePill = ({ onStartOver, extra }: { onStartOver: () => void;
                 </a>
                 <a
                     className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-white/10"
-                    href={`#${HOME}`}
+                    href={`#${home}`}
                     onClick={(e) => {
                         e.preventDefault();
                         onStartOver();

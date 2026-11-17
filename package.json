@@ -10,6 +10,7 @@
         "test": "vitest run --project=storybook",
         "prototype": "vite --config vite.prototype.config.ts",
         "prototype:web": "vite --config vite.prototype.config.ts --port 6024 --open /web/",
+        "prototype:mcg": "vite --config vite.prototype.config.ts --port 6026 --open /mcg/",
         "build:prototype": "vite build --config vite.prototype.config.ts",
         "preview:prototype": "vite preview --config vite.prototype.config.ts",
         "prototype:preview": "node scripts/capture-prototype-preview.mjs"

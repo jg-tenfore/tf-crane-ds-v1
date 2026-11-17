@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "re
 import { ArrowUpRight, Laptop01, LayoutLeft, LogIn01, LogOut01, Maximize01, Monitor01, Moon01, Phone01, RefreshCcw01, Sun, Tablet01 } from "@untitledui/icons";
 import { CraneAppIcon } from "@/components/foundations/logos";
 import { WEB_WIDTHS, WebFrame, type WebWidth } from "@/components/web/web-frame";
+import type { WebOrg } from "@/components/web/web-org";
 import { courseById, USER } from "@/data/crane";
 import { productById, productPath, SHOP_PRODUCTS } from "@/data/shop";
 import { accountRoutes } from "@/screens/web/account";
@@ -20,7 +21,14 @@ const sagamore = courseById("sagamore-spring");
 const teeTime = defaultTeeTime(sagamore, teeDay, 2).id;
 const product = productById("ball-titleist-pro-v1-dozen") ?? SHOP_PRODUCTS.find((p) => p.group === "golf-balls") ?? SHOP_PRODUCTS[0];
 
-const SCREEN_GROUPS: { label: string; items: [label: string, path: string][] }[] = [
+/** A jump-list section: label + [screen label, path] pairs. */
+export interface ScreenGroup {
+    label: string;
+    items: [label: string, path: string][];
+}
+
+/** The Crane Web jump list (prototype/web/). */
+export const CRANE_WEB_SCREEN_GROUPS: ScreenGroup[] = [
     {
         label: "Tee Times",
         items: [
@@ -90,8 +98,8 @@ const SCREEN_GROUPS: { label: string; items: [label: string, path: string][] }[]
 ];
 
 /** The jump-list entry for the current path: exact match first, then same pathname. */
-const activeItem = (path: string) => {
-    const all = SCREEN_GROUPS.flatMap((g) => g.items.map(([, p]) => p));
+const activeItem = (path: string, groups: ScreenGroup[]) => {
+    const all = groups.flatMap((g) => g.items.map(([, p]) => p));
     const bare = (p: string) => p.split("?")[0].replace(/\/$/, "") || "/";
     return all.find((p) => p === path) ?? all.find((p) => bare(p) === bare(path)) ?? null;
 };
@@ -108,9 +116,9 @@ interface Prefs {
 const PREFS_KEY = "crane-web-presenter";
 const DEFAULT_PREFS: Prefs = { width: "desktop", dark: false, mode: "review", shopNav: "tabs" };
 
-const loadPrefs = (): Prefs => {
+const loadPrefs = (key: string): Prefs => {
     try {
-        const p = JSON.parse(localStorage.getItem(PREFS_KEY) ?? "{}") as Partial<Prefs>;
+        const p = JSON.parse(localStorage.getItem(key) ?? "{}") as Partial<Prefs>;
         return {
             width: p.width && p.width in WEB_WIDTHS ? p.width : DEFAULT_PREFS.width,
             dark: typeof p.dark === "boolean" ? p.dark : DEFAULT_PREFS.dark,
@@ -121,9 +129,9 @@ const loadPrefs = (): Prefs => {
         return DEFAULT_PREFS;
     }
 };
-const savePrefs = (p: Prefs) => {
+const savePrefs = (key: string, p: Prefs) => {
     try {
-        localStorage.setItem(PREFS_KEY, JSON.stringify(p));
+        localStorage.setItem(key, JSON.stringify(p));
     } catch {
         /* private mode / storage full: prefs just don't persist */
     }
@@ -141,22 +149,71 @@ const isPhoneNow = () => typeof matchMedia !== "undefined" && matchMedia(PHONE_Q
  * app at real window breakpoints (the default on phones). Router, session and cart sit above
  * the frame, so changing width keeps the page and the cart.
  */
-export const CraneWebPresenter = () => {
-    const routing = useHashRouting();
+export interface CraneWebPresenterProps {
+    /** Panel title (default "Crane Web prototype"). */
+    title?: string;
+    /** Host shown under the title and in the frame's address bar (default crane.tenfore.golf). */
+    host?: string;
+    /** Start / "Start over" path (default /tee-times). */
+    home?: string;
+    /** localStorage key for width / appearance / mode prefs. */
+    storageKey?: string;
+    /** The jump list (default: every Crane Web screen). */
+    groups?: ScreenGroup[];
+    /** Organization site (e.g. MCG_ORG) — the app renders with that org's chrome. */
+    org?: WebOrg | null;
+    /** Storybook link in the panel and pill. */
+    storybookUrl?: string;
+    /** Show the Shop nav (tabs | sidebar) switch (default true). */
+    showShopNav?: boolean;
+    /** Links to the sibling prototypes, under the Storybook link (default: iPhone + MCG). */
+    links?: { label: string; href: string }[];
+}
+
+interface PresenterConfig {
+    title: string;
+    host: string;
+    home: string;
+    groups: ScreenGroup[];
+    storybookUrl: string;
+    showShopNav: boolean;
+    links: { label: string; href: string }[];
+}
+
+export const CraneWebPresenter = ({
+    title = "Crane Web prototype",
+    host = "crane.tenfore.golf",
+    home = HOME,
+    storageKey = PREFS_KEY,
+    groups = CRANE_WEB_SCREEN_GROUPS,
+    org = null,
+    storybookUrl = STORYBOOK_URL,
+    showShopNav = true,
+    // Sibling builds sit next to each other: / (iPhone), /web/ (Crane Web), /mcg/ (MCG).
+    links = [
+        { label: "iPhone prototype", href: IPHONE_URL },
+        { label: "MCG prototype", href: "../mcg/" },
+    ],
+}: CraneWebPresenterProps = {}) => {
+    const routing = useHashRouting(home);
     const [prefs, setPrefs] = useState<Prefs>(() => {
-        const p = loadPrefs();
+        const p = loadPrefs(storageKey);
         return isPhoneNow() ? { ...p, mode: "full" } : p;
     });
-    useEffect(() => savePrefs(prefs), [prefs]);
+    useEffect(() => savePrefs(storageKey, prefs), [storageKey, prefs]);
     const set = (patch: Partial<Prefs>) => setPrefs((p) => ({ ...p, ...patch }));
+    const config: PresenterConfig = { title, host, home, groups, storybookUrl, showShopNav, links };
 
     return (
-        <WebAppProviders routing={routing}>
+        <WebAppProviders routing={routing} org={org}>
             {prefs.mode === "full" ? (
                 <div className="h-dvh w-screen">
                     <FullWindowApp shopNav={prefs.shopNav} dark={prefs.dark} />
                     <PrototypePill
-                        onStartOver={() => routing.restart(HOME)}
+                        label={title}
+                        storybookUrl={storybookUrl}
+                        home={home}
+                        onStartOver={() => routing.restart(home)}
                         extra={
                             <button type="button" className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-left hover:bg-white/10" onClick={() => set({ mode: "review" })}>
                                 <LayoutLeft className="size-4" aria-hidden="true" /> Show review panel
@@ -165,7 +222,7 @@ export const CraneWebPresenter = () => {
                     />
                 </div>
             ) : (
-                <ReviewMode routing={routing} prefs={prefs} set={set} />
+                <ReviewMode routing={routing} prefs={prefs} set={set} config={config} />
             )}
         </WebAppProviders>
     );
@@ -178,11 +235,11 @@ const WIDTH_OPTIONS: [WebWidth, string, typeof Monitor01][] = [
     ["mobile", "Mobile", Phone01],
 ];
 
-const ReviewMode = ({ routing, prefs, set }: { routing: HashRouting; prefs: Prefs; set: (p: Partial<Prefs>) => void }) => {
+const ReviewMode = ({ routing, prefs, set, config }: { routing: HashRouting; prefs: Prefs; set: (p: Partial<Prefs>) => void; config: PresenterConfig }) => {
     const { userName, setUserName } = useWebSession();
     const cart = useCart();
     const routes = useWebRoutes(prefs.shopNav);
-    const active = activeItem(routing.path);
+    const active = activeItem(routing.path, config.groups);
     const activeRef = useRef<HTMLAnchorElement>(null);
 
     // Keep the highlighted screen in view when the page changes from inside the app.
@@ -196,8 +253,8 @@ const ReviewMode = ({ routing, prefs, set }: { routing: HashRouting; prefs: Pref
                 <div className="flex items-center gap-3 border-b border-secondary px-5 py-4">
                     <CraneAppIcon size={40} />
                     <div className="min-w-0">
-                        <div className="text-md font-semibold">Crane Web prototype</div>
-                        <div className="text-xs text-tertiary">crane.tenfore.golf</div>
+                        <div className="text-md font-semibold">{config.title}</div>
+                        <div className="text-xs text-tertiary">{config.host}</div>
                     </div>
                 </div>
 
@@ -215,7 +272,7 @@ const ReviewMode = ({ routing, prefs, set }: { routing: HashRouting; prefs: Pref
                 </div>
 
                 <nav aria-label="Jump to screen" className="scrollbar-hide flex-1 overflow-y-auto px-3 py-3">
-                    {SCREEN_GROUPS.map((g) => (
+                    {config.groups.map((g) => (
                         <div key={g.label} className="mb-3">
                             <div className="px-2 pb-1 text-xs font-semibold tracking-wide text-quaternary uppercase">{g.label}</div>
                             {g.items.map(([label, path]) => {
@@ -276,6 +333,7 @@ const ReviewMode = ({ routing, prefs, set }: { routing: HashRouting; prefs: Pref
                             ["dark", "Dark", Moon01],
                         ]}
                     />
+                    {config.showShopNav && (
                     <Segmented
                         label="Shop nav"
                         value={prefs.shopNav}
@@ -285,24 +343,29 @@ const ReviewMode = ({ routing, prefs, set }: { routing: HashRouting; prefs: Pref
                             ["sidebar", "Sidebar"],
                         ]}
                     />
+                    )}
                     <div className="flex gap-2">
                         <PanelButton icon={Maximize01} onClick={() => set({ mode: "full" })} className="flex-1 justify-center">
                             Full window
                         </PanelButton>
-                        <PanelButton icon={RefreshCcw01} onClick={() => routing.restart(HOME)} className="flex-1 justify-center">
+                        <PanelButton icon={RefreshCcw01} onClick={() => routing.restart(config.home)} className="flex-1 justify-center">
                             Start over
                         </PanelButton>
                     </div>
-                    <div className="flex items-center justify-between gap-2 pt-1">
-                        <PanelLink href={STORYBOOK_URL} newTab>
+                    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 pt-1">
+                        <PanelLink href={config.storybookUrl} newTab>
                             Storybook
                         </PanelLink>
-                        <PanelLink href={IPHONE_URL}>iPhone prototype</PanelLink>
+                        {config.links.map((l) => (
+                            <PanelLink key={l.href} href={l.href}>
+                                {l.label}
+                            </PanelLink>
+                        ))}
                     </div>
                 </div>
             </aside>
 
-            <FitStage width={prefs.width} url={`crane.tenfore.golf${routing.path}`} dark={prefs.dark}>
+            <FitStage width={prefs.width} url={`${config.host}${routing.path}`} dark={prefs.dark}>
                 <CraneWebRoutes routes={routes} />
             </FitStage>
         </div>

@@ -64,6 +64,8 @@ const preview: Preview = {
                             "Sign in ∕ Sign up",
                             "*",
                         ],
+                        "MCG Instruction",
+                        ["Screen index", "Home", "Instruction", "Instructors", "Booking", "Packages & credits", "*"],
                     ],
                     "Design System",
                     [
@@ -75,7 +77,7 @@ const preview: Preview = {
                         ["Foundations", "Components"],
                     ],
                     "Reviews",
-                    ["Nov 12 – Shop & checkout", "Nov 11 – CraneWeb call", ["Summary", "Changes"]],
+                    ["Nov 17 – Clinics & lessons (MCG)", "Nov 12 – Shop & checkout", "Nov 11 – CraneWeb call", ["Summary", "Changes"]],
                     "*",
                 ],
             },

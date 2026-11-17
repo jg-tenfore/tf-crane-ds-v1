@@ -4,6 +4,7 @@ import { Button } from "@/components/base/button";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { useWebFrame } from "@/components/web/web-frame";
 import { WEB_SECTIONS, type WebSection } from "@/components/web/web-header";
+import { resolveOrgRedirect } from "@/components/web/web-org";
 import { WebPage } from "@/components/web/web-layout";
 import { matchPath, useWebRouter } from "@/components/web/web-router";
 import { accountRoutes, AccountMembershipsScreen } from "./account";
@@ -11,9 +12,12 @@ import { authRoutes } from "./auth";
 import { browseRoutesFor, type CategoryNavVariant } from "./browse";
 import { checkoutRoutes } from "./checkout";
 import { eventRoutes } from "./events";
+import { instructionRoutes } from "./instruction";
+import { orgRoutes } from "./org";
 import { restaurantRoutes } from "./restaurant";
+import { InstructionStoreProvider } from "./instruction/instruction-store";
 import { TeeTimeRoundsProvider, teeTimeRoutes } from "./tee-times";
-import { WebShell } from "./web-shell";
+import { useWebSession, WebShell } from "./web-shell";
 
 export interface WebRoute {
     pattern: string;
@@ -49,6 +53,8 @@ const ComingSoon = ({ section }: { section?: WebSection }) => {
  * section (an old or mistyped link) falls through to a friendly page via the catch-alls at the end.
  */
 export const webRoutes = (opts: { shopNav?: CategoryNavVariant } = {}): WebRoute[] => [
+    // "/" — an organization's home page (e.g. MCG). Without one, CraneWebRoutes redirects "/" to /tee-times.
+    ...orgRoutes,
     ...authRoutes,
     ...checkoutRoutes,
     // Membership "Join" links (shop Club Offerings + account plans) open the join page.
@@ -60,6 +66,8 @@ export const webRoutes = (opts: { shopNav?: CategoryNavVariant } = {}): WebRoute
     ...teeTimeRoutes,
     ...eventRoutes,
     ...accountRoutes.map((r) => ({ pattern: r.pattern, render: () => createElement(r.screen) })),
+    // MCG Instruction (Fox Prototype 3 port): /instruction, /instruction/pro/:id, /instruction/book, …
+    ...instructionRoutes,
     ...WEB_SECTIONS.map((s) => ({ pattern: `${s.href}/:a?/:b?/:c?`, render: () => <ComingSoon section={s.id} /> })),
 ];
 
@@ -73,10 +81,14 @@ export const resolveWebRoute = (path: string, routes: WebRoute[]): ReactNode => 
 
 /**
  * CraneWebRoutes — renders the page for the current router path and scrolls to the top on
- * navigation. "/" goes to Tee Times, CraneWeb's home.
+ * navigation. "/" goes to Tee Times, CraneWeb's home — unless the active organization has its own
+ * home page. Organization redirects (`WebOrg.redirects`, e.g. MCG /clinics → Instruction) apply first.
  */
 export const CraneWebRoutes = ({ routes }: { routes: WebRoute[] }) => {
-    const { path, navigate } = useWebRouter();
+    const { path, navigate, replace } = useWebRouter();
+    const { org } = useWebSession();
+    const bare = path.split("#")[0];
+    const redirect = resolveOrgRedirect(org, bare);
     const { scrollToTop } = useWebFrame();
     const first = useRef(true);
     useEffect(() => {
@@ -88,8 +100,16 @@ export const CraneWebRoutes = ({ routes }: { routes: WebRoute[] }) => {
         if (typeof window !== "undefined") window.scrollTo({ top: 0 });
     }, [path, scrollToTop]);
     useEffect(() => {
-        if (path === "/" || path === "") navigate("/tee-times");
-    }, [path, navigate]);
+        if ((path === "/" || path === "") && !org?.hasHome) navigate("/tee-times");
+    }, [path, navigate, org]);
+    useEffect(() => {
+        if (redirect) replace(redirect);
+    }, [redirect, replace]);
     // App-level stores that must survive navigation live here (rounds booked this session).
-    return <TeeTimeRoundsProvider>{resolveWebRoute(path.split("#")[0], routes)}</TeeTimeRoundsProvider>;
+    // While an org redirect is pending, render nothing inside them (no flash of the old page).
+    return (
+        <TeeTimeRoundsProvider>
+            <InstructionStoreProvider>{redirect ? null : resolveWebRoute(bare, routes)}</InstructionStoreProvider>
+        </TeeTimeRoundsProvider>
+    );
 };

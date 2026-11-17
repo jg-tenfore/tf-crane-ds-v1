@@ -36,6 +36,9 @@ export interface Course {
     photo?: string;
     /** Indoor-only simulator venue (no outdoor course), e.g. FloGolf. */
     indoor?: boolean;
+    /** Holes and par of the main course, when known (shown on organization home pages, e.g. MCG). */
+    holes?: number;
+    par?: number;
 }
 
 export const COURSES: Course[] = [
@@ -84,6 +87,8 @@ export const COURSES: Course[] = [
         email: "info@laytonsvillegolf.com",
         address: "7130 Dorsey Road, Laytonsville, MD 20882",
         photo: coursePhotos.laytonsville,
+        holes: 18,
+        par: 70,
     },
     {
         id: "northwest",
@@ -96,6 +101,8 @@ export const COURSES: Course[] = [
         email: "info@northwestgolf.com",
         address: "15711 Layhill Road, Silver Spring, MD 20906",
         photo: coursePhotos.northwest,
+        holes: 18,
+        par: 72,
     },
     {
         id: "falls-road",
@@ -108,6 +115,8 @@ export const COURSES: Course[] = [
         email: "info@fallsroadgolf.com",
         address: "10800 Falls Road, Potomac, MD 20854",
         photo: coursePhotos.fallsRoad,
+        holes: 18,
+        par: 71,
     },
     {
         id: "flogolf",
@@ -148,7 +157,24 @@ export const COURSES: Course[] = [
     },
 ];
 
-export const courseById = (id: string) => COURSES.find((c) => c.id === id) ?? COURSES[0];
+/**
+ * The rest of Montgomery County Golf (MCG_ORG in src/data/orgs.ts): nine county courses with Laytonsville,
+ * Northwest and Falls Road in COURSES. Kept out of COURSES so they only appear where the MCG organization
+ * is active (decided Nov 17); `courseById` and `orgCourses` still find them. 555 numbers only.
+ */
+export const ORG_ONLY_COURSES: Course[] = [
+    { id: "hampshire-greens", name: "Hampshire Greens Golf Course", shortName: "Hampshire Greens", city: "Silver Spring", state: "MD", distanceMi: 404, phone: "(301) 555-0161", holes: 18, par: 71, photo: coursePhotos.hampshireGreens },
+    { id: "little-bennett", name: "Little Bennett Golf Course", shortName: "Little Bennett", city: "Clarksburg", state: "MD", distanceMi: 420, phone: "(301) 555-0173", holes: 18, par: 71, photo: coursePhotos.littleBennett },
+    { id: "needwood", name: "Needwood Golf Course", shortName: "Needwood", city: "Derwood", state: "MD", distanceMi: 410, phone: "(301) 555-0156", holes: 18, par: 70 },
+    { id: "crossvines", name: "Golf at The Crossvines", shortName: "The Crossvines", city: "Poolesville", state: "MD", distanceMi: 426, phone: "(301) 555-0138", holes: 18, par: 72 },
+    { id: "rattlewood", name: "Rattlewood Golf Course", shortName: "Rattlewood", city: "Mount Airy", state: "MD", distanceMi: 415, phone: "(301) 555-0127", holes: 18, par: 72 },
+    { id: "sligo-creek", name: "Sligo Creek Golf Course", shortName: "Sligo Creek", city: "Silver Spring", state: "MD", distanceMi: 401, phone: "(301) 555-0194", holes: 9, par: 34 },
+];
+
+/** Every course, including organization-only ones — for lookups, never for pickers. */
+export const ALL_COURSES: Course[] = [...COURSES, ...ORG_ONLY_COURSES];
+
+export const courseById = (id: string) => ALL_COURSES.find((c) => c.id === id) ?? COURSES[0];
 
 /** Course sections shown as tabs under the course header. */
 export const COURSE_SECTIONS = [

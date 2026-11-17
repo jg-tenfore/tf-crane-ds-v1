@@ -83,6 +83,11 @@ Fox itself stays an archive (`tf-fox-ds-v1`).
   renders `CraneWebPresenter` (`src/prototype-app/web-presenter.tsx`: jump list, width/appearance/shop-nav switches,
   full-window) around the shared hash-routed app in `src/prototype-app/web-prototype.tsx`. Storybook › Prototypes › Crane Web › Flow
   is the same app in a frame.
+- **MCG prototype:** `npm run prototype:mcg` → http://localhost:6026/mcg/ (Pages: /prototype/mcg/). `prototype/mcg/main.tsx`
+  renders the same presenter with `MCG_SCREEN_GROUPS` (`src/prototype-app/mcg-screens.ts`, also the source of the
+  Storybook screen index) around Crane Web with `MCG_ORG` (`src/data/orgs.ts`). Instruction lives in
+  `src/screens/web/instruction/` (hub, pro, book, packages; URL query in `data/query.ts`; state in `instruction-store.tsx`).
+  Stories are in `src/stories/mcg/` and must inline `parameters: { layout: "fullscreen" }`.
 - **Event/clinic/league art:** `src/screens/web/events/images/art/<id>-card.webp` (1200×800, 3:2 cards) and
   `<id>-banner.webp` (2160×925, 21:9 detail heroes, subject centred so it crops to 3:1 / 5:2 / 16:9). Loaded via
   `art(id)` in `events-data.ts`; `Hero` uses `banner ?? image`. Generated with Higgsfield from Sagamore references.

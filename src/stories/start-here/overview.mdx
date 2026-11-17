@@ -1,5 +1,5 @@
 import { Meta } from "@storybook/addon-docs/blocks";
-import { DocButton, DocPage, Grid, Hero, HeroScreen, NavCard, Pill, ScreenCard, Section, iphonePrototype, screen, webPrototype } from "../docs-kit/docs-kit";
+import { DocButton, DocPage, Grid, Hero, HeroScreen, NavCard, Pill, ScreenCard, Section, iphonePrototype, mcgPrototype, screen, webPrototype } from "../docs-kit/docs-kit";
 import { Code, P, SubHead } from "./parts";
 import { MockupStage } from "../device-mockups";
 
@@ -11,14 +11,14 @@ import { MockupStage } from "../device-mockups";
     eyebrow="TF Crane design system"
     title="TenFore Golf for golfers, on iPhone and the web."
     art="docs/hero-overview.webp"
-    pills={<><Pill>2 prototypes</Pill><Pill>277 stories</Pill><Pill>14 areas</Pill><Pill>Sample data only</Pill></>}
+    pills={<><Pill>3 prototypes</Pill><Pill>277 stories</Pill><Pill>14 areas</Pill><Pill>Sample data only</Pill></>}
     actions={<><DocButton href={webPrototype("/tee-times")}>Open Crane Web</DocButton><DocButton variant="secondary" to="start-here-how-to-review--docs">How to review</DocButton></>}
     screens={<>
         <HeroScreen src={screen("web-tee-times")} label="Crane Web · Tee Times" href={webPrototype("/tee-times")} />
         <HeroScreen src={screen("iphone-home")} frame="phone" label="iPhone app · Home" href={iphonePrototype("/home")} />
         <HeroScreen src={screen("web-checkout")} label="Crane Web · Checkout" href={webPrototype("/checkout")} />
     </>}
-    footnote="Live screens from the two prototypes. The courses are real clubs; every golfer, order and price is sample data."
+    footnote="Live screens from the prototypes. The courses are real clubs; every golfer, order and price is sample data."
 >
     Crane is the golfer side of TenFore: the iPhone app and Crane Web, the web app that replaces Fox. This Storybook is where their screens and UX are designed and reviewed, before they're built.
 </Hero>
@@ -38,7 +38,7 @@ import { MockupStage } from "../device-mockups";
     <NavCard eyebrow="Your turn" title="How to review" to="start-here-how-to-review--docs" cta="Start reviewing">
         Open the prototype beside Storybook and go through the pages that matter most, in order.
     </NavCard>
-    <NavCard eyebrow="The calls" title="Reviews" to="reviews-nov-12-shop-checkout-summary--docs" cta="Open the latest">
+    <NavCard eyebrow="The calls" title="Reviews" to="reviews-nov-17-clinics-lessons-mcg-summary--docs" cta="Open the latest">
         Every review with product, newest first: what was decided and what was left open.
     </NavCard>
 </Grid>
@@ -173,31 +173,76 @@ import { MockupStage } from "../device-mockups";
 </Grid>
 </Section>
 
+<Section title="Open MCG Instruction" intro="Crane Web for a multi-course organization: Montgomery County Golf's nine courses and the MCG Academy, converted from Fox Prototype 3 after the Nov 17 call.">
+<Grid cols={3}>
+    <ScreenCard
+        src={screen("mcg-hub")}
+        badge="Nov 17"
+        eyebrow="Instruction"
+        title="Lessons, clinics and camps"
+        lookAt="format tiles first, filters behind the Filters button."
+        links={[
+            { label: "Open the prototype", href: mcgPrototype("/instruction") },
+            { label: "Screen index", to: "prototypes-mcg-instruction-screen-index--docs" },
+        ]}
+    >
+        Private lessons, group clinics, junior camps, junior league and Op 36 across nine county courses.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("mcg-instructors")}
+        eyebrow="Instructors"
+        title="Pick a pro"
+        lookAt="home courses, price from, and the next opening."
+        links={[
+            { label: "Open the prototype", href: mcgPrototype("/instruction?view=instructors") },
+            { label: "Stories", to: "prototypes-mcg-instruction-instructors-all-instructors--desktop" },
+        ]}
+    >
+        Every Academy instructor, each with a profile page a course website can link to directly.
+    </ScreenCard>
+    <ScreenCard
+        src={screen("mcg-packages")}
+        eyebrow="Packages & credits"
+        title="Pay less per lesson"
+        lookAt="per-instructor packs and the My credits wallet."
+        links={[
+            { label: "Open the prototype", href: mcgPrototype("/instruction/packages") },
+            { label: "Stories", to: "prototypes-mcg-instruction-packages-credits--packages" },
+        ]}
+    >
+        5 and 10 lesson packs, monthly plans, checkout, and credits spent at booking.
+    </ScreenCard>
+</Grid>
+</Section>
+
 <Section title="Where things are" intro="Four folders in the sidebar, in this order.">
 <Grid cols={4}>
     <NavCard eyebrow="1 · You are here" title="Start Here">
         This page, the style guide, the process and roadmap, and how to review.
     </NavCard>
     <NavCard eyebrow="2" title="Prototypes" to="prototypes-crane-web-about-crane-web--docs" cta="About Crane Web">
-        Every screen and state, one story each: the iPhone app (Global Nav is the whole app) and Crane Web (Flow is the whole site).
+        Every screen and state, one story each: the iPhone app (Global Nav is the whole app), Crane Web (Flow is the whole site) and MCG Instruction.
     </NavCard>
     <NavCard eyebrow="3" title="Design System" to="design-system-styles-colors--brand" cta="See the colours">
         Styles (colour, type, spacing, Liquid Glass, logos), the components, and Crane Web's widths, type and header.
     </NavCard>
-    <NavCard eyebrow="4" title="Reviews" to="reviews-nov-12-shop-checkout-summary--docs" cta="Open the latest">
+    <NavCard eyebrow="4" title="Reviews" to="reviews-nov-17-clinics-lessons-mcg-summary--docs" cta="Open the latest">
         One folder per review call, newest first. Each opens on a summary, with the changes as stories.
     </NavCard>
 </Grid>
 </Section>
 
-<Section title="Try the prototypes" intro="Both are separate Vite apps built from the same source as these stories, so they can't drift from them.">
+<Section title="Try the prototypes" intro="All three are separate Vite apps built from the same source as these stories, so they can't drift from them.">
 <div style={{ marginBottom: 16 }}><MockupStage /></div>
-<Grid cols={2}>
+<Grid cols={3}>
     <NavCard eyebrow="iPhone app" title="Run it, and what works" href={iphonePrototype()} cta="Open the iPhone prototype">
         <Code>npm run prototype</Code>, then localhost:6022. Live on GitHub Pages at /prototype/. Sign up or sign in, reserve a tee time, see it in Bookings and cancel it. Switch courses, set Appearance, sign out. State survives a reload, every screen has a deep link (for example <Code>#/profile/edit-profile</Code>), a side panel jumps to any screen, and <Code>#/reset</Code> starts over.
     </NavCard>
     <NavCard eyebrow="Crane Web" title="Run it, and the review panel" href={webPrototype("/tee-times")} cta="Open the Crane Web prototype">
         <Code>npm run prototype:web</Code>, then localhost:6024/web/. Live on GitHub Pages at /prototype/web/. The review panel jumps to any page and switches the width (1440, 1024, 768, 390), light or dark, and Tabs or Sidebar shop navigation, or opens the site full-window. Every page is a deep link (for example <Code>#/shop/golf-balls/dozens</Code>) and browser Back works.
+    </NavCard>
+    <NavCard eyebrow="MCG Instruction" title="Run it, and the deep links" href={mcgPrototype()} cta="Open the MCG prototype">
+        <Code>npm run prototype:mcg</Code>, then localhost:6026/mcg/. Live on GitHub Pages at /prototype/mcg/. The same review panel as Crane Web, with every Instruction page and the webmaster deep links from the Nov 17 call (for example <Code>#/instruction?formats=clinic&course=needwood</Code>). Its screen index, under Prototypes › MCG Instruction, lists every page.
     </NavCard>
 </Grid>
 </Section>

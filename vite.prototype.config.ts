@@ -23,7 +23,7 @@ const TYPES: Record<string, string> = { ".svg": "image/svg+xml", ".webp": "image
 
 /**
  * Serves those folders in dev (from any page depth, e.g. /web/store-images/…) and copies them
- * into the build next to each page (prototype/ and prototype/web/).
+ * into the build next to each page (prototype/, prototype/web/ and prototype/mcg/).
  */
 const brandAssets = (): Plugin => ({
     name: "crane-brand-assets",
@@ -44,7 +44,7 @@ const brandAssets = (): Plugin => ({
         });
     },
     writeBundle(options) {
-        for (const page of ["", "web"])
+        for (const page of ["", "web", "mcg"])
             for (const [prefix, dir] of Object.entries(ASSET_DIRS)) fs.cpSync(path.join(dirname, dir), path.join(options.dir!, page, prefix), { recursive: true });
     },
 });
@@ -60,7 +60,13 @@ export default defineConfig({
     build: {
         outDir: path.join(dirname, "dist-prototype"),
         emptyOutDir: true,
-        // Two pages: the iPhone prototype (/) and the Crane Web prototype (/web/).
-        rollupOptions: { input: { main: path.join(dirname, "prototype/index.html"), web: path.join(dirname, "prototype/web/index.html") } },
+        // Three pages: the iPhone prototype (/), the Crane Web prototype (/web/) and MCG Instruction (/mcg/).
+        rollupOptions: {
+            input: {
+                main: path.join(dirname, "prototype/index.html"),
+                web: path.join(dirname, "prototype/web/index.html"),
+                mcg: path.join(dirname, "prototype/mcg/index.html"),
+            },
+        },
     },
 });

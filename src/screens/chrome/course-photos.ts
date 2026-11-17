@@ -5,9 +5,11 @@
  */
 import fallsRoad from "./images/course-photos/falls-road.webp";
 import flogolf from "./images/course-photos/flogolf-lounge.webp";
+import hampshireGreens from "./images/course-photos/hampshire-greens.webp";
 import kettleHills from "./images/course-photos/kettle-hills.webp";
 import laytonsville from "./images/course-photos/laytonsville.webp";
+import littleBennett from "./images/course-photos/little-bennett.webp";
 import memorialPark from "./images/course-photos/memorial-park.webp";
 import northwest from "./images/course-photos/northwest.webp";
 
-export const coursePhotos = { fallsRoad, flogolf, kettleHills, laytonsville, memorialPark, northwest };
+export const coursePhotos = { fallsRoad, flogolf, hampshireGreens, kettleHills, laytonsville, littleBennett, memorialPark, northwest };
