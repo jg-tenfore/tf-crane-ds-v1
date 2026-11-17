@@ -74,6 +74,7 @@ export const runChecks = (paths: string[]): Check[] => {
         check("MCG /clinics → group programs", resolveOrgRedirect(MCG_ORG, "/clinics") === GROUP_PROGRAMS_PATH),
         check("MCG /clinics/:id → service", resolveOrgRedirect(MCG_ORG, "/clinics/ggr-northwest") === "/instruction/service/ggr-northwest"),
         check("no org → no redirect", resolveOrgRedirect(null, "/clinics") === null),
+        check("MCG /clinics keeps its query", (resolveOrgRedirect(MCG_ORG, "/clinics?photos=autumn&course=needwood") ?? "").includes("photos=autumn") && (resolveOrgRedirect(MCG_ORG, "/clinics?photos=autumn&course=needwood") ?? "").includes("course=needwood") && (resolveOrgRedirect(MCG_ORG, "/clinics?photos=autumn") ?? "").startsWith(GROUP_PROGRAMS_PATH.split("?")[0])),
         // Data
         check("re-based by whole weeks (16)", REBASE_DAYS === 112, REBASE_DAYS),
         check("Adult Level 2 still meets on Thursdays", !!adultL2?.startIso && dateOfIso(adultL2.startIso).getDay() === 4, adultL2?.schedule),

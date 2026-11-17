@@ -57,12 +57,24 @@ export interface WebOrg {
 /** The org's courses as `Course` objects, in the org's order (unknown ids are skipped). */
 export const orgCourses = (org: WebOrg): Course[] => org.courses.map((id) => ALL_COURSES.find((c) => c.id === id)).filter((c): c is Course => !!c);
 
-/** Where `path` should go under `org`, or null when no redirect applies. Query strings on `path` are ignored. */
+/**
+ * Where `path` should go under `org`, or null when no redirect applies. Matching ignores the query,
+ * but the query is carried over: `/clinics?photos=autumn&course=needwood` lands on the target with
+ * those settings added (a setting in both wins from `path`, so a link can narrow the target's filter).
+ */
 export const resolveOrgRedirect = (org: WebOrg | null | undefined, path: string): string | null => {
     if (!org?.redirects) return null;
+    const [, incoming = ""] = path.split("?");
     for (const r of org.redirects) {
         const params = matchPath(r.from, path);
-        if (params) return r.to.replace(/:([A-Za-z]+)/g, (_, k: string) => encodeURIComponent(params[k] ?? ""));
+        if (!params) continue;
+        const to = r.to.replace(/:([A-Za-z]+)/g, (_, k: string) => encodeURIComponent(params[k] ?? ""));
+        if (!incoming) return to;
+        const [toPath, toQuery = ""] = to.split("?");
+        const merged = new URLSearchParams(toQuery);
+        new URLSearchParams(incoming).forEach((v, k) => merged.set(k, v));
+        const q = merged.toString().replace(/%2C/gi, ",");
+        return q ? `${toPath}?${q}` : toPath;
     }
     return null;
 };
