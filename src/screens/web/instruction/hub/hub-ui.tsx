@@ -255,12 +255,13 @@ export const PrivateLessonCard = ({ offering, href }: { offering: Offering; href
 );
 
 /** A group program (Academy program or county clinic): art, badges, schedule, course, instructor, price. */
-export const ProgramCard = ({ offering, href }: { offering: Offering; href: string }) => {
+/** `position`: the card's index in its list, so default photos rotate and neighbours never match. */
+export const ProgramCard = ({ offering, href, position }: { offering: Offering; href: string; position?: number }) => {
     const { art } = useOfferingArt();
     return (
         <WebLink href={href} className={cardLink}>
             <div className="relative aspect-[16/9] w-full overflow-hidden bg-secondary">
-                <img src={art(offering.format, offering.image, offering.id)} alt="" loading="lazy" className="size-full object-cover transition duration-300 ease-out group-hover:scale-[1.03]" />
+                <img src={art(offering.format, offering.image, position ?? offering.id)} alt="" loading="lazy" className="size-full object-cover transition duration-300 ease-out group-hover:scale-[1.03]" />
             </div>
             <div className="flex flex-1 flex-col gap-3 p-5">
                 <OfferingBadges offering={offering} />

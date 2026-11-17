@@ -104,7 +104,7 @@ const resultHref = (o: Offering, q: InstructionQuery) =>
 
 const ResultGrid = ({ items, query }: { items: Offering[]; query: InstructionQuery }) => (
     <div className="grid gap-4 @tablet:grid-cols-2 @tablet:gap-5 @desktop:grid-cols-3">
-        {items.map((o) => (o.format === "private" ? <PrivateLessonCard key={o.key} offering={o} href={resultHref(o, query)} /> : <ProgramCard key={o.key} offering={o} href={resultHref(o, query)} />))}
+        {items.map((o, i) => (o.format === "private" ? <PrivateLessonCard key={o.key} offering={o} href={resultHref(o, query)} /> : <ProgramCard key={o.key} offering={o} href={resultHref(o, query)} position={i} />))}
     </div>
 );
 

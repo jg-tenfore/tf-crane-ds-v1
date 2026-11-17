@@ -450,12 +450,12 @@ const Profile = ({ profile, backHref, fullyBooked }: { profile: InstructorProfil
                                 sub={`Scheduled programs ${coach.name} runs. Register right here — a full program still takes waitlist entries.`}
                             />
                             <div className="grid grid-cols-1 gap-4 @tablet:grid-cols-2">
-                                {profile.programs.map((program) => {
+                                {profile.programs.map((program, programIndex) => {
                                     const left = spotsLeft(program) ?? 0;
                                     const full = left === 0;
                                     return (
                                         <article key={program.id} className="flex flex-col overflow-hidden rounded-xl bg-primary ring-1 ring-secondary ring-inset">
-                                            <img src={artFor(program.id, program.image)} alt="" className="aspect-[3/1] w-full object-cover" />
+                                            <img src={artFor(program.id, program.image, programIndex)} alt="" className="aspect-[3/1] w-full object-cover" />
                                             <div className="flex flex-1 flex-col gap-3 p-5">
                                                 <div className="flex items-start justify-between gap-3">
                                                     <h3 className="text-md font-semibold text-primary">{program.name}</h3>

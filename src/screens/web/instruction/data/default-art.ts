@@ -50,11 +50,14 @@ const pick = (key: string, n: number) => {
 };
 
 /**
- * The default photo for a category in a set. With a `key` (an offering or program id) it rotates
- * through the category's three photos, stable per key, so neighbouring cards usually differ; without
- * one it's the first photo (category tiles).
+ * The default photo for a category in a set.
+ * - A number (the card's position in its list) rotates 1-2-3-1-2-3, so neighbouring cards never match
+ *   (decided Nov 17). Lists pass this.
+ * - A string (an offering or program id) picks one stably for that id: detail banners and thumbnails.
+ * - Nothing: the first photo (category tiles).
  */
-export const defaultArt = (set: DefaultPhotoSetId, format: OfferingFormat, key?: string): string => {
+export const defaultArt = (set: DefaultPhotoSetId, format: OfferingFormat, key?: string | number): string => {
     const list = defaultArtList(set, format);
+    if (typeof key === "number") return list[key % list.length];
     return key ? list[pick(key, list.length)] : list[0];
 };
