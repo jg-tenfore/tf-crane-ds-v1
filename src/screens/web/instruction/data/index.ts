@@ -15,11 +15,13 @@
  * - `profile.ts`      — everything an instructor page needs, in one call
  * - `query.ts`        — the URL model + canonical hrefs for every Instruction state
  * - `images.ts`       — headshots, Academy lockup/banner/photos, program art
+ * - `default-art.ts`  — TenFore's default photo sets (the fallback when a course has no photos)
  */
 export * from "./availability";
 export * from "./catalog";
 export * from "./county-clinics";
 export * from "./dates";
+export * from "./default-art";
 export * from "./images";
 export * from "./offerings";
 export * from "./packages";

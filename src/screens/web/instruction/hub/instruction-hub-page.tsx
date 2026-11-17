@@ -29,6 +29,7 @@ import {
     type OfferingFormat,
 } from "../data";
 import { useInstructionQuery } from "../use-instruction-query";
+import { useOfferingArt } from "../use-offering-art";
 import { useInstructionStore } from "../instruction-store";
 import { useWebSession, WebShell } from "../../web-shell";
 import { ActiveFilterChips, clearedFilters, coursesSummary, FilterFields, isGroupOnly, querySummary } from "./hub-filters";
@@ -114,13 +115,14 @@ const FormatTiles = ({ offerings, hrefFor }: { offerings: Offering[]; hrefFor: (
         const paid = items.map((o) => o.priceFrom).filter((n) => n > 0);
         return { format, count: items.length, from: paid.length ? Math.min(...paid) : 0 };
     }).filter((t) => t.count > 0);
+    const { art } = useOfferingArt();
     if (tiles.length < 2) return null;
     return (
         <nav aria-label="Browse by format" className="grid grid-cols-2 gap-3 @tablet:grid-cols-3 @desktop:grid-cols-5 @desktop:gap-4">
             {tiles.map((t) => (
                 <WebLink key={t.format} href={hrefFor(t.format)} className={cx("group flex flex-col overflow-hidden transition duration-100 ease-linear hover:ring-brand", cardBase, focusRing)}>
                     <div className="relative aspect-[16/9] overflow-hidden bg-secondary">
-                        <img src={FORMAT_ART[t.format]} alt="" loading="lazy" className={cx("size-full object-cover transition duration-300 ease-out group-hover:scale-[1.04]", t.format === "private" && "object-[50%_30%]")} />
+                        <img src={art(t.format, FORMAT_ART[t.format])} alt="" loading="lazy" className={cx("size-full object-cover transition duration-300 ease-out group-hover:scale-[1.04]", t.format === "private" && "object-[50%_30%]")} />
                     </div>
                     <div className="flex flex-1 flex-col gap-0.5 p-3.5 @tablet:p-4">
                         <span className="flex items-center justify-between gap-2">

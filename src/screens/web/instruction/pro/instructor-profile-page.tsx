@@ -64,6 +64,7 @@ import {
 import { useInstructionQuery } from "../use-instruction-query";
 import { useInstructionStore } from "../instruction-store";
 import { useFollowCourse } from "../use-follow-course";
+import { useOfferingArt } from "../use-offering-art";
 import { CourseChip, DaypartBoard, focusRing, MetaLine, SectionTitle, StarRating } from "./instructor-ui";
 
 export interface InstructorProfilePageProps {
@@ -183,6 +184,7 @@ const Profile = ({ profile, backHref, fullyBooked }: { profile: InstructorProfil
     const { navigate } = useWebRouter();
     const { scrollToTop } = useWebFrame();
     const store = useInstructionStore();
+    const { artFor } = useOfferingArt();
     const saved = store.savedInstructors.includes(coach.id);
     const [reviewsOpen, setReviewsOpen] = useState(false);
     const first = coach.name.split(" ")[0];
@@ -453,7 +455,7 @@ const Profile = ({ profile, backHref, fullyBooked }: { profile: InstructorProfil
                                     const full = left === 0;
                                     return (
                                         <article key={program.id} className="flex flex-col overflow-hidden rounded-xl bg-primary ring-1 ring-secondary ring-inset">
-                                            {program.image && <img src={program.image} alt="" className="aspect-[3/1] w-full object-cover" />}
+                                            <img src={artFor(program.id, program.image)} alt="" className="aspect-[3/1] w-full object-cover" />
                                             <div className="flex flex-1 flex-col gap-3 p-5">
                                                 <div className="flex items-start justify-between gap-3">
                                                     <h3 className="text-md font-semibold text-primary">{program.name}</h3>

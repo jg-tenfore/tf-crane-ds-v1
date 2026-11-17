@@ -49,6 +49,7 @@ import {
     readBookingDraft,
     saveBookingDraft,
 } from "./book-model";
+import { useOfferingArt } from "../use-offering-art";
 import {
     BookingLayout,
     DEFAULT_CARD,
@@ -119,6 +120,7 @@ const sessionLine = (n: number) => `${n} ${n === 1 ? "session" : "sessions"}`;
  * `registration-rules.ts`) → Sign in → Payment → Review. A full program takes waitlist entries.
  */
 export const ProgramRegistration = ({ program }: { program: BookableProgram }) => {
+    const { artFor } = useOfferingArt();
     const { query, setQuery } = useInstructionQuery();
     const { userName } = useWebSession();
     const { navigate } = useWebRouter();
@@ -227,7 +229,7 @@ export const ProgramRegistration = ({ program }: { program: BookableProgram }) =
     const summary = (
         <>
             <div className="flex items-start gap-3 border-b border-secondary px-5 py-4">
-                {program.image && <img src={program.image} alt="" className="size-14 shrink-0 rounded-lg object-cover" />}
+                <img src={artFor(program.id, program.image)} alt="" className="size-14 shrink-0 rounded-lg object-cover" />
                 <div className="min-w-0">
                     <p className="text-md font-semibold text-primary">{program.name}</p>
                     <p className="text-sm text-tertiary">{program.schedule}</p>

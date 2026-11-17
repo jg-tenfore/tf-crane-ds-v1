@@ -46,6 +46,12 @@ export interface WebOrg {
     redirects?: WebOrgRedirect[];
     /** Host for the prototype's address bar, e.g. "mcg.tenfore.golf". */
     host?: string;
+    /**
+     * Photos for Instruction (and later other areas). `own`: the org uploaded its own, so default
+     * art only fills gaps. `defaultSet`: the TenFore default photo set picked in Buck's clinic
+     * template builder (ids in `src/screens/web/instruction/data/default-art.ts`).
+     */
+    photos?: { own: boolean; defaultSet: string };
 }
 
 /** The org's courses as `Course` objects, in the org's order (unknown ids are skipped). */
