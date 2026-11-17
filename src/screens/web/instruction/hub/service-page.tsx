@@ -398,7 +398,7 @@ const ProgramService = ({ offering, query }: { offering: Offering; query: Instru
         <WebShell active="instruction">
             <WebPage className="pb-10 @desktop:pb-20">
                 <BackToHub query={query} />
-                <Hero src={art(p.format, p.banner)} alt={p.name} />
+                <Hero src={art(p.format, p.banner, p.id)} alt={p.name} />
 
                 <div className="mt-6 flex flex-wrap items-center gap-2">
                     <Tag tone="gray" variant="soft">

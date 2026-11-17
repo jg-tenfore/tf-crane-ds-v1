@@ -7,8 +7,10 @@
  * fallback. MCG has its own photos, so it only shows a set when asked (`?photos=<set>` demo, or
  * `photos.own: false` on the org).
  *
- * Files: `../images/default-art/<set>/<category>.webp` (1200 wide, 3:2, no logos or text, people
- * from behind or at a distance). They're imported as Vite assets, so the URLs work on Pages too.
+ * Files: `../images/default-art/<set>/<category>.webp`, `<category>-2.webp` and `<category>-3.webp`:
+ * three photos per category (1200 wide, 3:2, no logos or text), so cards in a list don't repeat. Buck's
+ * picker uses the same set ids and the same three-photo arrays. Imported as Vite assets, so the URLs
+ * work on Pages too.
  */
 import type { OfferingFormat } from "./vocab";
 
@@ -36,5 +38,23 @@ const CATEGORY_FILE: Record<OfferingFormat, string> = {
     op36: "op-36",
 };
 
-/** The default photo for a category in a set. */
-export const defaultArt = (set: DefaultPhotoSetId, format: OfferingFormat): string => ART[`../images/default-art/${set}/${CATEGORY_FILE[format]}.webp`];
+/** The three photos for a category in a set, in order (the first is the set's "hero" for that category). */
+export const defaultArtList = (set: DefaultPhotoSetId, format: OfferingFormat): string[] =>
+    ["", "-2", "-3"].map((suffix) => ART[`../images/default-art/${set}/${CATEGORY_FILE[format]}${suffix}.webp`]).filter(Boolean);
+
+/** A stable 0..n-1 pick for a key (an offering id), so a card keeps its photo across renders. */
+const pick = (key: string, n: number) => {
+    let h = 0;
+    for (let i = 0; i < key.length; i += 1) h = (h * 31 + key.charCodeAt(i)) >>> 0;
+    return h % n;
+};
+
+/**
+ * The default photo for a category in a set. With a `key` (an offering or program id) it rotates
+ * through the category's three photos, stable per key, so neighbouring cards usually differ; without
+ * one it's the first photo (category tiles).
+ */
+export const defaultArt = (set: DefaultPhotoSetId, format: OfferingFormat, key?: string): string => {
+    const list = defaultArtList(set, format);
+    return key ? list[pick(key, list.length)] : list[0];
+};

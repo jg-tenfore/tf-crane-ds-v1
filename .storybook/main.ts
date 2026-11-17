@@ -6,6 +6,9 @@ const config: StorybookConfig = {
     framework: "@storybook/react-vite",
     staticDirs: [
         "../public",
+        // legacy-redirects.js: sends links from before the 17 Nov 2026 regroup to their new ids
+        // (loaded by manager-head.html and preview-head.html).
+        "./static",
         // Brand source folders stay where they were dropped; serve them at stable URLs.
         { from: "../brand", to: "/brand" },
         { from: "../crane-logo", to: "/crane-logo" },

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { MCG_ORG } from "@/data/orgs";
-import { DEFAULT_PHOTO_SETS, defaultArt, FORMAT_LABEL, FORMAT_ORDER, type DefaultPhotoSetId } from "@/screens/web/instruction/data";
+import { DEFAULT_PHOTO_SETS, defaultArtList, FORMAT_LABEL, FORMAT_ORDER, type DefaultPhotoSetId } from "@/screens/web/instruction/data";
 import { McgRoute } from "./mcg-story-kit";
 
 /**
@@ -25,10 +25,10 @@ const noPhotos = (set: DefaultPhotoSetId) => ({ ...MCG_ORG, photos: { own: false
 
 const AllSets = () => (
     <div className="crane-web min-h-screen bg-secondary p-8 font-body text-primary">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6">
             <header className="flex flex-col gap-1">
                 <span className="caps text-brand-secondary">MCG Instruction · Default photo sets</span>
-                <h1 className="text-display-sm font-bold">Six sets, five categories</h1>
+                <h1 className="text-display-sm font-bold">Six sets, five categories, three photos each</h1>
                 <p className="max-w-3xl text-md text-tertiary">
                     What a course gets when it hasn&rsquo;t uploaded photos. The org picks one set in Buck&rsquo;s clinic template builder and can override any photo per
                     course. No logos or text, and people are seen from behind or at a distance.
@@ -50,7 +50,11 @@ const AllSets = () => (
                             <span className="text-xs text-tertiary">{s.blurb}</span>
                         </div>
                         {FORMAT_ORDER.map((f) => (
-                            <img key={f} src={defaultArt(s.id, f)} alt={`${s.label} · ${FORMAT_LABEL[f]}`} className="aspect-[3/2] w-full rounded-lg object-cover ring-1 ring-secondary" />
+                            <div key={f} className="grid grid-cols-3 gap-1">
+                                {defaultArtList(s.id, f).map((src, n) => (
+                                    <img key={src} src={src} alt={`${s.label} · ${FORMAT_LABEL[f]} ${n + 1}`} className="aspect-[3/2] w-full rounded object-cover ring-1 ring-secondary" />
+                                ))}
+                            </div>
                         ))}
                     </div>
                 ))}
@@ -62,7 +66,7 @@ const AllSets = () => (
 export const Sets: Story = {
     name: "All six sets",
     render: () => <AllSets />,
-    parameters: { docs: { description: { story: "Every set across the five categories: `src/screens/web/instruction/images/default-art/<set>/<category>.webp`." } } },
+    parameters: { docs: { description: { story: "Every set across the five categories, three photos each (`<category>.webp`, `-2`, `-3` in `src/screens/web/instruction/images/default-art/<set>/`). Cards pick one by offering id, so each keeps its photo and neighbours usually differ." } } },
 };
 
 const hub = (set: DefaultPhotoSetId, name: string): Story => ({

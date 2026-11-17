@@ -33,12 +33,13 @@ export const useOfferingArt = () => {
     const orgSet = org?.photos?.defaultSet;
     const set: DefaultPhotoSetId = forced ?? (isDefaultPhotoSet(orgSet) ? orgSet : FALLBACK_SET);
     const defaultsOnly = !!forced || org?.photos?.own === false;
-    const art = (format: OfferingFormat, own?: string | null) => (defaultsOnly || !own ? defaultArt(set, format) : own);
+    /** `key`: the offering or program id, so its card keeps one of the category's three photos. */
+    const art = (format: OfferingFormat, own?: string | null, key?: string) => (defaultsOnly || !own ? defaultArt(set, format, key) : own);
     return {
         set,
         defaultsOnly,
         art,
         /** Same, for a program known only by id (profile lists, registration, confirmations). */
-        artFor: (programId: string, own?: string | null) => art(offeringById(programId)?.format ?? "clinic", own),
+        artFor: (programId: string, own?: string | null) => art(offeringById(programId)?.format ?? "clinic", own, programId),
     };
 };
