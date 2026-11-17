@@ -1,3 +1,4 @@
+import { DEFAULT_PHOTO_SETS } from "@/screens/web/instruction/data/default-art";
 import { bookHref, clinicsHref, creditsHref, instructionHref, instructorHref, packagesHref, proHref, reviewHref, serviceHref } from "@/screens/web/instruction/data/query";
 import type { ScreenGroup } from "./web-presenter";
 
@@ -75,6 +76,16 @@ export const MCG_SCREEN_GROUPS: ScreenGroup[] = [
             ["Credits · after a booking", creditsHref({ extra: { demo: "after-booking" } })],
             ["Credits · spent & expired", creditsHref({ extra: { demo: "spent-expired" } })],
             ["Credits · none", creditsHref({ extra: { demo: "empty" } })],
+        ],
+    },
+    {
+        // Nov 17: a course with no photos falls back to the org's default set. The switch sticks for the
+        // session (sessionStorage) so you can click around; "MCG's own photos" turns it off.
+        label: "Default photo sets",
+        items: [
+            ...DEFAULT_PHOTO_SETS.map(({ id, label }): [string, string] => [`No course photos · ${label}`, instructionHref({ extra: { photos: id } })]),
+            ["Clinic cards · Autumn", clinicsHref({ extra: { photos: "autumn" } })],
+            ["MCG's own photos (switch back)", instructionHref({ extra: { photos: "own" } })],
         ],
     },
     {

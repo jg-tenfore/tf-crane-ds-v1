@@ -15,10 +15,13 @@ import { WebScreen, type WebScreenProps } from "../crane-web/web-story-kit";
  * resolves the path through the real route table (redirects included), so links inside work.
  */
 
-export type McgScreenProps = Omit<WebScreenProps, "org">;
+export type McgScreenProps = Omit<WebScreenProps, "org"> & {
+    /** A variant of MCG_ORG (e.g. `photos: { own: false }` for the default-photo stories). Defaults to MCG_ORG. */
+    org?: WebScreenProps["org"];
+};
 
 /** One MCG screen: `WebScreen` with the MCG org. */
-export const McgScreen = (props: McgScreenProps) => <WebScreen org={MCG_ORG} {...props} />;
+export const McgScreen = ({ org = MCG_ORG, ...props }: McgScreenProps) => <WebScreen org={org} {...props} />;
 
 const Routes = () => {
     const routes = useMemo(() => webRoutes(), []);

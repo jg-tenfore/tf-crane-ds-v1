@@ -42,6 +42,7 @@ import {
 import { useInstructionStore } from "../instruction-store";
 import { useInstructionQuery } from "../use-instruction-query";
 import { useFollowCourse } from "../use-follow-course";
+import { useOfferingArt } from "../use-offering-art";
 import { AcademyLogoTile, cardBase, FilterToggle, focusRing, InstructorAvatar, LinkButton } from "./hub-ui";
 
 /** The hub search this page was opened from (filters only), for "All instruction" and booking links. */
@@ -354,6 +355,7 @@ const programModel = (offering: Offering): ProgramModel => {
 };
 
 const ProgramService = ({ offering, query }: { offering: Offering; query: InstructionQuery }) => {
+    const { art } = useOfferingArt();
     const p = programModel(offering);
     const { programs } = useInstructionStore();
     const registration = programs.find((r) => r.serviceId === p.id);
@@ -396,7 +398,7 @@ const ProgramService = ({ offering, query }: { offering: Offering; query: Instru
         <WebShell active="instruction">
             <WebPage className="pb-10 @desktop:pb-20">
                 <BackToHub query={query} />
-                {p.banner && <Hero src={p.banner} alt={p.name} />}
+                <Hero src={art(p.format, p.banner)} alt={p.name} />
 
                 <div className="mt-6 flex flex-wrap items-center gap-2">
                     <Tag tone="gray" variant="soft">

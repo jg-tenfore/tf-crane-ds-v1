@@ -42,6 +42,7 @@ import { useInstructionStore } from "../instruction-store";
 import { CoachAvatar, focusRing } from "../pro/instructor-ui";
 import { useInstructionQuery } from "../use-instruction-query";
 import { useFollowCourse } from "../use-follow-course";
+import { useOfferingArt } from "../use-offering-art";
 import { extrasOf, programFor, quoteLesson, sessionsParamOf, timeLabelOf, timeRange, type BookableProgram } from "./book-model";
 import { MoneyRow, paymentName, WebTextArea } from "./booking-ui";
 
@@ -343,6 +344,7 @@ const BookedConfirmation = ({ q }: { q: InstructionQuery }) => {
 /* ------------------------------------------------------------------ */
 
 const WaitlistConfirmation = ({ q }: { q: InstructionQuery }) => {
+    const { artFor } = useOfferingArt();
     const store = useInstructionStore();
     const [left, setLeft] = useState(false);
     const program = q.service ? programFor(q.service) : undefined;
@@ -374,7 +376,7 @@ const WaitlistConfirmation = ({ q }: { q: InstructionQuery }) => {
                     <Panel bodyClassName="flex flex-col gap-4 px-5 py-5 @tablet:px-6">
                         <div className="flex items-center gap-3.5">
                             {program ? (
-                                program.image && <img src={program.image} alt="" className="size-14 rounded-lg object-cover" />
+                                <img src={artFor(program.id, program.image)} alt="" className="size-14 rounded-lg object-cover" />
                             ) : (
                                 <CoachAvatar photo={coach.isAny ? null : coachPhoto(coach)} initials={coach.initials} size="lg" />
                             )}

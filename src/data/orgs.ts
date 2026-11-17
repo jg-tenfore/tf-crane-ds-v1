@@ -19,6 +19,8 @@ export const MCG_ORG: WebOrg = {
     name: "Montgomery County Golf",
     shortName: "MCG",
     logo: mcgLogo,
+    // MCG has its own Academy photos; the set only shows where one is missing (or with ?photos=<set>).
+    photos: { own: true, defaultSet: "morning-parkland" },
     location: "Montgomery County, MD",
     phone: "(301) 555-0100",
     email: "info@mcg.example.com",

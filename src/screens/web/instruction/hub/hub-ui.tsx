@@ -6,6 +6,7 @@ import { WebLink } from "@/components/web/web-router";
 import type { Course } from "@/data/crane";
 import { CourseLogo } from "@/screens/chrome/course-logo";
 import { cx } from "@/utils/cx";
+import { useOfferingArt } from "../use-offering-art";
 import {
     academyDisplayName,
     academyLogo,
@@ -254,29 +255,32 @@ export const PrivateLessonCard = ({ offering, href }: { offering: Offering; href
 );
 
 /** A group program (Academy program or county clinic): art, badges, schedule, course, instructor, price. */
-export const ProgramCard = ({ offering, href }: { offering: Offering; href: string }) => (
-    <WebLink href={href} className={cardLink}>
-        <div className="relative aspect-[16/9] w-full overflow-hidden bg-secondary">
-            {offering.image && <img src={offering.image} alt="" loading="lazy" className="size-full object-cover transition duration-300 ease-out group-hover:scale-[1.03]" />}
-        </div>
-        <div className="flex flex-1 flex-col gap-3 p-5">
-            <OfferingBadges offering={offering} />
-            <div className="flex flex-col gap-1">
-                <h3 className="text-lg font-semibold text-primary group-hover:underline">{offering.name}</h3>
-                <div className="flex flex-col gap-1 text-sm text-tertiary">
-                    <Fact icon={Calendar}>{offering.meta}</Fact>
-                    <Fact icon={MarkerPin01}>{offering.courseSlugs.map(courseShortName).join(", ")}</Fact>
+export const ProgramCard = ({ offering, href }: { offering: Offering; href: string }) => {
+    const { art } = useOfferingArt();
+    return (
+        <WebLink href={href} className={cardLink}>
+            <div className="relative aspect-[16/9] w-full overflow-hidden bg-secondary">
+                <img src={art(offering.format, offering.image)} alt="" loading="lazy" className="size-full object-cover transition duration-300 ease-out group-hover:scale-[1.03]" />
+            </div>
+            <div className="flex flex-1 flex-col gap-3 p-5">
+                <OfferingBadges offering={offering} />
+                <div className="flex flex-col gap-1">
+                    <h3 className="text-lg font-semibold text-primary group-hover:underline">{offering.name}</h3>
+                    <div className="flex flex-col gap-1 text-sm text-tertiary">
+                        <Fact icon={Calendar}>{offering.meta}</Fact>
+                        <Fact icon={MarkerPin01}>{offering.courseSlugs.map(courseShortName).join(", ")}</Fact>
+                    </div>
+                </div>
+                <p className="line-clamp-2 text-sm text-tertiary">{offering.blurb}</p>
+                <SkillPills offering={offering} />
+                <div className="mt-auto flex items-end justify-between gap-3 border-t border-secondary pt-3">
+                    <InstructorStack instructors={offering.instructors} />
+                    <PriceBlock offering={offering} />
                 </div>
             </div>
-            <p className="line-clamp-2 text-sm text-tertiary">{offering.blurb}</p>
-            <SkillPills offering={offering} />
-            <div className="mt-auto flex items-end justify-between gap-3 border-t border-secondary pt-3">
-                <InstructorStack instructors={offering.instructors} />
-                <PriceBlock offering={offering} />
-            </div>
-        </div>
-    </WebLink>
-);
+        </WebLink>
+    );
+};
 
 /* ------------------------------------------------------------------ */
 /* Instructor cards                                                    */
