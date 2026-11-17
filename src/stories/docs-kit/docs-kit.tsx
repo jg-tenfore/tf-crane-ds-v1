@@ -25,9 +25,9 @@ export const DOC = {
     muted: "#6b7a70",
     brand: "#2C7C4D",
     brandDeep: "#1f5c3a",
-    cream: "#f8f6f1",
-    creamDeep: "#f1ede3",
-    line: "#e6e1d6",
+    cream: "#f7f8f6",
+    creamDeep: "#eef1ed",
+    line: "#e3e7e2",
     mint: "#e8f3ec",
     amber: "#fdf3e1",
 } as const;
@@ -179,30 +179,38 @@ export interface HeroProps {
     footnote?: ReactNode;
 }
 
-/** Big landing hero (Start Here › Overview): copy left, illustration right, screens along the bottom. */
+/**
+ * Big landing hero (Start Here › Overview), laid out like the Buck design system's: a white card,
+ * the illustration as a background on the right with a white fade from the left so the copy
+ * reads, then the live screens in their own light band, then a one-line caption.
+ */
 export const Hero = ({ eyebrow, title, children, pills, actions, art, screens, footnote }: HeroProps) => (
-    <section className="relative overflow-hidden rounded-[28px]" style={{ background: DOC.cream, boxShadow: `inset 0 0 0 1px ${DOC.line}`, margin: "8px 0 32px" }}>
-        {art && (
-            <img
-                src={art}
-                alt=""
-                aria-hidden="true"
-                className="pointer-events-none absolute top-0 right-0 h-full w-[68%] object-cover object-left"
-                style={{ maskImage: "linear-gradient(to right, transparent 0%, black 22%)", WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 22%)" }}
-            />
-        )}
-        <div className="relative flex flex-col gap-5 p-8 md:p-10" style={{ maxWidth: 560 }}>
-            <Eyebrow>{eyebrow}</Eyebrow>
-            <h1 className="m-0 font-semibold tracking-[-0.8px]" style={{ fontSize: 40, lineHeight: "46px", color: DOC.ink }}>
-                {title}
-            </h1>
-            {children && <div className="text-lg" style={{ lineHeight: "28px", color: DOC.body }}>{children}</div>}
-            {pills && <Pills>{pills}</Pills>}
-            {actions && <div className="flex flex-wrap items-center gap-3 pt-1">{actions}</div>}
+    <section className="overflow-hidden rounded-2xl bg-white" style={{ boxShadow: `inset 0 0 0 1px ${DOC.line}`, margin: "8px 0 32px" }}>
+        <div className="relative" style={art ? { backgroundImage: `url(${art})`, backgroundSize: "cover", backgroundPosition: "right center" } : undefined}>
+            {art && (
+                <div
+                    aria-hidden="true"
+                    className="absolute inset-0"
+                    style={{ background: "linear-gradient(90deg, #fff 0%, rgba(255,255,255,0.94) 44%, rgba(255,255,255,0) 70%)" }}
+                />
+            )}
+            <div className="relative flex flex-col gap-4 px-9 pt-10 pb-9" style={{ maxWidth: 540 }}>
+                <Eyebrow>{eyebrow}</Eyebrow>
+                <h1 className="m-0 font-semibold tracking-[-0.8px]" style={{ fontSize: 38, lineHeight: "44px", color: DOC.ink }}>
+                    {title}
+                </h1>
+                {children && <div className="text-lg" style={{ lineHeight: "28px", color: DOC.body }}>{children}</div>}
+                {pills && <Pills>{pills}</Pills>}
+                {actions && <div className="flex flex-wrap items-center gap-3 pt-1">{actions}</div>}
+            </div>
         </div>
-        {screens && <div className="relative grid grid-cols-1 gap-4 px-6 pb-6 sm:grid-cols-3 md:px-8">{screens}</div>}
+        {screens && (
+            <div className="grid grid-cols-1 gap-5 border-t px-7 pt-6 pb-5 sm:grid-cols-3" style={{ borderColor: DOC.line, background: "#f6f7f5" }}>
+                {screens}
+            </div>
+        )}
         {footnote && (
-            <div className="relative border-t px-8 py-4 text-sm md:px-10" style={{ borderColor: DOC.line, background: "rgba(255,255,255,0.7)", color: DOC.muted }}>
+            <div className="border-t bg-white px-9 py-3 text-sm" style={{ borderColor: DOC.line, color: DOC.muted }}>
                 {footnote}
             </div>
         )}
@@ -211,7 +219,7 @@ export const Hero = ({ eyebrow, title, children, pills, actions, art, screens, f
 
 /** Compact page banner with a green left rule (How to review, review summaries, process). */
 export const Banner = ({ eyebrow, title, children, pills, actions }: Omit<HeroProps, "art" | "screens" | "footnote">) => (
-    <section className="relative overflow-hidden rounded-2xl p-7 md:p-8" style={{ background: DOC.cream, boxShadow: `inset 0 0 0 1px ${DOC.line}`, borderLeft: `5px solid ${DOC.brand}`, margin: "8px 0 32px" }}>
+    <section className="relative overflow-hidden rounded-2xl bg-white p-7 md:p-8" style={{ boxShadow: `inset 0 0 0 1px ${DOC.line}`, borderLeft: `5px solid ${DOC.brand}`, margin: "8px 0 32px" }}>
         <div className="flex flex-col gap-3" style={{ maxWidth: 760 }}>
             <Eyebrow>{eyebrow}</Eyebrow>
             <h1 className="m-0 font-semibold tracking-[-0.5px]" style={{ fontSize: 30, lineHeight: "36px", color: DOC.ink }}>
@@ -244,7 +252,7 @@ export const Grid = ({ cols = 3, children }: { cols?: 2 | 3 | 4; children: React
 
 /** A card that points somewhere: eyebrow, title, a few lines, and a link at the bottom. */
 export const NavCard = ({ eyebrow, title, children, cta, ...t }: LinkTarget & { eyebrow?: ReactNode; title: ReactNode; children?: ReactNode; cta?: ReactNode }) => (
-    <div className="flex h-full flex-col gap-2 rounded-2xl p-5" style={{ background: DOC.cream, boxShadow: `inset 0 0 0 1px ${DOC.line}` }}>
+    <div className="flex h-full flex-col gap-2 rounded-2xl bg-white p-5" style={{ boxShadow: `inset 0 0 0 1px ${DOC.line}` }}>
         {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
         <h3 className="m-0 text-lg font-semibold" style={{ color: DOC.ink }}>
             {title}
@@ -261,8 +269,11 @@ export const NavCard = ({ eyebrow, title, children, cta, ...t }: LinkTarget & { 
 /* ------------------------------------------------------------------ screens */
 
 /** A screenshot in a flat browser or phone frame. */
-export const ScreenThumb = ({ src, frame = "browser", alt = "", badge }: { src: string; frame?: "browser" | "phone"; alt?: string; badge?: ReactNode }) => (
-    <div className="relative flex items-start justify-center overflow-hidden rounded-xl" style={{ background: DOC.creamDeep, padding: frame === "phone" ? "14px 0 0" : "12px 12px 0", height: 190 }}>
+export const ScreenThumb = ({ src, frame = "browser", alt = "", badge, plain = false }: { src: string; frame?: "browser" | "phone"; alt?: string; badge?: ReactNode; plain?: boolean }) => (
+    <div
+        className="relative flex items-start justify-center overflow-hidden rounded-xl"
+        style={plain ? { height: 170 } : { background: DOC.creamDeep, padding: frame === "phone" ? "14px 0 0" : "12px 12px 0", height: 190 }}
+    >
         {frame === "browser" ? (
             <div className="w-full overflow-hidden rounded-t-lg bg-white" style={{ boxShadow: "0 6px 18px rgba(20,33,26,0.14)" }}>
                 <div className="flex h-5 items-center gap-1 px-2" style={{ background: "#efefed" }}>
@@ -328,9 +339,9 @@ export const ScreenCard = ({ src, frame, badge, eyebrow, title, children, lookAt
 /** Hero-strip screenshot with a caption underneath (for `Hero.screens`). */
 export const HeroScreen = ({ src, label, frame = "browser", ...t }: LinkTarget & { src: string; label: ReactNode; frame?: "browser" | "phone" }) => {
     const body = (
-        <span className="flex flex-col items-center gap-2">
-            <ScreenThumb src={src} frame={frame} />
-            <span className="text-md font-semibold" style={{ color: DOC.ink }}>
+        <span className="flex flex-col items-center gap-2.5">
+            <ScreenThumb src={src} frame={frame} plain />
+            <span className="text-sm font-semibold" style={{ color: DOC.body }}>
                 {label}
             </span>
         </span>

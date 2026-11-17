@@ -21,10 +21,10 @@ const crane = create({
     colorPrimary: "#2C7C4D",
     colorSecondary: "#2C7C4D",
 
-    appBg: "#f8f6f1",
+    appBg: "#f7f8f6",
     appContentBg: "#ffffff",
     appPreviewBg: "#ffffff",
-    appBorderColor: "#e6e1d6",
+    appBorderColor: "#e3e7e2",
     appBorderRadius: 10,
 
     textColor: "#14211a",
@@ -36,7 +36,7 @@ const crane = create({
     barHoverColor: "#2C7C4D",
 
     inputBg: "#ffffff",
-    inputBorder: "#e6e1d6",
+    inputBorder: "#e3e7e2",
     inputTextColor: "#14211a",
     inputBorderRadius: 8,
 
