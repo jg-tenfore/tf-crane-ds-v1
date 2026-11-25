@@ -67,6 +67,8 @@ const preview: Preview = {
                         "MCG Instruction",
                         ["Screen index", "Home", "Instruction", "Instructors", "Booking", "Packages & credits", "*"],
                     ],
+                    "Explorations",
+                    ["Club customization", ["Overview", "Palettes", "Club home", "App appearance (Buck)", "*"], "*"],
                     "Design System",
                     [
                         "Styles",
