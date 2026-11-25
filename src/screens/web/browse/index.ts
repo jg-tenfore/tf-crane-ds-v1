@@ -1,7 +1,8 @@
 export { ShopHome, type ShopHomeProps } from "./shop-home";
 export { CategoryPage, type CategoryPageProps } from "./category-page";
 export { ProductPage, type ProductPageProps } from "./product-page";
-export { GiftCardPage, PunchCardPage, PUNCH_PACKS, type GiftCardPageProps } from "./gift-card-page";
+export { GiftCardBuilderPage } from "./gift-card-builder-page";
+export { PunchCardPage, PUNCH_PACKS } from "./gift-card-page";
 export { browseRoutes, browseRoutesFor, resolveBrowseRoute, BrowseOutlet, type BrowseRoute } from "./browse-routes";
 export { CategoryTabs, CategorySidebar, CategoriesDialog, MobileShopBar, Breadcrumb, crumbsFor, type CategoryNavVariant, type Crumb } from "./shop-nav";
 export { ProductCard, StarRating, badgesFor, logoFor, money, FilterBar, ShopSearchField, type ShopFilters } from "./shop-ui";

@@ -4,6 +4,7 @@ import { AddMorePage } from "./add-more-page";
 import { CartPage } from "./cart-page";
 import { CheckoutPage } from "./checkout-page";
 import { ConfirmationPage } from "./confirmation-page";
+import { OrderEmailPage } from "./order-email-page";
 
 /**
  * Renders the checkout page for the router's current path — a self-contained click-through
@@ -16,6 +17,7 @@ export const CheckoutFlow = () => {
     if (matchPath("/cart/add-more", path)) page = <AddMorePage />;
     else if (matchPath("/cart", path)) page = <CartPage />;
     else if (matchPath("/checkout", path)) page = <CheckoutPage />;
+    else if (matchPath("/order/:orderId/email", path)) page = <OrderEmailPage orderId={matchPath("/order/:orderId/email", path)!.orderId} />;
     else {
         const order = matchPath("/order/:orderId", path);
         page = order ? (

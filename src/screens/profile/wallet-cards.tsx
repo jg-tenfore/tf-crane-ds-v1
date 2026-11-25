@@ -1,10 +1,12 @@
 import type { ReactNode } from "react";
-import { Award03, Gift01 } from "@untitledui/icons";
+import { Button as AriaButton } from "react-aria-components";
+import { Award03, ChevronRight, Gift01 } from "@untitledui/icons";
 import { StatusBadge, type StatusTone } from "@/components/base/badge";
 import { IconTile } from "@/components/base/card";
 import { ProgressBar } from "@/components/base/progress-bar";
 import { currency, formatDate, walletStatus, type GiftCard, type Membership, type PunchCard, type RainCheck, type WalletStatus } from "@/data/crane";
 import { cx } from "@/utils/cx";
+import { GiftThumb, NewPill } from "./gift-card-parts";
 
 const STATUS: Record<WalletStatus, { label: string; tone: StatusTone }> = {
     active: { label: "Active", tone: "success" },
@@ -15,6 +17,9 @@ const STATUS: Record<WalletStatus, { label: string; tone: StatusTone }> = {
 };
 
 const Status = ({ status }: { status: WalletStatus }) => <StatusBadge tone={STATUS[status].tone}>{STATUS[status].label}</StatusBadge>;
+
+/** Available · Used Up · Expired · Expiring Soon, as every wallet item shows it. */
+export const WalletStatusBadge = Status;
 
 /** White card with a title row (title, expiry, status) over a hairline and a body. */
 const ItemCard = ({ title, subtitle, status, children }: { title: ReactNode; subtitle: ReactNode; status: WalletStatus; children: ReactNode }) => (
@@ -60,18 +65,33 @@ export const RainCheckItem = ({ check }: { check: RainCheck }) => {
     );
 };
 
-/** Gift card: code, balance, what it can be spent on. Expired/used cards are dimmed. */
-export const GiftCardItem = ({ card }: { card: GiftCard }) => {
+/** The gift card's wallet status: Available, Used Up or Expired. */
+export const giftCardStatus = (card: GiftCard): WalletStatus => {
     const s = walletStatus({ expires: card.expires, used: card.used, total: card.amount });
-    const status: WalletStatus = s === "active" || s === "expiring-soon" ? "available" : s;
+    return s === "active" || s === "expiring-soon" ? "available" : s;
+};
+
+export interface GiftCardItemProps {
+    /** `designId` shows the card's art instead of the gift icon; `isNew` adds the green "New" pill. */
+    card: GiftCard & { designId?: string; isNew?: boolean };
+    /** Opens the card (detail with the barcode and QR). Adds a chevron. */
+    onPress?: () => void;
+}
+
+/** Gift card: code, balance, what it can be spent on. Expired/used cards are dimmed. */
+export const GiftCardItem = ({ card, onPress }: GiftCardItemProps) => {
+    const status = giftCardStatus(card);
     const dim = status !== "available";
-    return (
-        <article className="flex gap-3 rounded-ios-card bg-primary p-4 shadow-ios-card ring-1 ring-secondary/60">
-            <IconTile icon={Gift01} size="lg" className={cx(dim && "opacity-60")} />
+    const body = (
+        <>
+            {card.designId ? <GiftThumb designId={card.designId} className={cx("mt-1", dim && "opacity-60")} /> : <IconTile icon={Gift01} size="lg" className={cx("self-start", dim && "opacity-60")} />}
             <div className="min-w-0 flex-1">
                 <div className="flex items-start gap-2">
                     <div className={cx("min-w-0 flex-1", dim && "opacity-60")}>
-                        <h2 className="text-ios-headline text-primary">Gift Card</h2>
+                        <h2 className="flex items-center gap-2 text-ios-headline text-primary">
+                            Gift Card
+                            {card.isNew && <NewPill />}
+                        </h2>
                         <p className="truncate text-ios-subheadline text-tertiary">Code: {card.code}</p>
                     </div>
                     <Status status={status} />
@@ -95,6 +115,21 @@ export const GiftCardItem = ({ card }: { card: GiftCard }) => {
                     </ul>
                 </div>
             </div>
+        </>
+    );
+
+    if (!onPress) return <article className="flex gap-3 rounded-ios-card bg-primary p-4 shadow-ios-card ring-1 ring-secondary/60">{body}</article>;
+
+    // The whole card opens the detail: a full-size button sits over it (headings and lists can't go inside a button).
+    return (
+        <article className="relative flex gap-3 rounded-ios-card bg-primary p-4 pr-3 shadow-ios-card ring-1 ring-secondary/60">
+            {body}
+            <ChevronRight className="size-5 shrink-0 self-center text-fg-quaternary" aria-hidden="true" />
+            <AriaButton
+                aria-label={`Open gift card ${card.code.slice(-4)}, balance ${currency(card.amount - card.used)}`}
+                onPress={onPress}
+                className="absolute inset-0 cursor-pointer rounded-ios-card outline-none transition duration-100 ease-linear data-[focus-visible]:ring-4 data-[focus-visible]:ring-brand-300/60 data-[pressed]:bg-black/[0.04] dark:data-[pressed]:bg-white/[0.06]"
+            />
         </article>
     );
 };

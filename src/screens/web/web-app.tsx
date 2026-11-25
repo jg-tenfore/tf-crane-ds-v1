@@ -85,17 +85,23 @@ export const resolveWebRoute = (path: string, routes: WebRoute[]): ReactNode => 
  * home page. Organization redirects (`WebOrg.redirects`, e.g. MCG /clinics → Instruction) apply first.
  */
 export const CraneWebRoutes = ({ routes }: { routes: WebRoute[] }) => {
-    const { path, navigate, replace } = useWebRouter();
+    const { path, navigate, replace, lastNav } = useWebRouter();
     const { org } = useWebSession();
     const bare = path.split("#")[0];
     const redirect = resolveOrgRedirect(org, bare);
     const { scrollToTop } = useWebFrame();
     const first = useRef(true);
+    const lastPathname = useRef(bare.split("?")[0]);
     useEffect(() => {
+        const pathname = bare.split("?")[0];
+        const samePage = pathname === lastPathname.current;
+        lastPathname.current = pathname;
         if (first.current) {
             first.current = false;
             return;
         }
+        // A page writing its own state to the URL (replace, same pathname) stays where it is.
+        if (lastNav === "replace" && samePage) return;
         scrollToTop();
         if (typeof window !== "undefined") window.scrollTo({ top: 0 });
     }, [path, scrollToTop]);

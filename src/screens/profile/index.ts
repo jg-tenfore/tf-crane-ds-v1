@@ -3,8 +3,11 @@ import type { ScreenRegistry } from "@/components/prototype/stack-navigator";
 import { AccountBalanceScreen, type AccountBalanceScreenProps } from "./account-balance-screen";
 import { AddPaymentMethodScreen, type AddPaymentMethodScreenProps } from "./add-payment-method-screen";
 import { AppearanceScreen } from "./appearance-screen";
+import { BuyGiftCardScreen, type BuyGiftCardScreenProps } from "./buy-gift-card-screen";
 import { CommunityScreen, type CommunityScreenProps } from "./community-screen";
 import { EditProfileScreen } from "./edit-profile-screen";
+import { GiftCardBoughtScreen, type GiftCardBoughtScreenProps } from "./gift-card-bought-screen";
+import { GiftCardDetailScreen, type GiftCardDetailScreenProps } from "./gift-card-detail-screen";
 import { GiftCardsScreen } from "./gift-cards-screen";
 import { GolfBuddiesScreen, type GolfBuddiesScreenProps } from "./golf-buddies-screen";
 import { KioskSignInScreen } from "./kiosk-sign-in-screen";
@@ -18,8 +21,14 @@ import { WaitlistScreen } from "./waitlist-screen";
 export * from "./account-balance-screen";
 export * from "./add-payment-method-screen";
 export * from "./appearance-screen";
+export * from "./buy-gift-card-screen";
 export * from "./community-screen";
 export * from "./edit-profile-screen";
+export * from "./gift-card-bought-screen";
+export * from "./gift-card-detail-screen";
+export * from "./gift-card-parts";
+export * from "./gift-card-review-sheet";
+export * from "./gift-cards-store";
 export * from "./gift-cards-screen";
 export * from "./golf-buddies-screen";
 export * from "./kiosk-sign-in-screen";
@@ -48,6 +57,10 @@ export const profileScreens: ScreenRegistry = {
     "punch-cards": (p) => createElement(PunchCardsScreen, p),
     "rain-checks": (p) => createElement(RainChecksScreen, p),
     "gift-cards": (p) => createElement(GiftCardsScreen, p),
+    /* Gift cards: buy (`buy-gift-card:review` opens Review and pay), a card's detail (`gift-card:gc-new`), and the confirmation (`gift-card-bought:gift|print|me`). */
+    "buy-gift-card": (p) => createElement(BuyGiftCardScreen, p as BuyGiftCardScreenProps),
+    "gift-card": (p) => createElement(GiftCardDetailScreen, p as GiftCardDetailScreenProps),
+    "gift-card-bought": (p) => createElement(GiftCardBoughtScreen, p as GiftCardBoughtScreenProps),
     appearance: () => createElement(AppearanceScreen),
     community: (p) => createElement(CommunityScreen, p as CommunityScreenProps),
     "kiosk-sign-in": () => createElement(KioskSignInScreen),

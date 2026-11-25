@@ -3,7 +3,7 @@ import { CheckCircle, XClose } from "@untitledui/icons";
 import { Button as AriaButton } from "react-aria-components";
 import { WebDialog } from "@/components/web/web-dialog";
 import { useWebRouter, WebLink } from "@/components/web/web-router";
-import type { ProductKind, ShopProduct } from "@/data/shop";
+import { checkOutSeparately, KIND_PHRASE, type ShopProduct } from "@/data/shop";
 import { useCart } from "@/screens/web/cart-store";
 import { money, ProductImage, WebButton } from "./shop-ui";
 
@@ -13,10 +13,9 @@ export interface AddRequest {
     qty: number;
 }
 
-const kindLabel = (k: ProductKind) => (k === "food" ? "food & drinks" : "pro shop items");
 
 /**
- * Add-to-cart with CraneWeb's rule: food & drinks and pro shop items check out separately.
+ * Add-to-cart with CraneWeb's rule: food & drinks, pro shop items and gift cards each check out separately.
  * A mixed add opens a dialog ("View cart" / "Clear cart and add"); a good add shows an inline
  * confirmation.
  */
@@ -51,11 +50,11 @@ export const useAddToCart = ({ initialAdded, initialMixed }: { initialAdded?: Ad
             isOpen={!!mixed}
             onOpenChange={(o) => !o && setMixed(null)}
             size="sm"
-            title={<>Food & drinks and pro shop items check out separately</>}
+            title={mixed ? checkOutSeparately(cartKind, mixed.product.kind) : null}
             description={
                 mixed ? (
                     <>
-                        Your cart has {kindLabel(cartKind)}. Check out that order first, or clear your cart to add {mixed.product.title}.
+                        Your cart has {KIND_PHRASE[cartKind]}. Check out that order first, or clear your cart to add {mixed.product.title}.
                     </>
                 ) : null
             }

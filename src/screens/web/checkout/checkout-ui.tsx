@@ -13,7 +13,9 @@ import { Button } from "@/components/base/button";
 import { TextField, type TextFieldProps } from "@/components/forms/text-field";
 import { FREE_SHIPPING_THRESHOLD, priceOf, type ShopProduct } from "@/data/shop";
 import type { CartLine } from "../cart-store";
-import { FEE_RATE, itemsLabel, money, pct, SURCHARGE_RATE, type CardBrand, type Totals } from "./checkout-data";
+import { GiftArtThumb } from "@/components/gift-cards/gift-art-card";
+import { deliveryLine, designById, type GiftCardOrder } from "@/data/gift-cards";
+import { FEE_RATE, itemsLabel, money, pct, SURCHARGE_RATE, type CardBrand, type GiftTotals, type Totals } from "./checkout-data";
 
 export const focusRing = "outline-none focus-visible:ring-4 focus-visible:ring-brand-300/60";
 
@@ -294,3 +296,49 @@ export const PanelSection = ({ label, icon: Icon, right, children, className }: 
     </section>
 );
 
+
+/* ---------- Gift cards (Nov 25) ---------- */
+
+/** "Birthday gift · To Alex Rivera · emailed today". */
+export const giftLineDetail = (o: GiftCardOrder) => `${designById(o.designId).name} · ${deliveryLine(o)}`;
+
+/** Gift card lines in a summary: the card art, title, design and delivery, what's paid. */
+export const GiftOrderLines = ({ lines }: { lines: CartLine[] }) => (
+    <ul className="flex flex-col gap-4">
+        {lines.map((l) => (
+            <li key={`${l.product.id}-${l.variant}`} className="flex items-center gap-3">
+                {l.product.giftCard ? <GiftArtThumb designId={l.product.giftCard.designId} className="w-20" /> : <Thumb product={l.product} />}
+                <div className="min-w-0 flex-1">
+                    <p className="line-clamp-2 text-sm font-medium text-primary">{l.product.title}</p>
+                    {l.product.giftCard && <p className="text-xs text-tertiary">{giftLineDetail(l.product.giftCard)}</p>}
+                </div>
+                <span className="shrink-0 text-sm font-semibold text-primary tabular-nums">{money(priceOf(l.product) * l.qty)}</span>
+            </li>
+        ))}
+    </ul>
+);
+
+/**
+ * Gift card totals (Cart, Checkout, Confirmation): Subtotal, Deal bonus in green, Delivery free,
+ * Taxes $0.00 and the total. No shipping, fees or surcharge.
+ */
+export const GiftTotalsBlock = ({ totals, totalLabel = "Total" }: { totals: GiftTotals; totalLabel?: string }) => (
+    <div className="flex flex-col gap-3">
+        <SummaryRow label={`Subtotal · ${itemsLabel(totals.count)}`} value={money(totals.subtotal)} />
+        {totals.bonus > 0 && <SummaryRow label="Deal bonus (card value)" value={`+${money(totals.bonus)}`} tone="success" />}
+        <SummaryRow
+            label={totals.allForMe ? "Delivery — wallet" : "Delivery — email"}
+            value="Free"
+            tone="success"
+            help={<HelpTip label="About delivery">{totals.allForMe ? "The card is saved to your wallet the moment you pay. We email you a copy too." : "Gift cards are emailed the moment you pay, so there's nothing to ship."}</HelpTip>}
+        />
+        <SummaryRow label="Taxes" value={money(0)} help={<HelpTip label="About tax">Gift cards aren't taxed when you buy them. Tax is charged on what the card is spent on.</HelpTip>} />
+        <div className="mt-1 flex items-baseline justify-between border-t border-secondary pt-4">
+            <span className="text-lg font-semibold text-primary">{totalLabel}</span>
+            <span className="text-xl font-bold text-brand-secondary tabular-nums">
+                <span className="mr-1.5 text-xs font-medium text-tertiary">USD</span>
+                {money(totals.total)}
+            </span>
+        </div>
+    </div>
+);

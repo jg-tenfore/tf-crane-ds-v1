@@ -57,11 +57,15 @@ export const useHashRouting = (home: string = HOME) => {
         [restart],
     );
 
-    // Called by <HashSync> whenever the router's path changes.
-    const onPath = useCallback((p: string) => {
+    // Called by <HashSync> whenever the router's path changes. A router replace (a page writing its own
+    // state to the URL, a redirect) replaces the browser entry too, so Back leaves the page instead of
+    // stepping through every edit. replaceState fires no hashchange, so nothing loops.
+    const onPath = useCallback((p: string, mode: "push" | "replace" = "push") => {
         setPath(p);
         last.current = p;
-        if (hashPath() !== p) location.hash = p;
+        if (hashPath() === p) return;
+        if (mode === "replace") history.replaceState(null, "", `#${p}`);
+        else location.hash = p;
     }, []);
 
     useEffect(() => {
@@ -86,13 +90,14 @@ export const useHashRouting = (home: string = HOME) => {
 export type HashRouting = ReturnType<typeof useHashRouting>;
 
 /** Lives inside the router: hands its navigate() up and reports path changes. */
-const HashSync = ({ navRef, onPath }: { navRef: RefObject<((p: string) => void) | null>; onPath: (p: string) => void }) => {
-    const { path, navigate } = useWebRouter();
+const HashSync = ({ navRef, onPath }: { navRef: RefObject<((p: string) => void) | null>; onPath: (p: string, mode?: "push" | "replace") => void }) => {
+    const { path, navigate, lastNav } = useWebRouter();
     useLayoutEffect(() => {
         navRef.current = navigate;
     }, [navRef, navigate]);
     useEffect(() => {
-        onPath(path);
+        onPath(path, lastNav);
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- report each path once, with how it arrived
     }, [path, onPath]);
     return null;
 };

@@ -1,0 +1,47 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Banner, Callout, DocButton, DocLink, DocPage, DocTable, Pill, Section, Status, iphonePrototype, webPrototype } from "../../docs-kit/docs-kit";
+
+<Meta title="Reviews/Nov 25 – Gift cards/Summary" />
+
+<DocPage>
+
+<Banner
+    eyebrow="Review · Nov 25, 2026"
+    title="Gift cards"
+    pills={<><Pill>Fox "New Concept" flow</Pill><Pill>Crane Web · checkout · iPhone app</Pill><Pill tone="mint">Ported into Crane</Pill></>}
+    actions={<><DocButton href={webPrototype("/shop/gift-cards")}>Open the builder on Crane Web</DocButton><DocLink href={iphonePrototype("/profile/gift-cards")}>iPhone · Gift Cards</DocLink><DocLink href="https://jg-tenfore.github.io/tf-fox-ds-v1/?path=/story/nov-25-2026-gift-card-builder--choose">The Fox original</DocLink></>}
+>
+    Buying a gift card is one page in three steps: choose an amount (deals first, "Pay $50, get a $60 card"), pick a design, and say who it's for. A card preview and running total stay in view the whole way. Then it's the shop's own cart, checkout and confirmation, a purchase email, and the card in the wallet. Fox's Nov 25 "New Concept" flow, brought to Crane Web, Crane Web checkout and the iPhone app.
+</Banner>
+
+<Section title="What it covers">
+<DocTable
+    columns={["Surface", "In Crane"]}
+    widths={["24%", "76%"]}
+    rows={[
+        [<strong>Crane Web</strong>, "The builder replaces /shop/gift-cards: deals first (a sold-out deal stays visible), a nudge when a deal beats the same money, $25–$200 or any amount from $10 to $500, 10 designs in three groups, Someone else or Me, email or print, From with Change, and a sticky summary (a bottom bar on mobile web). Every choice is in the URL."],
+        [<strong>Crane Web checkout</strong>, "Crane's own cart, checkout and confirmation. Gift cards swap Ship to → Send to, Shipping → Delivery, and Returns → Gift card details. No tax, shipping, discount codes or rewards. Edit in the cart reopens the builder with everything kept."],
+        [<strong>Purchase emails</strong>, "Self Email: the Gift Card ID with a scannable UPC-A barcode (barcode only, no QR code). Gift Email: \"Gift sent\", with no code for the buyer."],
+        [<strong>Wallet</strong>, "A success notice, a New pill, card art, a new Sent as gifts list, and Buy a gift card going to the builder."],
+        [<strong>iPhone app</strong>, "Profile › Gift Cards gains Buy a gift card, a card detail with the barcode and QR for the Pro Shop counter, New and Sent as gifts. The builder is a pushed screen with a sticky bottom bar, then review and pay with the app's saved cards, then a confirmation."],
+    ]}
+/>
+</Section>
+
+<Section title="Decided for Crane" intro="Justin's answers to the questions Fox left open (Nov 25).">
+<DocTable
+    columns={["Topic", "Decision", "In the prototype"]}
+    widths={["18%", "52%", "30%"]}
+    rows={[
+        [<strong>Mixed carts</strong>, "A gift card checks out on its own, like food: it never shares a cart with pro shop items, so a gift order has no Ship to, shipping or tax.", <>Its own cart kind. <Status tone="done">Built</Status></>],
+        [<strong>Scheduling</strong>, "Sent today only, as in Fox. A send date can come later.", <>No date picker. <Status tone="done">Built</Status></>],
+        [<strong>Recipient phone</strong>, "With email delivery, the optional phone also gets a text with the card: \"We'll also text them the card.\"", <>Hint, Send to and Gift Email. <Status tone="done">Built</Status></>],
+        [<strong>Signed out</strong>, "Anyone can build a card and add it to the cart; checkout uses Crane's sign-in step and comes back with everything kept. Signed out, the From box asks for a name and email.", <>Crane Web. <Status tone="done">Built</Status></>],
+        [<strong>Deals</strong>, "Keep all three samples ($50 → $60 live, $200 → $250 sample, $100 → $120 sold out) and the $10–$500 custom range, as sample rules to confirm.", <>One data file: src/data/gift-cards.ts. <Status tone="done">Built</Status></>],
+    ]}
+/>
+</Section>
+
+<Callout title="Sample people only.">The buyer is Crane's signed-in sample golfer and the recipient, Alex Rivera, is made up (tenfore.golf address, 555 number). The Gift Card ID 284716093352 is a sample.</Callout>
+
+</DocPage>

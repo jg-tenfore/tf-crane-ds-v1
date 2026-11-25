@@ -22,7 +22,7 @@ import { Screen } from "@/components/device/screen";
 import { AlertDialog } from "@/components/feedback/alert-dialog";
 import { NavigationBar } from "@/components/navigation/navigation-bar";
 import { useStack } from "@/components/prototype/stack-navigator";
-import { APP_VERSION, BUDDIES, GIFT_CARDS, MEMBERSHIPS, PAYMENT_CARDS, PUNCH_CARDS, RAIN_CHECKS, USER, currency, walletStatus } from "@/data/crane";
+import { APP_VERSION, BUDDIES, MEMBERSHIPS, PAYMENT_CARDS, PUNCH_CARDS, RAIN_CHECKS, USER, currency, walletStatus } from "@/data/crane";
 
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 /** Counts shown under each Profile row, from the same data the sub-screens render. */
@@ -31,8 +31,8 @@ const COUNTS = {
     memberships: plural(MEMBERSHIPS.filter((m) => walletStatus({ expires: m.expires }) !== "expired").length, "active membership"),
     punchCards: plural(PUNCH_CARDS.filter((c) => walletStatus({ expires: c.expires }) !== "expired").length, "active card"),
     rainChecks: plural(RAIN_CHECKS.filter((c) => walletStatus({ expires: c.expires, used: c.used, total: c.amount }) === "active").length, "active rain check"),
-    giftCards: plural(GIFT_CARDS.length, "card"),
 };
+import { useGiftCards } from "./gift-cards-store";
 import { ProfileRow, RowCard } from "./profile-shared";
 
 /** Apple logo for the "Add to Wallet" button (not in @untitledui/icons). */
@@ -80,6 +80,7 @@ export interface ProfileScreenProps {
  */
 export const ProfileScreen = ({ communityBadge = 1, onSignOut, onDeleteAccount, onAddToWallet, defaultDeleteOpen = false }: ProfileScreenProps) => {
     const { push } = useStack();
+    const giftCards = useGiftCards();
     const [deleteOpen, setDeleteOpen] = useState(defaultDeleteOpen);
     const cards = PAYMENT_CARDS.length;
 
@@ -125,7 +126,7 @@ export const ProfileScreen = ({ communityBadge = 1, onSignOut, onDeleteAccount, 
                     <ProfileRow icon={Clock} title="Waitlist" subtitle="0 active waitlists" onPress={() => push("waitlist")} />
                     <ProfileRow icon={Ticket01} title="Punch Cards" subtitle={COUNTS.punchCards} onPress={() => push("punch-cards")} />
                     <ProfileRow icon={CloudRaining01} title="Rain Checks" subtitle={COUNTS.rainChecks} onPress={() => push("rain-checks")} />
-                    <ProfileRow icon={Gift01} title="Gift Cards" subtitle={COUNTS.giftCards} onPress={() => push("gift-cards")} />
+                    <ProfileRow icon={Gift01} title="Gift Cards" subtitle={plural(giftCards.cards.length, "card")} onPress={() => push("gift-cards")} />
                 </RowCard>
 
                 <RowCard>

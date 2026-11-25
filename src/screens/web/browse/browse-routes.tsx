@@ -3,7 +3,8 @@ import { useWebFrame } from "@/components/web/web-frame";
 import { matchPath, useWebRouter } from "@/components/web/web-router";
 import { groupBySlug, productById } from "@/data/shop";
 import { CategoryPage } from "./category-page";
-import { GiftCardPage, PunchCardPage } from "./gift-card-page";
+import { GiftCardBuilderPage } from "./gift-card-builder-page";
+import { PunchCardPage } from "./gift-card-page";
 import { ProductPage } from "./product-page";
 import { ShopHome } from "./shop-home";
 import type { CategoryNavVariant } from "./shop-nav";
@@ -11,6 +12,11 @@ import type { CategoryNavVariant } from "./shop-nav";
 export interface BrowseRoute {
     pattern: string;
     render: (params: Record<string, string>) => ReactNode;
+    /**
+     * The page keeps its own state in the query string and writes it back as you go (the gift card
+     * builder), so a query-only change must not remount it or scroll to the top.
+     */
+    queryState?: boolean;
 }
 
 /** /shop?category=golf-balls&subcategory=dozens — live CraneWeb's query-string deep links. */
@@ -29,7 +35,7 @@ const ShopRoute = ({ variant }: { variant: CategoryNavVariant }) => {
  */
 export const browseRoutesFor = (variant: CategoryNavVariant = "tabs"): BrowseRoute[] => [
     { pattern: "/shop", render: () => <ShopRoute variant={variant} /> },
-    { pattern: "/shop/gift-cards", render: () => <GiftCardPage /> },
+    { pattern: "/shop/gift-cards", render: () => <GiftCardBuilderPage />, queryState: true },
     { pattern: "/shop/punch-cards", render: () => <PunchCardPage /> },
     { pattern: "/shop/:group/:subgroup/:productId", render: ({ productId }) => <ProductPage productId={productId} /> },
     {
@@ -54,25 +60,32 @@ export const resolveBrowseRoute = (path: string, routes: BrowseRoute[] = browseR
     return null;
 };
 
+/** The first browse route matching a path, or undefined. */
+const matchBrowseRoute = (path: string, routes: BrowseRoute[]) => routes.find((r) => matchPath(r.pattern, path));
+
 /**
  * Renders the browse page for the current router path and scrolls the frame to the top on
  * navigation. `initial` (with `initialPath`) lets a story show an explicit-props state until the
  * reviewer clicks away; `fallback` renders paths owned by other areas (cart, checkout).
+ * Pages with `queryState` stay mounted (and in place) while only their query changes.
  */
 export const BrowseOutlet = ({ variant = "tabs", initial, initialPath, fallback }: { variant?: CategoryNavVariant; initial?: ReactNode; initialPath?: string; fallback?: (path: string) => ReactNode }) => {
     const { path } = useWebRouter();
     const { scrollToTop } = useWebFrame();
-    const first = useRef(true);
+    const routes = browseRoutesFor(variant);
+    const pathname = path.split("?")[0];
+    const keepOnQuery = !!matchBrowseRoute(path, routes)?.queryState;
+    const prev = useRef(path);
     useEffect(() => {
-        if (first.current) {
-            first.current = false;
-            return;
-        }
+        const before = prev.current;
+        prev.current = path;
+        if (before === path) return;
+        if (keepOnQuery && before.split("?")[0] === pathname) return;
         scrollToTop();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [path]);
 
     if (initial && path === initialPath) return <>{initial}</>;
-    const page = resolveBrowseRoute(path, browseRoutesFor(variant));
-    return <div key={path} className="contents">{page ?? fallback?.(path) ?? null}</div>;
+    const page = resolveBrowseRoute(path, routes);
+    return <div key={keepOnQuery ? pathname : path} className="contents">{page ?? fallback?.(path) ?? null}</div>;
 };

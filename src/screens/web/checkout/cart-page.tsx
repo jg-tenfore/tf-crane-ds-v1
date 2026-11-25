@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, ShoppingBag01, Trash01 } from "@untitledui/icons";
+import { ArrowLeft, ArrowRight, Edit03, Gift01, Plus, ShoppingBag01, Trash01 } from "@untitledui/icons";
 import { Button as AriaButton } from "react-aria-components";
 import { cx } from "@/utils/cx";
 import { Button } from "@/components/base/button";
@@ -7,19 +7,19 @@ import { Notice } from "@/components/feedback/notice";
 import { PageHeader, Panel, WebPage } from "@/components/web/web-layout";
 import { useWebFrame } from "@/components/web/web-frame";
 import { useWebRouter, WebLink } from "@/components/web/web-router";
-import { priceOf, productPath } from "@/data/shop";
+import { GiftArtThumb } from "@/components/gift-cards/gift-art-card";
+import { giftCardsHref, money0, orderDeal } from "@/data/gift-cards";
+import { KIND_LABEL, priceOf, productPath } from "@/data/shop";
 import { useCart, type CartLine } from "../cart-store";
 import { WebShell } from "../web-shell";
-import { computeTotals, itemsLabel, money } from "./checkout-data";
-import { focusRing, PromoField, QtyStepper, ShipProgress, Thumb, TotalsBlock } from "./checkout-ui";
+import { computeGiftTotals, computeTotals, itemsLabel, money } from "./checkout-data";
+import { focusRing, giftLineDetail, GiftTotalsBlock, PromoField, QtyStepper, ShipProgress, Thumb, TotalsBlock } from "./checkout-ui";
 import { carryPromo } from "./checkout-session";
 
 export interface CartPageProps {
     /** Start with a promo / gift card applied (story state). */
     promo?: string;
 }
-
-const KIND_LABEL = { retail: "Pro Shop", food: "Food & Drinks" } as const;
 
 const CartLineRow = ({ line }: { line: CartLine }) => {
     const { setQty, remove } = useCart();
@@ -51,6 +51,121 @@ const CartLineRow = ({ line }: { line: CartLine }) => {
     );
 };
 
+/* ---------- Gift cards (Nov 25): their own cart, no shipping or tax ---------- */
+
+/** A gift card line: card art, "$60 Sagamore Spring gift card", design and delivery, the deal, Edit and Remove. No quantity. */
+const GiftCartLineRow = ({ line }: { line: CartLine }) => {
+    const { remove } = useCart();
+    const order = line.product.giftCard!;
+    const deal = orderDeal(order);
+    // Edit reopens the builder with every choice, and Add to cart replaces this line.
+    const edit = giftCardsHref(order, line.product.id);
+    return (
+        <li className="flex gap-4 py-5">
+            <WebLink href={edit} aria-label={`Edit ${line.product.title}`} className={cx("shrink-0 self-start rounded-md", focusRing)}>
+                <GiftArtThumb designId={order.designId} className="w-24 rounded-lg @tablet:w-32" />
+            </WebLink>
+            <div className="flex min-w-0 flex-1 flex-col gap-3 @tablet:flex-row @tablet:items-start @tablet:justify-between">
+                <div className="min-w-0">
+                    <p className="text-md font-semibold text-primary">{line.product.title}</p>
+                    <p className="mt-0.5 text-sm text-tertiary">{giftLineDetail(order)}</p>
+                    {deal && (
+                        <p className="mt-1 text-sm font-medium text-success-primary">
+                            Deal: pay {money0(deal.price)}, get a {money0(deal.value)} card
+                        </p>
+                    )}
+                    <div className="mt-3 flex items-center gap-4">
+                        <WebLink href={edit} className={cx("flex items-center gap-1 rounded text-sm font-semibold text-brand-secondary hover:underline", focusRing)}>
+                            <Edit03 className="size-4" aria-hidden="true" /> Edit
+                        </WebLink>
+                        <AriaButton
+                            onPress={() => remove(line.product.id, line.variant)}
+                            className={cx("flex cursor-pointer items-center gap-1 rounded text-sm font-medium text-tertiary transition duration-100 ease-linear hover:text-error-primary", focusRing)}
+                        >
+                            <Trash01 className="size-4" aria-hidden="true" /> Remove
+                        </AriaButton>
+                    </div>
+                </div>
+                <p className="shrink-0 text-md font-semibold text-primary tabular-nums @tablet:text-right">{money(priceOf(line.product) * line.qty)}</p>
+            </div>
+        </li>
+    );
+};
+
+/** The cart when it holds gift cards: same layout as the shop cart, with no promo field, shipping bar or tax. */
+const GiftCart = ({ onCheckout }: { onCheckout: () => void }) => {
+    const cart = useCart();
+    const totals = computeGiftTotals(cart.lines);
+    const one = cart.lines.length === 1;
+    const footnote = "Gift cards are emailed, so there's no shipping or tax.";
+
+    const back = (
+        <WebLink href="/shop/gift-cards" className={cx("inline-flex items-center gap-1.5 rounded text-sm font-semibold text-brand-secondary hover:underline", focusRing)}>
+            <ArrowLeft className="size-4" aria-hidden="true" /> Gift cards
+        </WebLink>
+    );
+    const checkoutButton = (
+        <Button size="lg" fullWidth onPress={onCheckout} className="caps h-14 rounded-lg text-[13px]">
+            Checkout
+        </Button>
+    );
+
+    return (
+        <WebShell active="shop">
+            <WebPage width="content">
+                <PageHeader back={back} eyebrow="Your order" title="Your cart" subtitle={one ? "Review your gift card before checkout." : "Review your gift cards before checkout."} />
+
+                <div className="mt-8 grid grid-cols-1 gap-6 @desktop:grid-cols-[minmax(0,1fr)_380px] @desktop:gap-8">
+                    {/* Left — gift card lines */}
+                    <div className="flex min-w-0 flex-col gap-4">
+                        <Panel title={itemsLabel(cart.count)}>
+                            <ul className="divide-y divide-secondary px-5">
+                                {cart.lines.map((l) => (
+                                    <GiftCartLineRow key={`${l.product.id}-${l.variant}`} line={l} />
+                                ))}
+                            </ul>
+                        </Panel>
+                        <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+                            <WebLink href="/shop/gift-cards" className={cx("inline-flex items-center gap-1.5 rounded text-sm font-semibold text-brand-secondary hover:underline", focusRing)}>
+                                <Plus className="size-4" aria-hidden="true" /> Add another gift card
+                            </WebLink>
+                            <AriaButton onPress={cart.clear} className={cx("cursor-pointer rounded text-sm font-semibold text-tertiary underline underline-offset-2 hover:text-error-primary", focusRing)}>
+                                Clear cart
+                            </AriaButton>
+                        </div>
+                    </div>
+
+                    {/* Right — order summary */}
+                    <aside className="@desktop:sticky @desktop:top-[140px] @desktop:self-start">
+                        <Panel title="Order summary">
+                            <div className="border-b border-secondary px-5 py-4">
+                                <p className="text-sm text-tertiary">Discount codes and gift cards can't be used to buy gift cards.</p>
+                            </div>
+                            <div className="px-5 py-5">
+                                <GiftTotalsBlock totals={totals} />
+                            </div>
+                        </Panel>
+                        <p className="mt-3 text-center text-sm text-tertiary @desktop:hidden">{footnote}</p>
+                        <div className="mt-4 hidden flex-col gap-3 @desktop:flex">
+                            {checkoutButton}
+                            <p className="text-center text-sm text-tertiary">{footnote}</p>
+                        </div>
+                    </aside>
+                </div>
+
+                {/* Mobile / tablet: sticky checkout bar */}
+                <div className="sticky bottom-0 z-20 -mx-4 mt-6 border-t border-secondary bg-primary px-4 pt-3 pb-4 @tablet:-mx-8 @tablet:px-8 @desktop:hidden">
+                    <div className="mb-2 flex items-baseline justify-between text-sm">
+                        <span className="text-tertiary">Total · {itemsLabel(totals.count)}</span>
+                        <span className="text-lg font-bold text-brand-secondary tabular-nums">{money(totals.total)}</span>
+                    </div>
+                    {checkoutButton}
+                </div>
+            </WebPage>
+        </WebShell>
+    );
+};
+
 /**
  * Cart — Fox "Shop Checkout / 1. Cart" in the Crane Web look, blended with live CraneWeb's
  * cart (YOUR ORDER eyebrow, Clear cart, PROMO CODE, Taxes · Fees · Surcharge, green total).
@@ -60,6 +175,9 @@ export const CartPage = ({ promo: initialPromo }: CartPageProps) => {
     const { navigate } = useWebRouter();
     const { scrollToTop } = useWebFrame();
     const [promo, setPromo] = useState<string | null>(initialPromo ?? null);
+    // A gift card cart that's emptied offers another gift card first.
+    const [fromGiftCards, setFromGiftCards] = useState(cart.kind === "gift-card");
+    if (cart.kind === "gift-card" && !fromGiftCards) setFromGiftCards(true);
 
     const go = (path: string) => {
         navigate(path);
@@ -94,14 +212,27 @@ export const CartPage = ({ promo: initialPromo }: CartPageProps) => {
                         </span>
                         <h2 className="mt-5 text-xl font-semibold text-primary">Your cart is empty</h2>
                         <p className="mt-1.5 max-w-sm text-md text-tertiary">Golf balls, apparel and snack-bar orders you add will show up here.</p>
-                        <Button size="lg" className="mt-6 rounded-lg text-md" iconTrailing={ArrowRight} onPress={() => go("/shop")}>
-                            Shop the Pro Shop
-                        </Button>
+                        {fromGiftCards ? (
+                            <div className="mt-6 flex flex-wrap justify-center gap-3">
+                                <Button size="lg" className="rounded-lg text-md" iconLeading={Gift01} onPress={() => go("/shop/gift-cards")}>
+                                    Buy a gift card
+                                </Button>
+                                <Button size="lg" color="outline" className="rounded-lg text-md" onPress={() => go("/shop")}>
+                                    Shop the Pro Shop
+                                </Button>
+                            </div>
+                        ) : (
+                            <Button size="lg" className="mt-6 rounded-lg text-md" iconTrailing={ArrowRight} onPress={() => go("/shop")}>
+                                Shop the Pro Shop
+                            </Button>
+                        )}
                     </Panel>
                 </WebPage>
             </WebShell>
         );
     }
+
+    if (cart.kind === "gift-card" && !mixed) return <GiftCart onCheckout={checkout} />;
 
     const groups = mixed ? (["retail", "food"] as const).map((k) => ({ kind: k, lines: cart.lines.filter((l) => l.product.kind === k) })) : [{ kind: cart.kind ?? "retail", lines: cart.lines }];
 

@@ -4,6 +4,7 @@
  * with destination tax (state + county + city), pickup, fees and surcharge from live CraneWeb.
  */
 import { COURSE_TAX, FREE_SHIPPING_THRESHOLD, GROUND_SHIPPING, productById, SHOP_PRODUCTS, TAX_BY_ZIP, taxFor, type ShopProduct, type TaxJurisdiction } from "@/data/shop";
+import { giftCardProduct, orderBonus, SAMPLE_GIFT_ORDER, SAMPLE_RECIPIENT, SAMPLE_SELF_ORDER, type GiftCardOrder } from "@/data/gift-cards";
 import type { CartLine } from "../cart-store";
 
 export const money = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD" });
@@ -216,3 +217,44 @@ export const PICKUP = {
 /** Fixed "today" for deterministic stories (Nov 12, 2026). */
 export const ORDER_DATE = "November 12, 2026";
 export const ARRIVAL = "Nov 18–21";
+
+/* ---------- Gift cards (Nov 25) ---------- */
+
+/**
+ * A gift card checks out on its own (cart kind "gift-card"): no Ship to, shipping, address or
+ * tax-by-ZIP step, no tax, fees or surcharge, and no discount codes, rewards or gift-card payment.
+ * The golfer pays the card's price; a deal's bonus shows as a green line.
+ */
+
+/** The sample gift by email, with the optional phone filled in (it also gets a text with the card). */
+export const GIFT_EMAIL_ORDER: GiftCardOrder = { ...SAMPLE_GIFT_ORDER, toPhone: SAMPLE_RECIPIENT.phone, toPhoneConfirm: SAMPLE_RECIPIENT.phone };
+/** The same gift, emailed to the buyer to print and hand over. */
+export const GIFT_PRINT_ORDER: GiftCardOrder = { ...SAMPLE_GIFT_ORDER, delivery: "print", toEmail: "", toEmailConfirm: "" };
+/** The same deal, for yourself. */
+export const GIFT_SELF_ORDER: GiftCardOrder = SAMPLE_SELF_ORDER;
+
+/** One gift card cart line. Pass a stable `id` so stories and the Edit link keep the same line. */
+export const giftLine = (o: GiftCardOrder, id = "gift-card-sample"): CartLine => ({ product: giftCardProduct(o, id), variant: "", qty: 1 });
+
+/** The orders riding on a cart's gift card lines, with their line ids (for Edit). */
+export const giftOrdersIn = (lines: CartLine[]) => lines.flatMap((l) => (l.product.giftCard ? [{ lineId: l.product.id, order: l.product.giftCard, line: l }] : []));
+
+export interface GiftTotals extends Totals {
+    /** Card value beyond what's paid (deals), summed over the lines. */
+    bonus: number;
+    /** Every gift card line is for the buyer (so delivery is the wallet, not email). */
+    allForMe: boolean;
+}
+
+/** Gift card totals: the price paid, nothing for shipping, tax, fees or surcharge. */
+export const computeGiftTotals = (lines: CartLine[]): GiftTotals => {
+    const count = lines.reduce((n, l) => n + l.qty, 0);
+    const subtotal = round(lines.reduce((s, l) => s + l.product.price * l.qty, 0));
+    const bonus = round(lines.reduce((s, l) => s + (l.product.giftCard ? orderBonus(l.product.giftCard) * l.qty : 0), 0));
+    const allForMe = lines.length > 0 && lines.every((l) => l.product.giftCard?.recipient === "me");
+    return { count, subtotal, promoDiscount: 0, rewardDiscount: 0, discount: 0, shipping: null, freeShipping: false, tax: 0, taxQuote: null, fees: 0, surcharge: 0, total: subtotal, bonus, allForMe };
+};
+
+/** Gift orders are dated the day of the Nov 25 review (shop orders keep ORDER_DATE). */
+export const GIFT_ORDER_DATE = "November 25, 2026";
+export const GIFT_ORDER_DAY = new Date(2026, 10, 25);

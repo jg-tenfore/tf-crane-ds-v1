@@ -77,7 +77,7 @@ const preview: Preview = {
                         ["Foundations", "Components"],
                     ],
                     "Reviews",
-                    ["Nov 17 – Clinics & lessons (MCG)", "Nov 12 – Shop & checkout", "Nov 11 – CraneWeb call", ["Summary", "Changes"]],
+                    ["Nov 25 – Gift cards", "Nov 17 – Clinics & lessons (MCG)", "Nov 12 – Shop & checkout", "Nov 11 – CraneWeb call", ["Summary", "Changes"]],
                     "*",
                 ],
             },

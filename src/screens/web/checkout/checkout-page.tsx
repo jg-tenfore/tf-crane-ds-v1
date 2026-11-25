@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { ArrowLeft, Building07, ChevronDown, ChevronUp, Clock, Lock01, MarkerPin01, Plus, ShoppingBag01, Truck01 } from "@untitledui/icons";
+import { ArrowLeft, Building07, ChevronDown, ChevronUp, Clock, Edit03, Gift01, Lock01, MarkerPin01, Plus, ShoppingBag01, Truck01, User01, Wallet02 } from "@untitledui/icons";
 import { Button as AriaButton, Radio as AriaRadio, RadioGroup as AriaRadioGroup } from "react-aria-components";
 import { cx } from "@/utils/cx";
 import { Tag } from "@/components/base/badge";
@@ -9,13 +9,17 @@ import { PageHeader, Panel, WebPage } from "@/components/web/web-layout";
 import { useWebFrame } from "@/components/web/web-frame";
 import { useWebRouter, WebLink } from "@/components/web/web-router";
 import { USER } from "@/data/crane";
+import { BUYER, giftCardsHref, toName, type GiftCardOrder } from "@/data/gift-cards";
 import { GROUND_SHIPPING } from "@/data/shop";
+import { LinkButton } from "../account/account-ui";
 import { useCart } from "../cart-store";
 import { useWebSession, WebShell } from "../web-shell";
 import { AddressDialog } from "./address-dialog";
 import {
     addressLine,
+    computeGiftTotals,
     computeTotals,
+    giftOrdersIn,
     money,
     PICKUP,
     REWARDS,
@@ -26,7 +30,7 @@ import {
     type Plan,
     type SavedPayment,
 } from "./checkout-data";
-import { BrandChip, ChoiceRow, focusRing, OrderLines, PanelSection, PromoField, RadioDot, TotalsBlock } from "./checkout-ui";
+import { BrandChip, ChoiceRow, focusRing, GiftOrderLines, GiftTotalsBlock, OrderLines, PanelSection, PromoField, RadioDot, TotalsBlock } from "./checkout-ui";
 import { takeCarriedPromo } from "./checkout-session";
 import { placeOrder } from "./orders";
 import { PaymentDialog } from "./payment-dialog";
@@ -48,7 +52,60 @@ export interface CheckoutPageProps {
     paymentModalOpen?: boolean;
     /** Mobile web: start with the order summary expanded. */
     summaryOpen?: boolean;
+    /** Gift card orders: start with the Send to details (message, phone, from) open. */
+    sendToOpen?: boolean;
 }
+
+/* ---------- Payment (saved cards, shared by shop and gift card checkout) ---------- */
+
+const PaymentSection = ({
+    payments,
+    setPayments,
+    paymentId,
+    setPaymentId,
+    onAdd,
+}: {
+    payments: SavedPayment[];
+    setPayments: (update: (ps: SavedPayment[]) => SavedPayment[]) => void;
+    paymentId: string;
+    setPaymentId: (id: string) => void;
+    onAdd: () => void;
+}) => (
+    <PanelSection label="Payment" right={<span className="flex items-center gap-1 text-xs text-tertiary"><Lock01 className="size-3.5" aria-hidden="true" /> Encrypted</span>}>
+        <AriaRadioGroup aria-label="Payment method" value={paymentId} onChange={setPaymentId} className="flex flex-col gap-2">
+            {payments.map((p) => (
+                <div key={p.id}>
+                    <ChoiceRow value={p.id} isDisabled={!!p.expired} muted={!!p.expired} className="data-[disabled]:opacity-60">
+                        <span className="flex flex-wrap items-center gap-2">
+                            <span className="text-md font-semibold text-primary">
+                                {p.name}
+                                {p.last4 && ` ···· ${p.last4}`}
+                            </span>
+                            <BrandChip brand={p.brand} />
+                            {p.expired && (
+                                <Tag tone="error" variant="soft">
+                                    Exp. {p.expired}
+                                </Tag>
+                            )}
+                        </span>
+                        <span className="block truncate text-sm text-tertiary">{p.brand === "PayPal" ? "You'll finish on PayPal" : `${USER.firstName} ${USER.lastName}, ${addressLine(SAVED_ADDRESSES[0])}`}</span>
+                    </ChoiceRow>
+                    {p.expired && (
+                        <div className="mt-1 ml-12 flex items-center gap-3 text-sm">
+                            <span className="text-tertiary">This card has expired.</span>
+                            <Button size="sm" color="plain-destructive" onPress={() => setPayments((ps) => ps.filter((x) => x.id !== p.id))} className="h-7 text-sm">
+                                Delete
+                            </Button>
+                        </div>
+                    )}
+                </div>
+            ))}
+        </AriaRadioGroup>
+        <Button size="md" color="plain" iconLeading={Plus} onPress={onAdd} className="h-10 self-start text-sm">
+            Pay another way
+        </Button>
+    </PanelSection>
+);
 
 /* ---------- Order summary (right column / mobile disclosure) ---------- */
 
@@ -131,6 +188,7 @@ export const CheckoutPage = ({
     addressQuery,
     paymentModalOpen = false,
     summaryOpen: initialSummaryOpen = false,
+    sendToOpen = false,
 }: CheckoutPageProps) => {
     const cart = useCart();
     const { course } = useWebSession();
@@ -204,6 +262,9 @@ export const CheckoutPage = ({
             </WebShell>
         );
     }
+
+    // Gift cards check out on their own: Send to and Delivery instead of an address, shipping and tax.
+    if (cart.kind === "gift-card") return <GiftCheckout sendToOpen={sendToOpen} summaryOpen={initialSummaryOpen} paymentModalOpen={paymentModalOpen} />;
 
     const unknownZip =
         fulfillment === "ship" && totals.taxQuote?.estimated && address ? (
@@ -424,40 +485,7 @@ export const CheckoutPage = ({
                             )}
 
                             {/* Payment */}
-                            <PanelSection label="Payment" right={<span className="flex items-center gap-1 text-xs text-tertiary"><Lock01 className="size-3.5" aria-hidden="true" /> Encrypted</span>}>
-                                <AriaRadioGroup aria-label="Payment method" value={paymentId} onChange={setPaymentId} className="flex flex-col gap-2">
-                                    {payments.map((p) => (
-                                        <div key={p.id}>
-                                            <ChoiceRow value={p.id} isDisabled={!!p.expired} muted={!!p.expired} className="data-[disabled]:opacity-60">
-                                                <span className="flex flex-wrap items-center gap-2">
-                                                    <span className="text-md font-semibold text-primary">
-                                                        {p.name}
-                                                        {p.last4 && ` ···· ${p.last4}`}
-                                                    </span>
-                                                    <BrandChip brand={p.brand} />
-                                                    {p.expired && (
-                                                        <Tag tone="error" variant="soft">
-                                                            Exp. {p.expired}
-                                                        </Tag>
-                                                    )}
-                                                </span>
-                                                <span className="block truncate text-sm text-tertiary">{p.brand === "PayPal" ? "You'll finish on PayPal" : `${USER.firstName} ${USER.lastName}, ${addressLine(SAVED_ADDRESSES[0])}`}</span>
-                                            </ChoiceRow>
-                                            {p.expired && (
-                                                <div className="mt-1 ml-12 flex items-center gap-3 text-sm">
-                                                    <span className="text-tertiary">This card has expired.</span>
-                                                    <Button size="sm" color="plain-destructive" onPress={() => setPayments((ps) => ps.filter((x) => x.id !== p.id))} className="h-7 text-sm">
-                                                        Delete
-                                                    </Button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))}
-                                </AriaRadioGroup>
-                                <Button size="md" color="plain" iconLeading={Plus} onPress={() => setPayOpen(true)} className="h-10 self-start text-sm">
-                                    Pay another way
-                                </Button>
-                            </PanelSection>
+                            <PaymentSection payments={payments} setPayments={setPayments} paymentId={paymentId} setPaymentId={setPaymentId} onAdd={() => setPayOpen(true)} />
                         </Panel>
 
                         <div className="hidden flex-col gap-2 @desktop:flex">
@@ -496,6 +524,259 @@ export const CheckoutPage = ({
                     isOpen={payOpen}
                     onOpenChange={setPayOpen}
                     billTo={fulfillment === "ship" ? address : null}
+                    onSave={(p) => {
+                        setPayments((ps) => [...ps, p]);
+                        setPaymentId(p.id);
+                    }}
+                />
+            )}
+        </WebShell>
+    );
+};
+
+/* ---------- Gift card checkout (Nov 25) ---------- */
+
+/** One card in Send to: who gets it and how; open, the message, their phone and who it's from. */
+const SendToCard = ({ lineId, order, open, buyerName, buyerEmail }: { lineId: string; order: GiftCardOrder; open: boolean; buyerName: string; buyerEmail: string }) => {
+    const me = order.recipient === "me";
+    const phone = order.delivery === "email" ? order.toPhone.trim() : "";
+    return (
+        <div className="flex flex-col gap-3">
+            <div className="flex gap-3">
+                {me ? <Wallet02 className="mt-0.5 size-5 shrink-0 text-fg-quaternary" aria-hidden="true" /> : <Gift01 className="mt-0.5 size-5 shrink-0 text-fg-quaternary" aria-hidden="true" />}
+                <div className="min-w-0">
+                    <p className="text-md font-semibold text-primary">{me ? `${buyerName} (you)` : toName(order)}</p>
+                    <p className="truncate text-sm text-tertiary">{me ? "Saved to your wallet" : order.delivery === "email" ? order.toEmail.trim() : `Emailed to you to print · ${buyerEmail}`}</p>
+                </div>
+            </div>
+            {open && !me && (
+                <div className="ml-8 flex flex-col gap-2.5 rounded-lg bg-secondary px-4 py-3 text-sm">
+                    <div>
+                        <p className="text-tertiary">Message</p>
+                        <p className="mt-0.5 text-primary">{order.message.trim() ? `“${order.message.trim()}”` : "No message"}</p>
+                    </div>
+                    {phone && (
+                        <p className="text-tertiary">
+                            Their phone <span className="font-medium text-primary tabular-nums">{phone}</span> · we'll text them the card too
+                        </p>
+                    )}
+                    <p className="text-tertiary">
+                        From <span className="font-medium text-primary">{order.fromName.trim() || buyerName}</span>
+                    </p>
+                    <WebLink href={giftCardsHref(order, lineId)} className={cx("inline-flex items-center gap-1 self-start rounded text-sm font-semibold text-brand-secondary hover:underline", focusRing)}>
+                        <Edit03 className="size-4" aria-hidden="true" /> Edit the gift
+                    </WebLink>
+                </div>
+            )}
+        </div>
+    );
+};
+
+/**
+ * Checkout for a gift card order — the shop checkout's layout with Send to in place of Ship to and
+ * Delivery in place of Shipping; no address, plan, rewards or discount code, and no tax. Signed
+ * out, the Contact step becomes Crane Web's sign-in step (`/sign-in?next=/checkout`): the cart is
+ * kept while the golfer signs in, and they come straight back here.
+ */
+const GiftCheckout = ({ sendToOpen, summaryOpen: initialSummaryOpen, paymentModalOpen }: { sendToOpen: boolean; summaryOpen: boolean; paymentModalOpen: boolean }) => {
+    const cart = useCart();
+    const { userName } = useWebSession();
+    const { navigate } = useWebRouter();
+    const { scrollToTop } = useWebFrame();
+    const [payments, setPayments] = useState<SavedPayment[]>(SAVED_PAYMENTS);
+    const [paymentId, setPaymentId] = useState(SAVED_PAYMENTS[0].id);
+    const [payOpen, setPayOpen] = useState(paymentModalOpen);
+    const [summaryOpen, setSummaryOpen] = useState(initialSummaryOpen);
+    const [sendOpen, setSendOpen] = useState(sendToOpen);
+    const [placing, setPlacing] = useState(false);
+
+    const signedIn = !!userName;
+    const gifts = giftOrdersIn(cart.lines);
+    const totals = computeGiftTotals(cart.lines);
+    const payment = payments.find((p) => p.id === paymentId) ?? payments[0];
+    const first = gifts[0]?.order;
+    // Signed out, the From the golfer typed in the builder stands in for the account.
+    const buyerName = signedIn ? BUYER.name : first?.fromName.trim() || "You";
+    const buyerEmail = signedIn ? BUYER.email : first?.fromEmail.trim() || "";
+    const anyGift = gifts.some((g) => g.order.recipient === "someone");
+    const anyForMe = gifts.some((g) => g.order.recipient === "me");
+    const next = encodeURIComponent("/checkout");
+
+    const go = (path: string) => {
+        navigate(path);
+        scrollToTop();
+    };
+
+    const pay = () => {
+        if (!signedIn) return go(`/sign-in?next=${next}`);
+        if (!payment) return;
+        setPlacing(true);
+        window.setTimeout(() => {
+            const id = placeOrder({ lines: cart.lines, kind: "gift-card", fulfillment: "email", address: null, payment, plan: "now", totals, promo: null });
+            cart.clear();
+            go(`/order/${id}`);
+        }, 700);
+    };
+
+    const back = (
+        <WebLink href="/cart" className={cx("inline-flex items-center gap-1.5 rounded text-sm font-semibold text-brand-secondary hover:underline", focusRing)}>
+            <ArrowLeft className="size-4" aria-hidden="true" /> Back to cart
+        </WebLink>
+    );
+
+    const summary = (
+        <div className="flex flex-col">
+            <div className="px-5 py-5">
+                <GiftOrderLines lines={cart.lines} />
+            </div>
+            <div className="border-t border-secondary px-5 py-4">
+                <p className="text-sm text-tertiary">Points, rewards and discount codes can't be used on gift cards.</p>
+            </div>
+            <div className="border-t border-secondary px-5 py-5">
+                <GiftTotalsBlock totals={totals} />
+            </div>
+        </div>
+    );
+
+    const payButton = (
+        <Button size="lg" fullWidth isLoading={placing} iconLeading={signedIn ? Lock01 : User01} onPress={pay} className="caps h-14 rounded-lg text-[13px]">
+            {placing ? "Placing order…" : signedIn ? `Pay now · ${money(totals.total)}` : "Sign in to pay"}
+        </Button>
+    );
+    const payNote = signedIn ? (
+        <p className="text-center text-sm text-tertiary">Gift cards can't be returned or exchanged for cash.</p>
+    ) : (
+        <p className="text-center text-sm text-tertiary">Your cart is saved while you sign in.</p>
+    );
+
+    return (
+        <WebShell active="shop" footer={false}>
+            <WebPage width="content">
+                <PageHeader back={back} eyebrow="Secure checkout" title="Checkout" />
+
+                {/* Mobile web: order summary disclosure */}
+                <div className="mt-6 overflow-hidden rounded-xl bg-primary ring-1 ring-secondary ring-inset @desktop:hidden">
+                    <AriaButton
+                        onPress={() => setSummaryOpen((o) => !o)}
+                        aria-expanded={summaryOpen}
+                        className={cx("flex w-full cursor-pointer items-center justify-between gap-3 px-5 py-4 text-left", focusRing)}
+                    >
+                        <span className="flex items-center gap-2 text-md font-semibold text-brand-secondary">
+                            <ShoppingBag01 className="size-5" aria-hidden="true" />
+                            {summaryOpen ? "Hide order summary" : "Show order summary"}
+                            {summaryOpen ? <ChevronUp className="size-4" aria-hidden="true" /> : <ChevronDown className="size-4" aria-hidden="true" />}
+                        </span>
+                        <span className="text-lg font-bold text-primary tabular-nums">{money(totals.total)}</span>
+                    </AriaButton>
+                    {summaryOpen && <div className="border-t border-secondary">{summary}</div>}
+                </div>
+
+                <div className="mt-6 grid grid-cols-1 gap-8 @desktop:mt-8 @desktop:grid-cols-[minmax(0,1fr)_400px]">
+                    {/* Left — steps */}
+                    <div className="flex min-w-0 flex-col gap-5">
+                        <Panel bodyClassName="flex flex-col divide-y divide-secondary">
+                            {/* Contact, or the sign-in step for a guest */}
+                            {signedIn ? (
+                                <PanelSection
+                                    label="Contact"
+                                    right={
+                                        <a href="#" onClick={(e) => e.preventDefault()} className={cx("rounded text-sm font-semibold text-brand-secondary hover:underline", focusRing)}>
+                                            Not you?
+                                        </a>
+                                    }
+                                >
+                                    <p className="-mt-1 text-md text-secondary">
+                                        {BUYER.email} <span className="text-tertiary">· your receipt and gift card email go here</span>
+                                    </p>
+                                </PanelSection>
+                            ) : (
+                                <PanelSection label="Sign in to pay">
+                                    <p className="-mt-1 max-w-xl text-md text-tertiary">
+                                        Gift cards are paid for with your TenFore account, the same one you use in the Crane app. Your cart is saved, and you'll come right back here.
+                                    </p>
+                                    <div className="flex flex-wrap gap-3">
+                                        <LinkButton href={`/sign-in?next=${next}`}>Sign in</LinkButton>
+                                        <LinkButton href={`/sign-up?next=${next}`} color="outline">
+                                            Create an account
+                                        </LinkButton>
+                                    </div>
+                                </PanelSection>
+                            )}
+
+                            {/* Send to, in place of Ship to */}
+                            <PanelSection
+                                label={anyGift ? "Send to" : "For"}
+                                right={
+                                    anyGift && (
+                                        <AriaButton onPress={() => setSendOpen((o) => !o)} aria-expanded={sendOpen} className={cx("flex cursor-pointer items-center gap-1 rounded text-sm font-semibold text-brand-secondary", focusRing)}>
+                                            {sendOpen ? "Hide details" : "Show details"}
+                                            {sendOpen ? <ChevronUp className="size-4" aria-hidden="true" /> : <ChevronDown className="size-4" aria-hidden="true" />}
+                                        </AriaButton>
+                                    )
+                                }
+                            >
+                                <div className="flex flex-col gap-5">
+                                    {gifts.map((g) => (
+                                        <SendToCard key={g.lineId} lineId={g.lineId} order={g.order} open={sendOpen} buyerName={buyerName} buyerEmail={buyerEmail} />
+                                    ))}
+                                </div>
+                            </PanelSection>
+
+                            {/* Delivery, in place of Shipping */}
+                            <PanelSection label="Delivery">
+                                {anyGift && (
+                                    <div className="flex items-center justify-between gap-3 rounded-lg bg-secondary px-4 py-3">
+                                        <div>
+                                            <p className="text-md font-semibold text-primary">Email</p>
+                                            <p className="text-sm text-tertiary">Sent today, right after you pay</p>
+                                        </div>
+                                        <span className="text-md font-semibold text-success-primary">Free</span>
+                                    </div>
+                                )}
+                                {anyForMe && (
+                                    <div className="flex items-center justify-between gap-3 rounded-lg bg-secondary px-4 py-3">
+                                        <div>
+                                            <p className="text-md font-semibold text-primary">Wallet</p>
+                                            <p className="text-sm text-tertiary">Ready to use right after you pay</p>
+                                        </div>
+                                        <span className="text-md font-semibold text-success-primary">Free</span>
+                                    </div>
+                                )}
+                            </PanelSection>
+
+                            {/* Payment — unchanged from shop checkout once signed in */}
+                            {signedIn ? (
+                                <PaymentSection payments={payments} setPayments={setPayments} paymentId={paymentId} setPaymentId={setPaymentId} onAdd={() => setPayOpen(true)} />
+                            ) : (
+                                <PanelSection label="Payment" right={<span className="flex items-center gap-1 text-xs text-tertiary"><Lock01 className="size-3.5" aria-hidden="true" /> Encrypted</span>}>
+                                    <p className="-mt-1 text-sm text-tertiary">Your saved cards show here once you're signed in, or you can add one.</p>
+                                </PanelSection>
+                            )}
+                        </Panel>
+
+                        <div className="hidden flex-col gap-2 @desktop:flex">
+                            {payButton}
+                            {payNote}
+                        </div>
+                    </div>
+
+                    {/* Right — order summary */}
+                    <aside className="hidden @desktop:sticky @desktop:top-[140px] @desktop:block @desktop:self-start">
+                        <Panel title="Order summary">{summary}</Panel>
+                    </aside>
+                </div>
+
+                {/* Mobile / tablet: sticky pay bar */}
+                <div className="sticky bottom-0 z-20 -mx-4 mt-6 flex flex-col gap-2 border-t border-secondary bg-primary px-4 pt-3 pb-4 @tablet:-mx-8 @tablet:px-8 @desktop:hidden">
+                    {payButton}
+                </div>
+            </WebPage>
+
+            {payOpen && (
+                <PaymentDialog
+                    isOpen={payOpen}
+                    onOpenChange={setPayOpen}
+                    billTo={null}
                     onSave={(p) => {
                         setPayments((ps) => [...ps, p]);
                         setPaymentId(p.id);

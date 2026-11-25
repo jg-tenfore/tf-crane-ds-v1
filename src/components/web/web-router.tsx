@@ -11,15 +11,23 @@ interface WebRouterApi {
     /** Swap the current entry instead of pushing one (redirects), so back() skips it. */
     replace: (path: string) => void;
     back: () => void;
+    /**
+     * How the current path arrived: "replace" for in-place updates (redirects, a page writing its own
+     * state to the URL). The prototype's address bar uses it to replace instead of push, and pages
+     * don't jump to the top for a replace that keeps the same pathname.
+     */
+    lastNav: "push" | "replace";
 }
 
-const WebRouterContext = createContext<WebRouterApi>({ path: "/", navigate: () => {}, replace: () => {}, back: () => {} });
+const WebRouterContext = createContext<WebRouterApi>({ path: "/", navigate: () => {}, replace: () => {}, back: () => {}, lastNav: "push" });
 export const useWebRouter = () => useContext(WebRouterContext);
 
 export const WebRouterProvider = ({ initialPath = "/", onNavigate, children }: { initialPath?: string; onNavigate?: (path: string) => void; children: ReactNode }) => {
     const [history, setHistory] = useState<string[]>([initialPath]);
+    const [lastNav, setLastNav] = useState<"push" | "replace">("push");
     const navigate = useCallback(
         (p: string) => {
+            setLastNav("push");
             setHistory((h) => (h[h.length - 1] === p ? h : [...h, p]));
             onNavigate?.(p);
         },
@@ -27,13 +35,17 @@ export const WebRouterProvider = ({ initialPath = "/", onNavigate, children }: {
     );
     const replace = useCallback(
         (p: string) => {
+            setLastNav("replace");
             setHistory((h) => [...h.slice(0, -1), p]);
             onNavigate?.(p);
         },
         [onNavigate],
     );
-    const back = useCallback(() => setHistory((h) => (h.length > 1 ? h.slice(0, -1) : h)), []);
-    const api = useMemo(() => ({ path: history[history.length - 1], navigate, replace, back }), [history, navigate, replace, back]);
+    const back = useCallback(() => {
+        setLastNav("push");
+        setHistory((h) => (h.length > 1 ? h.slice(0, -1) : h));
+    }, []);
+    const api = useMemo(() => ({ path: history[history.length - 1], navigate, replace, back, lastNav }), [history, navigate, replace, back, lastNav]);
     return <WebRouterContext.Provider value={api}>{children}</WebRouterContext.Provider>;
 };
 

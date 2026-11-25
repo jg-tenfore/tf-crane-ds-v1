@@ -4,6 +4,7 @@ import { CraneAppIcon } from "@/components/foundations/logos";
 import { WEB_WIDTHS, WebFrame, type WebWidth } from "@/components/web/web-frame";
 import type { WebOrg } from "@/components/web/web-org";
 import { courseById, USER } from "@/data/crane";
+import { giftCardsHref, SAMPLE_GIFT_ORDER, SAMPLE_SELF_ORDER } from "@/data/gift-cards";
 import { productById, productPath, SHOP_PRODUCTS } from "@/data/shop";
 import { accountRoutes } from "@/screens/web/account";
 import type { CategoryNavVariant } from "@/screens/web/browse";
@@ -47,6 +48,9 @@ export const CRANE_WEB_SCREEN_GROUPS: ScreenGroup[] = [
             ["Subgroup · Dozens", "/shop/golf-balls/dozens"],
             ["Product", productPath(product)],
             ["Gift cards", "/shop/gift-cards"],
+            ["Gift cards · filled in", giftCardsHref(SAMPLE_GIFT_ORDER)],
+            ["Gift cards · for me", giftCardsHref(SAMPLE_SELF_ORDER)],
+            ["Gift cards · print", giftCardsHref({ ...SAMPLE_GIFT_ORDER, delivery: "print", toEmail: "", toEmailConfirm: "" })],
             ["Punch cards", "/shop/punch-cards"],
         ],
     },
