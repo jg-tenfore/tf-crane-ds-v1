@@ -1,0 +1,153 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Banner, Callout, DocLink, DocPage, DocTable, Grid, NavCard, Pill, Quote, Section, Status } from "../docs-kit/docs-kit";
+
+<Meta title="Explorations/Club customization/Overview" />
+
+<DocPage>
+
+<Banner
+    eyebrow="Exploration · Nov 25, 2026"
+    title="Customizing white-label Crane apps"
+    pills={<><Pill>For Jonathan, Weston and Austin</Pill><Pill>R&D, not a decision</Pill><Pill tone="mint">Curated, not free-form</Pill></>}
+    actions={<><DocLink to="explorations-club-customization-app-appearance-buck--default">App appearance in Buck</DocLink><DocLink to="explorations-club-customization-club-home--mcg">The club home</DocLink><DocLink to="explorations-club-customization-palettes--all-palettes">The 12 palettes</DocLink></>}
+>
+    Courses that pay for a white-label Crane app sometimes ask to make it feel more like theirs. This page lays out the options we could support, what each one costs and risks, and what we recommend. Nothing here is built for real yet: it's a working prototype to decide from.
+</Banner>
+
+<Section title="See it" intro="Three working pieces, all on the five sample clubs.">
+
+<Grid cols={3}>
+    <NavCard eyebrow="1" title="App appearance (Buck)" to="explorations-club-customization-app-appearance-buck--default" cta="Open the settings page">
+        Where a course sets it up: palette swatches with contrast checks, hero photo with a focus point and warnings, logo and name, announcements, and a live phone preview. Submit for TenFore review, then publish.
+    </NavCard>
+    <NavCard eyebrow="2" title="The club home" to="explorations-club-customization-club-home--mcg" cta="See the five clubs">
+        What golfers get: the club's photo, logo and name over an automatic shade, a news strip, then the tee sheet. Scroll and the header becomes a bar in the club's colour.
+    </NavCard>
+    <NavCard eyebrow="3" title="The 12 palettes" to="explorations-club-customization-palettes--all-palettes" cta="Compare palettes">
+        Every palette's ramp, a light and dark component sample, and the contrast checks each one passes.
+    </NavCard>
+</Grid>
+
+</Section>
+
+<Section title="What we heard (Nov 24)">
+
+<DocTable
+    columns={["Point", "Detail"]}
+    widths={["26%", "74%"]}
+    rows={[
+        [<strong>The comparison</strong>, "Crane was called plain next to other white-label club apps. Looked at closely, those apps are mostly one great hero photo with text on top, plus a feed page. Almost everything else links out to other systems."],
+        [<strong>Who it's for</strong>, "White-label installs (like MCG), not the TenFore Crane app everyone shares. Courses have asked for \"more customization\", never for control of every colour."],
+        [<strong>The risk</strong>, "Given free rein, most courses will make it look worse, and a bad-looking app reflects on TenFore too."],
+        [<strong>The ask</strong>, "Options with pros and cons, and a point of view on how far to go, before anything is built."],
+    ]}
+/>
+
+<Quote cite="Weston, Nov 24 (paraphrased)">Really, all they have is a good background picture. Everything else is text on top of it.</Quote>
+
+</Section>
+
+<Section title="The principle" intro="Courses pick from things we've already made look good. They never start from a blank canvas.">
+
+<Grid cols={3}>
+    <NavCard eyebrow="1" title="Curated, not typed">
+        Twelve tuned palettes instead of a hex-code field. Every palette is contrast-checked in light and dark, so buttons, links and badges always read.
+    </NavCard>
+    <NavCard eyebrow="2" title="Guardrails built in">
+        The app adds a shade behind text on photos, crops to a focus point, warns about low-resolution photos, and falls back to a TenFore photo set when there isn't one. It never falls back to a logo.
+    </NavCard>
+    <NavCard eyebrow="3" title="Set in Buck, seen by golfers">
+        Courses choose in an "App appearance" page with a live phone preview. Golfers just get their course's look. They don't pick themes.
+    </NavCard>
+</Grid>
+
+</Section>
+
+<Section title="The options" intro="Each option is a dial a course could turn. The first four are what this exploration builds.">
+
+<DocTable
+    columns={["Dial", "What the course controls", "Pros", "Cons / risks", "Effort", "This pass"]}
+    widths={["13%", "22%", "21%", "24%", "9%", "11%"]}
+    rows={[
+        [<strong>Palette</strong>, "One of 12 palettes in 3 families", "Biggest visual change for the least risk; every screen follows automatically; dark mode handled", "Not an exact brand-colour match; some clubs will ask for \"their\" green", "Low", <Status tone="done">Built</Status>],
+        [<strong>Hero photo</strong>, "One photo + a focus point, or a TenFore photo set", "Matches what makes other club apps look premium; one photo does most of the work", "Bad photos are the main way it can look cheap: needs the guardrails and the review step", "Low–med", <Status tone="done">Built</Status>],
+        [<strong>Logo + name</strong>, "Logo, display name, one-line tagline", "Expected by every white-label client; low risk", "App icon and splash screen need a store release per club", "Low", <Status tone="done">Built</Status>],
+        [<strong>Announcements feed</strong>, "Posts: news, events, offers, course conditions; pin and expire", "Gives the app something new every visit; a reason to open it; pairs with push notifications", "Content goes stale if nobody posts; needs a simple composer and expiry", "Medium", <Status tone="done">Built</Status>],
+        [<strong>Home layout</strong>, "3–4 preset homes (tee sheet first, clubhouse tiles, feed first)", "Different kinds of club (private, muni, simulator lounge) lead with different things", "More to test and support; more ways to look unbalanced", "Med–high", <Status tone="next">Later</Status>],
+        [<strong>Heading font</strong>, "2–3 curated pairings (e.g. a classic serif)", "Strong signal for private and historic clubs", "Fonts are where amateur design shows fastest; licensing", "Medium", <Status tone="next">Later</Status>],
+        [<strong>Not offered</strong>, "Raw hex colours, uploaded fonts, free-form page building", "—", "The \"90% will make it worse\" problem; endless support", "—", <Status tone="open">No</Status>],
+    ]}
+/>
+
+</Section>
+
+<Section title="Who keeps it looking good" intro="Three ways to run it. They can be combined: self-serve for palette and photo, review for anything that ships to the App Store.">
+
+<DocTable
+    columns={["Model", "How it works", "Pros", "Cons"]}
+    widths={["18%", "32%", "25%", "25%"]}
+    rows={[
+        [<strong>Self-serve with guardrails</strong>, "The course changes it in Buck and publishes. Guardrails stop the worst outcomes.", "Scales; no TenFore time per change", "Taste still varies: an on-palette app can still have a weak photo"],
+        [<strong>TenFore review</strong>, "Changes go to TenFore for a quick review (e.g. within a business day) before they publish.", "Quality bar stays with us; catches bad photos", "Adds a step; someone has to own the queue"],
+        [<strong>Done for you</strong>, "TenFore designs the club's setup as part of onboarding, possibly as a paid service.", "Best result; a revenue line; a reason to choose Crane", "Doesn't scale to every course; needs design time"],
+    ]}
+/>
+
+</Section>
+
+<Section title="Our recommendation">
+
+<Callout title="Start small, keep it curated.">
+    Ship palette, hero photo, logo + name and the feed, self-serve in Buck with guardrails, with a TenFore review on first setup and on anything that needs an App Store release (icon, splash). Offer "done for you" setup to clubs that want it. Revisit layout presets and fonts once a few clubs are live and we can see what they actually change.
+</Callout>
+
+</Section>
+
+<Section title="What the prototype taught us">
+
+<DocTable
+    columns={["Finding", "What it means"]}
+    widths={["38%", "62%"]}
+    rows={[
+        ["Same course, three palettes reads as three different apps.", "The palette alone does most of the \"make it ours\" work, at almost no risk."],
+        ["Photos courses already have are often too small.", "Three of our five sample photos fall under the 1,200 px bar. Courses need to send originals; the warning says so."],
+        ["The automatic shade and the photo-set fallback carry the design.", "No photo, or a busy one, still looks intentional. Never a blank header or a logo."],
+        ["Dark mode carries less of the brand.", "In dark, links and tab labels turn neutral by design; only solid fills (buttons, the scrolled bar) keep the club colour."],
+        ["An empty feed costs nothing; a stale one hurts.", "The news strip disappears when there are no posts; posts need dates and expiry."],
+    ]}
+/>
+
+</Section>
+
+<Section title="Choices made in the mock (to confirm)">
+
+<DocTable
+    columns={["Choice", "In the mock"]}
+    widths={["38%", "62%"]}
+    rows={[
+        ["Do announcements need review?", "No: posts go live right away. Only palette, photo and logo/name go through TenFore review."],
+        ["How many pinned posts?", "One: pinning a post unpins the other."],
+        ["App icon name", "Its own field, up to 12 characters, defaulting to whole words of the display name."],
+        ["Editing while in review", "Returns the change to Draft (a real page should warn first)."],
+        ["Save / Publish placement", "A sticky footer; Buck's newer pages put actions in the header. Pick one convention."],
+    ]}
+/>
+
+</Section>
+
+<Section title="Questions for the group">
+
+<DocTable
+    columns={["Question", "Why it matters"]}
+    widths={["45%", "55%"]}
+    rows={[
+        ["Is review required, optional, or a paid service?", "Decides whether this is a product feature, an onboarding step, or both."],
+        ["Is 12 palettes enough, or do some clubs need a closer brand match?", "A \"request a palette\" path (we add it to the library) keeps the curation and the quality."],
+        ["Who writes feed posts, and do they push?", "A feed that goes quiet looks worse than no feed; push makes it worth posting."],
+        ["Does this stay white-label only, or should every Crane course get palette + photo?", "Everyone gets better-looking apps, but the shared TenFore app would look different per course."],
+    ]}
+/>
+
+</Section>
+
+</DocPage>
