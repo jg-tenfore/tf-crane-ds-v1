@@ -1,8 +1,11 @@
 import type { ReactNode } from "react";
 import { Award03, CloudRaining01, Gift01, Ticket01 } from "@untitledui/icons";
+import { StatusBadge } from "@/components/base/badge";
 import { IconTile } from "@/components/base/card";
 import { ProgressBar } from "@/components/base/progress-bar";
+import { GiftArtThumb } from "@/components/gift-cards/gift-art-card";
 import { currency, formatDate, walletStatus, type GiftCard, type Membership, type PunchCard, type RainCheck, type WalletStatus } from "@/data/crane";
+import type { SentGift } from "@/data/gift-cards";
 import { cx } from "@/utils/cx";
 import { WalletStatusBadge } from "./account-ui";
 
@@ -13,6 +16,7 @@ import { WalletStatusBadge } from "./account-ui";
 
 const ItemCard = ({
     icon,
+    media,
     title,
     subtitle,
     status,
@@ -21,6 +25,8 @@ const ItemCard = ({
     dim,
 }: {
     icon: typeof Gift01;
+    /** Replaces the icon tile (gift card art). */
+    media?: ReactNode;
     title: ReactNode;
     subtitle: ReactNode;
     status: WalletStatus;
@@ -30,7 +36,7 @@ const ItemCard = ({
 }) => (
     <article className="flex flex-col rounded-xl bg-primary ring-1 ring-secondary ring-inset">
         <header className="flex items-start gap-3 p-4 pb-3">
-            <IconTile icon={icon} className={cx(dim && "opacity-60")} />
+            {media ?? <IconTile icon={icon} className={cx(dim && "opacity-60")} />}
             <div className={cx("min-w-0 flex-1", dim && "opacity-60")}>
                 <h4 className="text-md font-semibold text-primary @tablet:truncate">{title}</h4>
                 <p className="truncate text-sm text-tertiary">{subtitle}</p>
@@ -94,16 +100,42 @@ export const giftCardStatus = (card: GiftCard): WalletStatus => {
     return s === "active" || s === "expiring-soon" ? "available" : s;
 };
 
-export const GiftCardTile = ({ card }: { card: GiftCard }) => {
+/** The green "New" pill on a card or gift just bought. */
+export const NewPill = () => (
+    <StatusBadge tone="success" className="text-xs">
+        New
+    </StatusBadge>
+);
+
+/**
+ * A gift card in the wallet. Cards bought online carry their design (`designId`), shown as the
+ * art; older cards keep the gift icon. `isNew` marks one just bought (`?bought=`).
+ */
+export const GiftCardTile = ({ card, designId, isNew, neverExpires }: { card: GiftCard; designId?: string; isNew?: boolean; neverExpires?: boolean }) => {
     const status = giftCardStatus(card);
     const dim = status !== "available";
     return (
-        <ItemCard icon={Gift01} title="Gift Card" subtitle={`Code ${card.code}`} status={status} dim={dim}>
+        <ItemCard
+            icon={Gift01}
+            media={designId ? <GiftArtThumb designId={designId} className="w-16 rounded-lg" /> : undefined}
+            title={
+                isNew ? (
+                    <span className="flex items-center gap-2">
+                        Gift Card <NewPill />
+                    </span>
+                ) : (
+                    "Gift Card"
+                )
+            }
+            subtitle={designId ? `Code ···· ${card.code.slice(-4)}` : `Code ${card.code}`}
+            status={status}
+            dim={dim}
+        >
             <p className="text-sm text-tertiary">
                 Balance <span className="ml-1 text-lg font-semibold text-brand-secondary tabular-nums">{currency(card.amount - card.used)}</span>
                 {card.used > 0 && <span className="tabular-nums"> · of {currency(card.amount)}</span>}
             </p>
-            <p className="text-sm text-tertiary">{dim ? `Ended ${formatDate(card.expires)}` : `Expires ${formatDate(card.expires)}`}</p>
+            <p className="text-sm text-tertiary">{neverExpires ? "Doesn't expire" : dim ? `Ended ${formatDate(card.expires)}` : `Expires ${formatDate(card.expires)}`}</p>
             <ul aria-label="Can be used for" className="mt-2.5 flex flex-wrap gap-1.5">
                 {card.categories.map((c) => (
                     <li key={c} className="rounded-md bg-tertiary px-2 py-0.5 text-xs font-medium text-secondary">
@@ -122,3 +154,39 @@ export const MembershipTile = ({ membership: m, action }: { membership: Membersh
         </p>
     </ItemCard>
 );
+
+/**
+ * A gift card bought for someone else (Wallet › Gift cards › Sent as gifts): the art, who it went to
+ * and when, the card value, what was paid (and any deal bonus), and Sent or Ready to print.
+ */
+export const SentGiftRow = ({ gift, isNew }: { gift: SentGift; isNew?: boolean }) => {
+    const bonus = Math.round((gift.value - gift.paid) * 100) / 100;
+    const print = gift.delivery === "print";
+    return (
+        <li className="flex flex-wrap items-center gap-x-4 gap-y-3 py-4">
+            <GiftArtThumb designId={gift.designId} className="w-16 rounded-md" />
+            <div className="min-w-0 flex-1 basis-48">
+                <p className="truncate text-md font-semibold text-primary">
+                    {gift.toName}
+                    <span className="font-normal text-tertiary"> · {print ? "printable copy emailed to you" : gift.toEmail}</span>
+                </p>
+                <p className="mt-0.5 flex items-center gap-2 text-sm text-tertiary tabular-nums">
+                    {formatDate(gift.date)}
+                    {isNew && <NewPill />}
+                </p>
+            </div>
+            <div className="flex items-center gap-4">
+                <div className="text-right">
+                    <p className="text-md font-semibold text-primary tabular-nums">{currency(gift.value)} card</p>
+                    <p className="text-sm text-tertiary tabular-nums">
+                        Paid {currency(gift.paid)}
+                        {bonus > 0 && <span className="text-success-primary"> · +{currency(bonus)} bonus</span>}
+                    </p>
+                </div>
+                <StatusBadge tone={print ? "gray" : "success"} className="w-[104px] justify-center text-xs">
+                    {print ? "Ready to print" : "Sent"}
+                </StatusBadge>
+            </div>
+        </li>
+    );
+};

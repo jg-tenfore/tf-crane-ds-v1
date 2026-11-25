@@ -5,9 +5,27 @@
  * "food & shop items check out separately" rule can be shown.
  */
 import { POS_PRODUCTS, POS_SUBGROUP_LABELS } from "./shop-pos-catalog";
+import type { GiftCardOrder } from "./gift-cards";
 import { STORE_PRODUCTS, type StoreProduct } from "./store-catalog";
 
-export type ProductKind = "retail" | "food";
+/**
+ * What a cart line is. Each kind checks out on its own: food & drinks, pro-shop items and gift cards
+ * (gift cards since Nov 25: no shipping or tax, so they never share a cart).
+ */
+export type ProductKind = "retail" | "food" | "gift-card";
+
+/** "Pro Shop" / "Food & Drinks" / "Gift Cards": cart group headings. */
+export const KIND_LABEL: Record<ProductKind, string> = { retail: "Pro Shop", food: "Food & Drinks", "gift-card": "Gift Cards" };
+/** "pro shop items" / "food & drinks" / "a gift card": the mixed-cart notice ("Your cart has …"). */
+export const KIND_PHRASE: Record<ProductKind, string> = { retail: "pro shop items", food: "food & drinks", "gift-card": "a gift card" };
+
+const KIND_NOUN: Record<ProductKind, string> = { food: "food & drinks", "gift-card": "gift cards", retail: "pro shop items" };
+const KIND_ORDER: ProductKind[] = ["food", "gift-card", "retail"];
+/** "Gift cards and pro shop items check out separately" (the mixed-cart dialog title). */
+export const checkOutSeparately = (a: ProductKind, b: ProductKind) => {
+    const [x, y] = [a, b].sort((p, q) => KIND_ORDER.indexOf(p) - KIND_ORDER.indexOf(q)).map((k) => KIND_NOUN[k]);
+    return `${x[0].toUpperCase()}${x.slice(1)} and ${y} check out separately`;
+};
 
 export interface ShopProduct extends StoreProduct {
     group: string;
@@ -15,6 +33,8 @@ export interface ShopProduct extends StoreProduct {
     kind: ProductKind;
     /** Units on hand (CraneWeb shows "In Stock: 93"). 0 when out of stock. */
     stock: number;
+    /** Gift card lines only: everything the builder collected (see src/data/gift-cards.ts). */
+    giftCard?: GiftCardOrder;
 }
 
 export interface ShopSubgroup {

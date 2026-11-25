@@ -7,6 +7,9 @@
 // does nothing unless the address asks for one of the ids below.
 (function () {
     var MOVED = {
+        // Nov 25: the gift card builder replaced the old page's two stories.
+        "prototypes-crane-web-shop-gift-cards--desktop": "story/prototypes-crane-web-shop-gift-cards--choose",
+        "prototypes-crane-web-shop-gift-cards--mobile-web": "story/prototypes-crane-web-shop-gift-cards--choose-mobile-web",
         "app-chrome-bookings--empty": "story/prototypes-iphone-app-app-chrome-bookings--empty",
         "app-chrome-bookings--flow": "story/prototypes-iphone-app-app-chrome-bookings--flow",
         "app-chrome-bookings--purchase-details": "story/prototypes-iphone-app-app-chrome-bookings--purchase-details",
@@ -294,8 +297,8 @@
         "crane-web-shop-7-confirmation--pickup": "story/prototypes-crane-web-shop-7-confirmation--pickup",
         "crane-web-shop-7-confirmation--shipped": "story/prototypes-crane-web-shop-7-confirmation--shipped",
         "crane-web-shop-7-confirmation--snack-bar-pickup": "story/prototypes-crane-web-shop-7-confirmation--snack-bar-pickup",
-        "crane-web-shop-gift-cards--desktop": "story/prototypes-crane-web-shop-gift-cards--desktop",
-        "crane-web-shop-gift-cards--mobile-web": "story/prototypes-crane-web-shop-gift-cards--mobile-web",
+        "crane-web-shop-gift-cards--desktop": "story/prototypes-crane-web-shop-gift-cards--choose",
+        "crane-web-shop-gift-cards--mobile-web": "story/prototypes-crane-web-shop-gift-cards--choose-mobile-web",
         "crane-web-shop-gift-cards--punch-card": "story/prototypes-crane-web-shop-gift-cards--punch-card",
         "crane-web-shop-gift-cards--punch-card-mobile": "story/prototypes-crane-web-shop-gift-cards--punch-card-mobile",
         "crane-web-sign-in-∕-sign-up-choose-home-course--desktop": "story/prototypes-crane-web-sign-in-∕-sign-up-choose-home-course--desktop",

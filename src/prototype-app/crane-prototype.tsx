@@ -8,7 +8,7 @@ import { BookingsProvider } from "@/screens/bookings/bookings-store";
 import { bookingsScreens } from "@/screens/bookings";
 import { CourseInfoSheet, CourseProvider, LocationsDrawer } from "@/screens/chrome";
 import { homeScreens } from "@/screens/home";
-import { AppearanceScreen, CommunityScreen, ProfileScreen, profileScreens } from "@/screens/profile";
+import { AppearanceScreen, CommunityScreen, GiftCardsProvider, ProfileScreen, profileScreens } from "@/screens/profile";
 import { TAB_ROOTS, defaultState, type PrototypeState } from "./prototype-state";
 
 type Update = Dispatch<SetStateAction<PrototypeState>>;
@@ -105,22 +105,25 @@ const SignedInApp = ({ state, update }: { state: PrototypeState; update: Update 
             onChange={({ courseId, savedIds }) => update((s) => ({ ...s, courseId, savedCourseIds: savedIds }))}
         >
             <BookingsProvider initial={state.bookings} onChange={(bookings) => update((s) => ({ ...s, bookings }))}>
-                <AppShell
-                    tab={state.tab}
-                    onTabChange={(tab) => update((s) => ({ ...s, tab }))}
-                    badges={{ profile: state.communitySeen ? 0 : 1 }}
-                    stacks={{
-                        home: { screens: homeScreens, initialRoute: "home", initialStack: state.stacks.home, onStackChange: stackChange("home") },
-                        bookings: { screens: bookingsScreens, initialRoute: "bookings", initialStack: state.stacks.bookings, onStackChange: stackChange("bookings") },
-                        profile: { screens: profile, initialRoute: "profile", initialStack: state.stacks.profile, onStackChange: stackChange("profile") },
-                    }}
-                    overlay={
-                        <>
-                            <LocationsDrawer />
-                            <CourseInfoSheet />
-                        </>
-                    }
-                />
+                {/* Gift cards bought in Profile › Gift Cards (New card / Sent as gifts). In memory: Reset or a jump starts clean. */}
+                <GiftCardsProvider>
+                    <AppShell
+                        tab={state.tab}
+                        onTabChange={(tab) => update((s) => ({ ...s, tab }))}
+                        badges={{ profile: state.communitySeen ? 0 : 1 }}
+                        stacks={{
+                            home: { screens: homeScreens, initialRoute: "home", initialStack: state.stacks.home, onStackChange: stackChange("home") },
+                            bookings: { screens: bookingsScreens, initialRoute: "bookings", initialStack: state.stacks.bookings, onStackChange: stackChange("bookings") },
+                            profile: { screens: profile, initialRoute: "profile", initialStack: state.stacks.profile, onStackChange: stackChange("profile") },
+                        }}
+                        overlay={
+                            <>
+                                <LocationsDrawer />
+                                <CourseInfoSheet />
+                            </>
+                        }
+                    />
+                </GiftCardsProvider>
             </BookingsProvider>
         </CourseProvider>
     );

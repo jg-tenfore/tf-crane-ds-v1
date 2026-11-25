@@ -1,15 +1,5 @@
 import { useState, type ReactNode } from "react";
 import { Check, Heart, Share07, ShoppingCart01 } from "@untitledui/icons";
-import {
-    FieldError as AriaFieldError,
-    Input as AriaInput,
-    Label as AriaLabel,
-    TextArea as AriaTextArea,
-    TextField as AriaTextField,
-    ToggleButton as AriaToggleButton,
-    ToggleButtonGroup as AriaToggleButtonGroup,
-    type Key,
-} from "react-aria-components";
 import { cx } from "@/utils/cx";
 import { StatusBadge } from "@/components/base/badge";
 import { Panel, WebPage } from "@/components/web/web-layout";
@@ -17,16 +7,17 @@ import type { ShopProduct } from "@/data/shop";
 import { CourseLogo } from "@/screens/chrome/course-logo";
 import { useWebSession, WebShell } from "@/screens/web/web-shell";
 import { AddedNotice, useAddToCart } from "./add-to-cart";
-import { GIFT_DESIGNS, GiftCardFace, PunchCardFace, type GiftDesign } from "./card-tiles";
+import { PunchCardFace } from "./card-tiles";
 import { Breadcrumb } from "./shop-nav";
 import { money, StarRating, WebButton } from "./shop-ui";
 
 /**
- * Club Offerings purchase pages — ported from Fox's proshop-cards.stories.tsx (Gift Card,
- * Punch Card): a preview + variation rail on the left, purchase details on the right.
+ * Club Offerings purchase page for punch cards — ported from Fox's proshop-cards.stories.tsx (Punch
+ * Card): a preview + pack rail on the left, purchase details on the right. (Gift cards moved to the
+ * builder, `gift-card-builder-page.tsx`, Nov 25.)
  */
 
-/** Gift & punch cards aren't catalog SKUs; the cart gets a synthetic product per amount/pack. */
+/** Punch cards aren't catalog SKUs; the cart gets a synthetic product per pack. */
 const offeringProduct = (id: string, title: string, price: number): ShopProduct => ({
     id,
     title,
@@ -47,46 +38,6 @@ const offeringProduct = (id: string, title: string, price: number): ShopProduct 
 const focus = "outline-none focus-visible:ring-4 focus-visible:ring-brand-300/60";
 
 /* ------------------------------ Shared bits ------------------------------ */
-
-const WebField = ({ label, value, onChange, placeholder, type = "text", multiline, maxLength, isInvalid, errorMessage, isRequired, inputMode }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string; type?: string; multiline?: boolean; maxLength?: number; isInvalid?: boolean; errorMessage?: string; isRequired?: boolean; inputMode?: "numeric" | "email" | "text" }) => (
-    <AriaTextField value={value} onChange={onChange} type={type} maxLength={maxLength} isInvalid={isInvalid} isRequired={isRequired} inputMode={inputMode} className="group flex flex-col gap-1.5">
-        <AriaLabel className="text-sm font-medium text-secondary">
-            {label}
-            {isRequired && <span className="text-error-primary"> *</span>}
-        </AriaLabel>
-        {multiline ? (
-            <AriaTextArea placeholder={placeholder} rows={3} className="resize-none rounded-lg bg-primary px-3.5 py-2.5 text-md text-primary ring-1 ring-primary outline-none ring-inset placeholder:text-placeholder focus:ring-2 focus:ring-brand group-data-[invalid]:ring-error" />
-        ) : (
-            <AriaInput placeholder={placeholder} className="h-11 rounded-lg bg-primary px-3.5 text-md text-primary ring-1 ring-primary outline-none ring-inset placeholder:text-placeholder focus:ring-2 focus:ring-brand group-data-[invalid]:ring-error" />
-        )}
-        {multiline && maxLength && (
-            <span className="text-right text-xs text-quaternary tabular-nums">
-                {value.length}/{maxLength}
-            </span>
-        )}
-        <AriaFieldError className="text-sm text-error-primary">{errorMessage}</AriaFieldError>
-    </AriaTextField>
-);
-
-const Segmented = <K extends string>({ label, options, value, onChange }: { label: string; options: { key: K; label: string }[]; value: K; onChange: (k: K) => void }) => (
-    <AriaToggleButtonGroup
-        aria-label={label}
-        selectionMode="single"
-        disallowEmptySelection
-        selectedKeys={[value]}
-        onSelectionChange={(keys: Set<Key>) => {
-            const [k] = keys;
-            if (k != null) onChange(String(k) as K);
-        }}
-        className="flex rounded-lg bg-tertiary p-1"
-    >
-        {options.map((o) => (
-            <AriaToggleButton key={o.key} id={o.key} className={cx("h-9 flex-1 cursor-pointer rounded-md text-sm font-medium text-tertiary transition duration-100 ease-linear data-[selected]:bg-primary data-[selected]:font-semibold data-[selected]:text-primary data-[selected]:shadow-sm", focus)}>
-                {o.label}
-            </AriaToggleButton>
-        ))}
-    </AriaToggleButtonGroup>
-);
 
 const ShopBrand = () => {
     const { course } = useWebSession();
@@ -134,148 +85,6 @@ const PageScaffold = ({ crumb, children }: { crumb: string; children: ReactNode 
         </WebPage>
     </WebShell>
 );
-
-/* ------------------------------ Gift card ------------------------------ */
-
-const PRESETS = [25, 50, 100, 250];
-const MIN = 25;
-const MAX = 500;
-const isEmail = (s: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.trim());
-
-export interface GiftCardPageProps {
-    initialAmount?: number;
-    initialDesign?: GiftDesign;
-    initialRecipient?: { name: string; email: string; message?: string };
-}
-
-/** /shop/gift-cards — amount chips + custom amount, design, recipient, message. */
-export const GiftCardPage = ({ initialAmount = 100, initialDesign = "classic", initialRecipient }: GiftCardPageProps) => {
-    const { course } = useWebSession();
-    const [design, setDesign] = useState<GiftDesign>(initialDesign);
-    const [amount, setAmount] = useState(initialAmount);
-    const [custom, setCustom] = useState("");
-    const [method, setMethod] = useState<"email" | "self">("email");
-    const [name, setName] = useState(initialRecipient?.name ?? "");
-    const [email, setEmail] = useState(initialRecipient?.email ?? "");
-    const [message, setMessage] = useState(initialRecipient?.message ?? "");
-    const [tried, setTried] = useState(false);
-    const { add, added, dismissAdded, dialog } = useAddToCart();
-
-    const value = custom ? Number(custom.replace(/[^0-9.]/g, "")) || 0 : amount;
-    const customBad = custom !== "" && (value < MIN || value > MAX);
-    const emailBad = method === "email" && !isEmail(email);
-    const nameBad = method === "email" && !name.trim();
-    const designLabel = GIFT_DESIGNS.find((d) => d.key === design)!.label;
-
-    const onAdd = () => {
-        setTried(true);
-        if (customBad || value <= 0 || emailBad || nameBad) return;
-        const variant = method === "email" ? `${designLabel} · To ${name.trim()} (${email.trim()})` : `${designLabel} · Added to my balance`;
-        add({ product: offeringProduct(`gift-card-${value}`, `Digital Gift Card · ${money(value)}`, value), variant, qty: 1 });
-    };
-
-    return (
-        <PageScaffold crumb="Gift Cards">
-            {/* Preview + design variations */}
-            <div>
-                <div className="flex min-h-[280px] items-center justify-center rounded-xl bg-primary p-6 ring-1 ring-secondary ring-inset @tablet:min-h-[380px] @tablet:p-10">
-                    <GiftCardFace course={course} design={design} amount={money(value)} to={method === "email" && name.trim() ? name.trim() : undefined} width={340} className="max-w-full" />
-                </div>
-                <div role="radiogroup" aria-label="Card design" className="scrollbar-hide mt-4 flex gap-3 overflow-x-auto">
-                    {GIFT_DESIGNS.map((d) => (
-                        <button
-                            key={d.key}
-                            type="button"
-                            role="radio"
-                            aria-checked={design === d.key}
-                            onClick={() => setDesign(d.key)}
-                            className={cx("flex shrink-0 cursor-pointer flex-col items-center gap-1.5 rounded-xl bg-primary p-2 transition duration-100 ease-linear ring-inset", design === d.key ? "ring-2 ring-brand" : "ring-1 ring-secondary hover:ring-brand", focus)}
-                        >
-                            <GiftCardFace course={course} design={d.key} amount={money(value)} width={96} />
-                            <span className={cx("text-xs font-medium", design === d.key ? "text-primary" : "text-tertiary")}>{d.label}</span>
-                        </button>
-                    ))}
-                </div>
-            </div>
-
-            {/* Details */}
-            <div className="flex flex-col">
-                <ShopBrand />
-                <h1 className="text-display-xs font-semibold tracking-[-0.3px] text-primary @tablet:text-display-sm">Digital Gift Card</h1>
-                <StarRating rating={4.9} count={128} size="md" className="mt-2" />
-                <p className="mt-4 text-md text-tertiary">Good for tee times, lessons, the pro shop and the snack bar. Never expires.</p>
-
-                <div className="mt-6">
-                    <p className="mb-2.5 text-sm font-semibold text-primary">Amount</p>
-                    <div role="radiogroup" aria-label="Amount" className="grid grid-cols-4 gap-2">
-                        {PRESETS.map((p) => {
-                            const on = !custom && amount === p;
-                            return (
-                                <button
-                                    key={p}
-                                    type="button"
-                                    role="radio"
-                                    aria-checked={on}
-                                    onClick={() => {
-                                        setAmount(p);
-                                        setCustom("");
-                                    }}
-                                    className={cx("h-11 cursor-pointer rounded-lg text-sm font-semibold tabular-nums ring-1 transition duration-100 ease-linear ring-inset", on ? "bg-primary-solid text-white ring-transparent" : "bg-primary text-secondary ring-primary hover:bg-primary_hover", focus)}
-                                >
-                                    ${p}
-                                </button>
-                            );
-                        })}
-                    </div>
-                    <div className="mt-3 max-w-xs">
-                        <WebField label="Custom amount" placeholder={`$${MIN} – $${MAX}`} value={custom} onChange={setCustom} inputMode="numeric" isInvalid={customBad} errorMessage={`Enter an amount from $${MIN} to $${MAX}.`} />
-                    </div>
-                </div>
-
-                <div className="mt-6 flex flex-col gap-4">
-                    <Segmented
-                        label="Delivery"
-                        options={[
-                            { key: "email", label: "Email a recipient" },
-                            { key: "self", label: "Add to my balance" },
-                        ]}
-                        value={method}
-                        onChange={setMethod}
-                    />
-                    {method === "email" ? (
-                        <>
-                            <div className="grid grid-cols-1 gap-4 @tablet:grid-cols-2">
-                                <WebField label="Recipient name" placeholder="Jane Doe" value={name} onChange={setName} isRequired isInvalid={tried && nameBad} errorMessage="Add the recipient’s name." />
-                                <WebField label="Recipient email" type="email" inputMode="email" placeholder="jane@tenfore.golf" value={email} onChange={setEmail} isRequired isInvalid={tried && emailBad} errorMessage="Enter a valid email address." />
-                            </div>
-                            <WebField label="Message (optional)" multiline maxLength={200} placeholder="Happy birthday — see you on the course!" value={message} onChange={setMessage} />
-                        </>
-                    ) : (
-                        <p className="rounded-xl bg-primary px-4 py-3 text-sm text-secondary ring-1 ring-secondary ring-inset">The balance is added to your {course.shortName ?? course.name} account as soon as you check out.</p>
-                    )}
-                </div>
-
-                <div className="mt-6">
-                    <WebButton size="lg" fullWidth iconLeading={ShoppingCart01} isDisabled={value <= 0} onPress={onAdd}>
-                        Add to cart · {money(value)}
-                    </WebButton>
-                </div>
-                {added && (
-                    <div className="mt-4">
-                        <AddedNotice req={added} onDismiss={dismissAdded} />
-                    </div>
-                )}
-                <SaveShare />
-
-                <Bullets
-                    title="Details"
-                    items={["Redeemable for tee times, the pro shop, lessons and the snack bar", "Delivered instantly by email, or added to your account balance", "Choose from four card designs", "Never expires — no fees"]}
-                />
-            </div>
-            {dialog}
-        </PageScaffold>
-    );
-};
 
 /* ------------------------------ Punch card ------------------------------ */
 

@@ -249,8 +249,8 @@ const DESCRIPTIONS = {
     "prototypes-crane-web-shop-7-confirmation--pickup": "Pro shop order for pickup at the course.",
     "prototypes-crane-web-shop-7-confirmation--snack-bar-pickup": "Snack-bar order for pickup: where, when, we'll text you.",
     "prototypes-crane-web-shop-7-confirmation--mobile-web": "Order receipt on mobile web (390).",
-    "prototypes-crane-web-shop-gift-cards--desktop": "Gift card: design, amount chips, email a recipient or add to balance.",
-    "prototypes-crane-web-shop-gift-cards--mobile-web": "Gift card on mobile web with a recipient filled in.",
+    "prototypes-crane-web-shop-gift-cards--choose": "Gift card builder: deals first, then a design and who it's for, with a sticky summary.",
+    "prototypes-crane-web-shop-gift-cards--choose-mobile-web": "Gift card builder on mobile web, with a sticky You pay bar.",
     "prototypes-crane-web-shop-gift-cards--punch-card": "Punch card purchase: pick a pack.",
     "prototypes-crane-web-shop-gift-cards--punch-card-mobile": "Punch card purchase on mobile web.",
     // ---- Restaurant
@@ -354,7 +354,7 @@ const DESCRIPTIONS = {
     "prototypes-crane-web-profile-account-wallet--desktop": "Account balance with recent activity, punch cards, gift cards and rain checks.",
     "prototypes-crane-web-profile-account-wallet--balance-due": "A $48.50 statement balance is due.",
     "prototypes-crane-web-profile-account-wallet--pay-balance": "Pay balance dialog open.",
-    "prototypes-crane-web-profile-account-wallet--buy-gift-card": "Buy gift card dialog open.",
+    "prototypes-crane-web-profile-account-wallet--buy-gift-card": "Wallet on the app router: Buy a gift card opens the builder.",
     "prototypes-crane-web-profile-account-wallet--mobile-web": "Wallet with a balance due on mobile web.",
     // ---- Sign in ∕ Sign up
     "prototypes-crane-web-sign-in-sign-up-choose-home-course--desktop": "Two home courses picked.",

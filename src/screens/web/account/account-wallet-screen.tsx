@@ -1,17 +1,22 @@
 import { useState, type ReactNode } from "react";
 import { Radio as AriaRadio, RadioGroup as AriaRadioGroup } from "react-aria-components";
-import { AlertCircle, CheckCircle, Gift01, Mail01, Plus, QrCode01, Wallet02 } from "@untitledui/icons";
+import { AlertCircle, CheckCircle, Gift01, Plus, QrCode01, Wallet02 } from "@untitledui/icons";
 import { IconTile } from "@/components/base/card";
 import { QRCode } from "@/components/base/qr-code";
 import { TextField } from "@/components/forms/text-field";
+import { Notice } from "@/components/feedback/notice";
 import { WebDialog } from "@/components/web/web-dialog";
+import { useWebRouter } from "@/components/web/web-router";
 import { GIFT_CARDS, PAYMENT_CARDS, PUNCH_CARDS, RAIN_CHECKS, currency, type GiftCard, type PunchCard, type RainCheck } from "@/data/crane";
+import { money0, orderValue, SENT_GIFTS, sentGiftFrom, toName, type SentGift } from "@/data/gift-cards";
+import { GIFT_ORDER_DAY, giftOrdersIn } from "@/screens/web/checkout/checkout-data";
+import { giftCardIdAt, orderById } from "@/screens/web/checkout/orders";
 import { useWebSession } from "@/screens/web/web-shell";
 import { cx } from "@/utils/cx";
 import { BALANCE_ACTIVITY } from "./account-data";
 import { AccountLayout } from "./account-layout";
-import { AccountPanel, AccountTitle, ChoicePills, EmptyBlock, Flash, WebButton, shortDay, useFlash } from "./account-ui";
-import { GiftCardTile, PunchCardTile, RainCheckTile, giftCardStatus, rainCheckStatus } from "./account-wallet-items";
+import { AccountPanel, AccountTitle, EmptyBlock, Flash, LinkButton, WebButton, shortDay, useFlash } from "./account-ui";
+import { GiftCardTile, PunchCardTile, RainCheckTile, SentGiftRow, giftCardStatus, rainCheckStatus } from "./account-wallet-items";
 
 const Dollar = ({ className }: { className?: string }) => (
     <span className={cx(className, "flex w-auto items-center text-md text-placeholder")} aria-hidden="true">
@@ -21,7 +26,7 @@ const Dollar = ({ className }: { className?: string }) => (
 
 const card = PAYMENT_CARDS[0];
 
-/** Saved-card radio list, shared by Pay balance and Buy a gift card. */
+/** Saved-card radio list for Pay balance. */
 const CardChoice = ({ value, onChange }: { value: string; onChange: (id: string) => void }) => (
     <AriaRadioGroup aria-label="Payment method" value={value} onChange={onChange} className="flex flex-col gap-2">
         {PAYMENT_CARDS.map((c) => (
@@ -90,101 +95,6 @@ const PayDialog = ({ isOpen, onOpenChange, due, onPaid }: { isOpen: boolean; onO
     );
 };
 
-/* ---------- Buy a gift card (Fox "Wallet · Buy Gift Card") ---------- */
-
-const AMOUNTS = ["25", "50", "100", "250"];
-
-const GiftDialog = ({ isOpen, onOpenChange, courseName, onBought }: { isOpen: boolean; onOpenChange: (o: boolean) => void; courseName: string; onBought: (msg: string) => void }) => {
-    const [amount, setAmount] = useState("100");
-    const [custom, setCustom] = useState("");
-    const [to, setTo] = useState<"someone" | "me">("someone");
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [message, setMessage] = useState("");
-    const [cardId, setCardId] = useState(card?.id ?? "");
-    const value = custom ? Math.max(0, Number(custom) || 0) : Number(amount);
-    const ok = value >= 5 && (to === "me" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()));
-
-    return (
-        <WebDialog
-            isOpen={isOpen}
-            onOpenChange={onOpenChange}
-            title="Buy a gift card"
-            description={`Good for tee fees, the pro shop and food & beverage at ${courseName}.`}
-            footer={
-                <>
-                    <span className="mr-auto text-sm text-tertiary">
-                        Total <span className="font-semibold text-primary tabular-nums">{currency(value)}</span>
-                    </span>
-                    <WebButton
-                        isDisabled={!ok}
-                        onPress={() => {
-                            onBought(to === "me" ? `${currency(value)} gift card added to your wallet` : `${currency(value)} gift card sent to ${email.trim()}`);
-                            onOpenChange(false);
-                        }}
-                    >
-                        Pay {currency(value)}
-                    </WebButton>
-                </>
-            }
-        >
-            <div className="flex flex-col gap-5">
-                <div className="relative flex aspect-[1.75] w-full max-w-[300px] flex-col justify-between self-center overflow-hidden rounded-xl bg-brand-section p-5 text-white shadow-lg">
-                    <div className="flex items-start justify-between">
-                        <span className="text-sm font-semibold text-white/85">{courseName}</span>
-                        <Gift01 className="size-5 text-white/80" aria-hidden="true" />
-                    </div>
-                    <div>
-                        <p className="caps text-white/60">{to === "someone" && name ? `For ${name}` : "Gift card"}</p>
-                        <p className="text-display-xs font-semibold text-white tabular-nums">{currency(value)}</p>
-                    </div>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                    <span className="text-sm font-medium text-secondary">Amount</span>
-                    <ChoicePills
-                        label="Amount"
-                        options={AMOUNTS.map((a) => ({ id: a, label: `$${a}` }))}
-                        value={custom ? "" : amount}
-                        onChange={(a) => {
-                            setAmount(a);
-                            setCustom("");
-                        }}
-                    />
-                    <TextField aria-label="Custom amount" icon={Dollar} inputMode="decimal" placeholder="Other amount" value={custom} onChange={setCustom} />
-                </div>
-
-                <div className="flex flex-col gap-3">
-                    <span className="text-sm font-medium text-secondary">Who's it for?</span>
-                    <ChoicePills
-                        label="Recipient"
-                        options={[
-                            { id: "someone", label: "Email it to someone" },
-                            { id: "me", label: "Keep it for me" },
-                        ]}
-                        value={to}
-                        onChange={(v) => setTo(v as "someone" | "me")}
-                    />
-                    {to === "someone" ? (
-                        <div className="grid grid-cols-1 gap-3 @tablet:grid-cols-2">
-                            <TextField label="Their name" value={name} onChange={setName} placeholder="Austin" />
-                            <TextField label="Their email" type="email" icon={Mail01} value={email} onChange={setEmail} placeholder="friend@tenfore.golf" />
-                            <TextField label="Message (optional)" value={message} onChange={setMessage} placeholder="Happy birthday!" className="@tablet:col-span-2" />
-                        </div>
-                    ) : (
-                        <p className="text-sm text-tertiary">It shows up under Gift cards in your wallet as soon as you pay.</p>
-                    )}
-                </div>
-
-                <div className="flex flex-col gap-2">
-                    <span className="text-sm font-medium text-secondary">Pay with</span>
-                    <CardChoice value={cardId} onChange={setCardId} />
-                </div>
-            </div>
-        </WebDialog>
-    );
-};
-
 /* ---------- Punch card QR ---------- */
 
 const PunchQRDialog = ({ card: pc, onClose }: { card: PunchCard | null; onClose: () => void }) => (
@@ -233,31 +143,74 @@ export interface AccountWalletScreenProps {
     punchCards?: PunchCard[];
     rainChecks?: RainCheck[];
     giftCards?: GiftCard[];
-    defaultGiftOpen?: boolean;
+    /** Gifts bought for other people (Gift cards › Sent as gifts). */
+    sentGifts?: SentGift[];
+    /** A gift card order just paid (also read from `?bought=<order id>`): its card is marked New, or its gift tops Sent as gifts. */
+    boughtOrderId?: string;
     defaultPayOpen?: boolean;
 }
 
+/** What a just-paid gift card order adds to the wallet: cards for you, gifts sent, and the notice. */
+const useBoughtGiftCards = (boughtOrderId?: string) => {
+    const { path } = useWebRouter();
+    const id = boughtOrderId ?? new URLSearchParams(path.split("?")[1] ?? "").get("bought");
+    const order = id ? orderById(id) : null;
+    const gifts = order?.kind === "gift-card" ? giftOrdersIn(order.lines) : [];
+    const cards = gifts.flatMap((g, i) =>
+        g.order.recipient === "me"
+            ? [
+                  {
+                      card: { id: `gc-${id}-${i}`, code: giftCardIdAt(i), expires: new Date(2099, 11, 31), amount: orderValue(g.order), used: 0, categories: ["Golf", "Food & Drink", "Alcohol", "Merchandise"] } satisfies GiftCard,
+                      designId: g.order.designId,
+                  },
+              ]
+            : [],
+    );
+    const sent = gifts.flatMap((g, i) => (g.order.recipient === "someone" ? [{ ...sentGiftFrom(g.order, `sg-${id}-${i}`), date: GIFT_ORDER_DAY }] : []));
+    const first = gifts[0]?.order;
+    const notice = !first ? null : first.recipient === "me" ? (
+        <Notice tone="success" title={`Your ${money0(orderValue(first))} gift card is in your wallet`} className="rounded-lg text-sm">
+            Use it at checkout or at the Pro Shop counter.
+        </Notice>
+    ) : first.delivery === "print" ? (
+        <Notice tone="success" title={`Your gift for ${toName(first)} is ready to print`} className="rounded-lg text-sm">
+            We emailed you the card to print. You'll find it under Gift cards › Sent as gifts.
+        </Notice>
+    ) : (
+        <Notice tone="success" title={`Your gift to ${toName(first)} is on its way`} className="rounded-lg text-sm">
+            You'll find it under Gift cards › Sent as gifts.
+        </Notice>
+    );
+    return { cards, sent, notice };
+};
+
 /**
- * Wallet — ports Fox "Profile ∕ Account/Wallet" (balance, punch cards, gift cards, Buy Gift
- * Card) and adds the Crane app's Pay Balance and Rain Checks, with the app's statuses.
+ * Wallet — ports Fox "Profile ∕ Account/Wallet" (balance, punch cards, gift cards) and adds the Crane
+ * app's Pay Balance and Rain Checks, with the app's statuses. Gift cards (Nov 25): art thumbnails on
+ * cards bought online, a "Sent as gifts" list, and "Buy a gift card" opening the builder at
+ * /shop/gift-cards. After a purchase (`?bought=<order id>`) a notice says where the card went, and
+ * the new card (New) or the new gift (top of Sent as gifts) is marked.
  */
 export const AccountWalletScreen = ({
     statementBalance = 0,
     punchCards = PUNCH_CARDS,
     rainChecks = RAIN_CHECKS,
     giftCards = GIFT_CARDS,
-    defaultGiftOpen = false,
+    sentGifts = SENT_GIFTS,
+    boughtOrderId,
     defaultPayOpen = false,
 }: AccountWalletScreenProps) => {
     const { course } = useWebSession();
     const flash = useFlash();
     const [due, setDue] = useState(statementBalance);
     const [payOpen, setPayOpen] = useState(defaultPayOpen && statementBalance > 0);
-    const [giftOpen, setGiftOpen] = useState(defaultGiftOpen);
     const [qrCard, setQrCard] = useState<PunchCard | null>(null);
+    const bought = useBoughtGiftCards(boughtOrderId);
+    const allSent = [...bought.sent, ...sentGifts];
+    const newSentIds = new Set(bought.sent.map((g) => g.id));
 
     const rainAvailable = rainChecks.filter((c) => ["active", "expiring-soon"].includes(rainCheckStatus(c))).reduce((n, c) => n + c.amount - c.used, 0);
-    const giftAvailable = giftCards.filter((c) => giftCardStatus(c) === "available").reduce((n, c) => n + c.amount - c.used, 0);
+    const giftAvailable = [...bought.cards.map((c) => c.card), ...giftCards].filter((c) => giftCardStatus(c) === "available").reduce((n, c) => n + c.amount - c.used, 0);
     // Usable first, then used up / expired.
     const order = (s: string) => (s === "active" || s === "available" || s === "expiring-soon" ? 0 : 1);
     const sortedRain = [...rainChecks].sort((a, b) => order(rainCheckStatus(a)) - order(rainCheckStatus(b)));
@@ -271,11 +224,12 @@ export const AccountWalletScreen = ({
                         title="Wallet"
                         subtitle={`Your balance and credits at ${course.name}.`}
                         actions={
-                            <WebButton color="outline" iconLeading={Gift01} onPress={() => setGiftOpen(true)} className="hidden @tablet:inline-flex">
+                            <LinkButton href="/shop/gift-cards" color="outline" icon={Gift01} className="hidden @tablet:inline-flex">
                                 Buy a gift card
-                            </WebButton>
+                            </LinkButton>
                         }
                     />
+                    {bought.notice}
                     <Flash message={flash.message} />
                 </div>
 
@@ -354,16 +308,38 @@ export const AccountWalletScreen = ({
                         title="Gift cards"
                         meta={`${currency(giftAvailable)} available`}
                         action={
-                            <WebButton size="sm" color="tinted" iconLeading={Plus} onPress={() => setGiftOpen(true)}>
+                            <LinkButton href="/shop/gift-cards" size="sm" color="tinted" icon={Plus}>
                                 Buy a gift card
-                            </WebButton>
+                            </LinkButton>
                         }
                     />
                     <div className="grid grid-cols-1 gap-4 @tablet:grid-cols-2">
+                        {bought.cards.map(({ card: c, designId }) => (
+                            <GiftCardTile key={c.id} card={c} designId={designId} isNew neverExpires />
+                        ))}
                         {sortedGift.map((c) => (
                             <GiftCardTile key={c.id} card={c} />
                         ))}
                     </div>
+
+                    {/* Sent as gifts */}
+                    {allSent.length > 0 && (
+                        <div className="mt-8">
+                            <div className="mb-3 flex items-baseline justify-between gap-3">
+                                <h4 className="caps text-quaternary">Sent as gifts</h4>
+                                <span className="text-sm text-tertiary">
+                                    {allSent.length} gift{allSent.length === 1 ? "" : "s"}
+                                </span>
+                            </div>
+                            <AccountPanel flush>
+                                <ul className="divide-y divide-secondary px-5">
+                                    {allSent.map((g) => (
+                                        <SentGiftRow key={g.id} gift={g} isNew={newSentIds.has(g.id)} />
+                                    ))}
+                                </ul>
+                            </AccountPanel>
+                        </div>
+                    )}
                 </section>
             </div>
 
@@ -376,7 +352,6 @@ export const AccountWalletScreen = ({
                     flash.show(`Payment of ${currency(v)} received. Thanks!`);
                 }}
             />
-            <GiftDialog isOpen={giftOpen} onOpenChange={setGiftOpen} courseName={course.name} onBought={flash.show} />
             <PunchQRDialog card={qrCard} onClose={() => setQrCard(null)} />
         </AccountLayout>
     );
