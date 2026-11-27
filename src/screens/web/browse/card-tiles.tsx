@@ -1,9 +1,13 @@
-import { ArrowRight, Award01, Calendar } from "@untitledui/icons";
+import { ArrowRight } from "@untitledui/icons";
 import { cx } from "@/utils/cx";
 import { WebLink } from "@/components/web/web-router";
 import type { Course } from "@/data/crane";
 import type { ClubOffering } from "@/data/shop";
 import { CourseLogo } from "@/screens/chrome/course-logo";
+import giftCardArt from "./images/offerings/gift-card.webp";
+import monthlyMembershipArt from "./images/offerings/monthly-membership.webp";
+import punchCardArt from "./images/offerings/punch-card.webp";
+import weekdayMembershipArt from "./images/offerings/weekday-membership.webp";
 import { money, StarRating } from "./shop-ui";
 
 /**
@@ -104,21 +108,25 @@ const cta = "caps inline-flex h-10 items-center justify-center gap-2 rounded-lg 
 export const offeringHref = (o: ClubOffering) => (o.kind === "gift-card" ? "/shop/gift-cards" : o.kind === "punch-card" ? "/shop/punch-cards" : `/memberships/${o.id}`);
 
 /**
- * One Club Offerings card, like live CraneWeb: art, caps eyebrow, title, price, and a caps CTA —
- * solid "PURCHASE →" for gift & punch cards, outline "JOIN →" for memberships.
+ * Photography for each offering (Higgsfield, Nov 27 2026, in the look of the sample club's course; no
+ * logos or text). Memberships pick by their title, so a new membership still gets a photo.
  */
-export const OfferingCard = ({ offering, course, className }: { offering: ClubOffering; course: Course; className?: string }) => {
+const OFFERING_ART: Record<string, string> = { "o-gift": giftCardArt, "o-punch": punchCardArt, "o-weekday": weekdayMembershipArt, "o-monthly": monthlyMembershipArt };
+const offeringArt = (o: ClubOffering) =>
+    OFFERING_ART[o.id] ??
+    (o.kind === "gift-card" ? giftCardArt : o.kind === "punch-card" ? punchCardArt : o.title.toLowerCase().includes("month") ? monthlyMembershipArt : weekdayMembershipArt);
+
+/**
+ * One Club Offerings card, like live CraneWeb: a photo, caps eyebrow, title, price, and a caps CTA —
+ * solid "PURCHASE →" for gift & punch cards, outline "JOIN →" for memberships. The border is a real
+ * border on the card (not an inset ring, which the photo would paint over), with a hairline under the photo.
+ */
+export const OfferingCard = ({ offering, className }: { offering: ClubOffering; course?: Course; className?: string }) => {
     const solid = offering.kind !== "membership";
     return (
-        <article className={cx("flex flex-col overflow-hidden rounded-xl bg-primary ring-1 ring-secondary ring-inset", className)}>
-            <div className="flex h-40 items-center justify-center bg-secondary px-6">
-                {offering.kind === "gift-card" && <GiftCardFace course={course} amount="$25 – $500" width={200} />}
-                {offering.kind === "punch-card" && <PunchCardFace rounds={20} used={0} className="max-w-[240px]" />}
-                {offering.kind === "membership" && (
-                    <span className="flex size-16 items-center justify-center rounded-full bg-primary text-fg-brand-primary ring-1 ring-secondary ring-inset">
-                        {offering.title.toLowerCase().includes("monthly") ? <Calendar className="size-7" aria-hidden="true" /> : <Award01 className="size-7" aria-hidden="true" />}
-                    </span>
-                )}
+        <article className={cx("group flex flex-col overflow-hidden rounded-xl border border-secondary bg-primary shadow-xs transition duration-100 ease-linear hover:shadow-md", className)}>
+            <div className="relative aspect-[16/9] overflow-hidden border-b border-secondary bg-secondary">
+                <img src={offeringArt(offering)} alt="" loading="lazy" className="size-full object-cover transition duration-300 ease-out group-hover:scale-[1.03]" />
             </div>
             <div className="flex flex-1 flex-col p-5">
                 <p className="caps text-brand-secondary">{offering.eyebrow}</p>
